@@ -1,0 +1,8 @@
+# robots.txt for SiteCheck
+# https://212128.xyz
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://212128.xyz/sitemap.xml

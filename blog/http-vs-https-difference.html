@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP与HTTPS的区别及迁移指南 | SiteCheck博客</title>
+    <meta name="description" content="对比 HTTP 与 HTTPS 的区别，讲解 HTTPS 的加密原理与优势，并给出从 HTTP 全站迁移到 HTTPS 的完整步骤、301 配置与常见注意事项。">
+    <meta name="keywords" content="HTTP,HTTPS,HTTP迁移HTTPS,全站HTTPS,301跳转,SSL证书,HTTPS配置">
+    <meta property="og:title" content="HTTP与HTTPS的区别及迁移指南">
+    <meta property="og:description" content="对比 HTTP 与 HTTPS 区别，给出全站迁移到 HTTPS 的完整步骤与注意事项。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/http-vs-https-difference.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">安全</div>
+                <h1>HTTP与HTTPS的区别及迁移指南</h1>
+                <div class="blog-post-meta">2026年6月23日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>在今天的互联网上，HTTPS 已经不是可选项，而是标配。Google Chrome 对 HTTP 网站标注"不安全"，搜索引擎优先收录 HTTPS，HTTP/2 等现代协议也要求 HTTPS。如果你的网站还在用 HTTP，是时候迁移了。本文将对比 HTTP 与 HTTPS 的本质区别，讲解 HTTPS 的加密原理与优势，并给出一份从 HTTP 全站迁移到 HTTPS 的完整指南。</p>
+
+                <h2>一、HTTP 与 HTTPS 的本质区别</h2>
+                <p>HTTP（超文本传输协议）和 HTTPS（安全超文本传输协议）在应用层做的事是一样的——传输网页数据，区别在于传输通道是否加密。</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>对比项</th>
+                            <th>HTTP</th>
+                            <th>HTTPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>默认端口</td><td>80</td><td>443</td></tr>
+                        <tr><td>传输方式</td><td>明文传输</td><td>SSL/TLS 加密传输</td></tr>
+                        <tr><td>安全性</td><td>易被窃听、篡改、伪造</td><td>机密性、完整性、身份认证</td></tr>
+                        <tr><td>证书</td><td>不需要</td><td>需要 SSL/TLS 证书</td></tr>
+                        <tr><td>性能</td><td>略快（无加密开销）</td><td>现代硬件下差异可忽略</td></tr>
+                        <tr><td>SEO</td><td>无加分，被标注不安全</td><td>排名加分，浏览器显示安全锁</td></tr>
+                        <tr><td>现代协议</td><td>不支持 HTTP/2、HTTP/3</td><td>支持 HTTP/2、HTTP/3</td></tr>
+                    </tbody>
+                </table>
+                <p>简单说，HTTPS = HTTP + SSL/TLS。SSL/TLS 在 HTTP 之下加了一层加密，让传输的数据变成密文，第三方无法窃听或篡改。</p>
+
+                <h2>二、为什么必须迁移到 HTTPS</h2>
+                <p>HTTP 明文传输的危害远超想象：</p>
+                <ul>
+                    <li><strong>窃听风险</strong>：在公共 WiFi 下，HTTP 流量可被轻易抓包，账号密码、个人信息一览无余。</li>
+                    <li><strong>篡改风险</strong>：中间人可向 HTTP 页面注入广告、恶意脚本，用户毫无察觉。</li>
+                    <li><strong>伪造风险</strong>：没有身份验证，钓鱼网站可以冒充任何站点。</li>
+                </ul>
+                <p>HTTPS 通过三个机制解决这些问题：</p>
+                <ul>
+                    <li><strong>加密</strong>：传输内容是密文，窃听者只能看到乱码。</li>
+                    <li><strong>完整性</strong>：传输过程被篡改会被检测到。</li>
+                    <li><strong>身份认证</strong>：证书验证服务器身份，防止钓鱼伪造。</li>
+                </ul>
+                <p>除了安全，HTTPS 还有额外好处：浏览器显示安全锁提升用户信任；Google 优先收录 HTTPS；支持 HTTP/2 提升性能；可使用 Service Worker、地理定位等仅限安全上下文的现代 Web API。</p>
+
+                <h2>三、HTTPS 的加密原理简述</h2>
+                <p>HTTPS 用 SSL/TLS 协议建立加密通道，过程涉及非对称加密和对称加密的结合：</p>
+                <ol>
+                    <li><strong>握手阶段</strong>：客户端和服务器用非对称加密（RSA/ECC）协商出一个对称密钥。这个阶段还验证服务器证书，确认身份。</li>
+                    <li><strong>传输阶段</strong>：双方用协商出的对称密钥加密传输数据。对称加密速度快，适合大量数据。</li>
+                </ol>
+                <p>之所以结合两种加密，是因为非对称加密安全但慢，对称加密快但密钥分发难。握手用非对称安全地交换密钥，传输用对称高效地加密数据，各取所长。证书在这个过程中用于验证服务器公钥的真实性，确保握手的对象是真正的服务器而非中间人。</p>
+
+                <h2>四、迁移前的准备工作</h2>
+                <p>全站迁移 HTTPS 是个系统工程，准备充分能避免很多坑：</p>
+                <ul>
+                    <li><strong>申请 SSL 证书</strong>：个人站点用 Let's Encrypt 免费证书；企业站点可考虑 OV/EV 证书。证书需覆盖所有子域名（含 www）。证书申请与检测见<a href="/blog/how-to-check-ssl-certificate.html">如何检测 SSL 证书</a>。</li>
+                    <li><strong>盘点内部硬编码的 HTTP 链接</strong>：数据库、配置文件、代码中的 <code>http://</code> 链接都要找出。常见的有图片、CSS、JS 的绝对路径，Canonical 标签，Open Graph 标签等。</li>
+                    <li><strong>检查第三方资源</strong>：统计代码、广告、字体等第三方资源是否支持 HTTPS，不支持的需要找替代方案，否则会触发混合内容警告。</li>
+                    <li><strong>备份</strong>：迁移前完整备份网站代码、数据库和配置，出问题能快速回滚。</li>
+                    <li><strong>通知合作伙伴</strong>：如果有第三方调你的 API 或用了你的回调地址，提前通知他们切换到 HTTPS。</li>
+                </ul>
+
+                <div id="ad-slot"></div>
+
+                <h2>五、迁移步骤详解</h2>
+
+                <h3>第一步：部署证书，开启 HTTPS</h3>
+                <p>在 Web 服务器上配置 SSL 证书，开启 443 端口。Nginx 配置示例：</p>
+                <pre><code>server {
+    listen 443 ssl http2;
+    server_name example.com www.example.com;
+
+    ssl_certificate     /etc/nginx/ssl/fullchain.cer;
+    ssl_certificate_key /etc/nginx/ssl/example.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    # 其余站点配置...
+}</code></pre>
+                <p>先用 <code>nginx -t</code> 测试配置，确认证书路径正确、无语法错误，再 reload。此时 HTTPS 已经可以访问，但 HTTP 还能访问，下一步做跳转。</p>
+
+                <h3>第二步：配置 301 永久重定向</h3>
+                <p>把所有 HTTP 请求 301 跳转到 HTTPS，同时把不带 www 跳转到带 www（或反之，统一一个规范）。Nginx 配置：</p>
+                <pre><code># HTTP 跳 HTTPS
+server {
+    listen 80;
+    server_name example.com www.example.com;
+    return 301 https://$host$request_uri;
+}
+
+# 不带 www 跳带 www（可选）
+server {
+    listen 443 ssl http2;
+    server_name example.com;
+    ssl_certificate     /etc/nginx/ssl/fullchain.cer;
+    ssl_certificate_key /etc/nginx/ssl/example.key;
+    return 301 https://www.example.com$request_uri;
+}</code></pre>
+                <p>用 301 而非 302，因为这是永久迁移，301 能把搜索引擎权重转移到 HTTPS 版本。关于状态码的区别，可参考<a href="/blog/what-is-http-status-code.html">HTTP 状态码详解</a>。</p>
+
+                <h3>第三步：启用 HSTS</h3>
+                <p>配置 HSTS 响应头，强制浏览器后续访问一律走 HTTPS，防止降级攻击：</p>
+                <pre><code>add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;</code></pre>
+                <p>注意 HSTS 一旦生效无法轻易撤销（在 max-age 内），建议先用短 max-age（如 300）测试，确认无误后再设为一年。如果确定永久 HTTPS，可申请加入 HSTS preload 列表。</p>
+
+                <h3>第四步：更新内部链接和资源引用</h3>
+                <p>把所有内部链接从 <code>http://</code> 改为 <code>https://</code>，或使用相对协议 <code>//</code>、相对路径。重点更新：导航、Canonical、sitemap、robots.txt 里的 URL、Open Graph 标签、结构化数据。建议把硬编码的域名配置提取成变量，便于统一管理。</p>
+
+                <h3>第五步：更新搜索引擎和第三方配置</h3>
+                <ul>
+                    <li>在 Google Search Console / 百度站长平台添加 HTTPS 版本的站点属性，重新提交 sitemap。</li>
+                    <li>更新 Google Analytics / 百度统计的站点 URL 为 HTTPS。</li>
+                    <li>更新 CDN、WAF 等服务的回源协议为 HTTPS。</li>
+                    <li>更新社交媒体、应用商店里的官网链接。</li>
+                </ul>
+
+                <h2>六、迁移后的检查清单</h2>
+                <p>迁移完成后，务必逐项检查，避免遗留问题：</p>
+                <ul>
+                    <li><strong>301 跳转正常</strong>：访问 HTTP 自动跳 HTTPS，状态码是 301。</li>
+                    <li><strong>无混合内容</strong>：浏览器地址栏是完整绿锁，没有"不安全"提示。用开发者工具 Console 查看是否有 mixed content 警告。</li>
+                    <li><strong>证书有效</strong>：用 <a href="/tools/ssl-checker.html">SSL 检测工具</a>确认证书域名匹配、链完整、未过期。</li>
+                    <li><strong>所有页面可访问</strong>：爬取全站，确认无 404、无证书错误。</li>
+                    <li><strong>功能正常</strong>：登录、支付、表单等核心功能测试通过。</li>
+                    <li><strong>第三方回调正常</strong>：支付回调、OAuth 回调等涉及固定 URL 的功能验证。</li>
+                    <li><strong>性能无退化</strong>：用响应时间检测对比迁移前后性能，HTTP/2 应带来提升而非下降。</li>
+                </ul>
+
+                <h2>七、常见问题与解决</h2>
+                <ul>
+                    <li><strong>混合内容（Mixed Content）</strong>：HTTPS 页面里引用了 HTTP 资源，浏览器会拦截或警告。解决：把所有资源改 HTTPS，或用 CSP 的 <code>upgrade-insecure-requests</code> 指令自动升级。更多 CSP 知识见<a href="/blog/http-security-headers-guide.html">HTTP 安全头指南</a>。</li>
+                    <li><strong>重定向循环</strong>：常见于 CDN/反向代理场景，后端以为收到的是 HTTP 就又跳 HTTPS。解决：让反向代理传递 <code>X-Forwarded-Proto</code> 头，后端据此判断真实协议。</li>
+                    <li><strong>证书不匹配</strong>：证书没覆盖某子域名。解决：在证书 SAN 中添加该子域名，或用通配符证书。</li>
+                    <li><strong>SEO 流量波动</strong>：迁移初期排名可能波动，保持 301 持续生效，提交新 sitemap，通常几周内恢复。</li>
+                    <li><strong>百度收录问题</strong>：百度对 HTTPS 支持较晚，需在站长平台做 HTTPS 验证，耐心等待重新抓取。</li>
+                </ul>
+
+                <h2>八、总结</h2>
+                <p>从 HTTP 迁移到 HTTPS 已是势在必行，它带来的安全、信任、SEO 和现代协议支持，远超迁移成本。本文对比了 HTTP 与 HTTPS 的区别，讲解了 HTTPS 的加密原理，并给出了从证书部署、301 跳转、HSTS、链接更新到迁移后检查的完整流程。核心要点：HTTPS = HTTP + SSL/TLS；用 301 永久重定向传递权重；启用 HSTS 防降级；彻底清除混合内容；迁移后逐项检查验证。</p>
+                <p>迁移是一次性的工程，但 HTTPS 的收益是长期的。如果你的网站还在 HTTP，建议尽快启动迁移，按本文的步骤稳步执行。迁移完成后，别忘了建立证书监控和自动续期，避免<a href="/blog/ssl-certificate-expired-fix.html">证书过期</a>让 HTTPS 反而成了故障源。一个全站 HTTPS、配置规范的网站，是安全与专业的基本体现。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

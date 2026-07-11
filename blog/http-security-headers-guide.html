@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP安全头配置指南：CSP、HSTS、X-Frame-Options | SiteCheck博客</title>
+    <meta name="description" content="详解 CSP、HSTS、X-Frame-Options、X-Content-Type-Options、Referrer-Policy 等 HTTP 安全头的配置方法，附 Nginx/Apache 示例，构筑网站安全防线。">
+    <meta name="keywords" content="HTTP安全头,CSP,HSTS,X-Frame-Options,内容安全策略,安全头配置,网站安全">
+    <meta property="og:title" content="HTTP安全头配置指南：CSP、HSTS、X-Frame-Options">
+    <meta property="og:description" content="详解各 HTTP 安全头的配置方法，附服务器示例，构筑网站安全防线。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/http-security-headers-guide.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">安全</div>
+                <h1>HTTP安全头配置指南：CSP、HSTS、X-Frame-Options</h1>
+                <div class="blog-post-meta">2026年6月11日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>在 Web 安全防御中，HTTP 安全头（Security Headers）是一道常被忽视却极其重要的防线。它们通过一行行响应头配置，就能有效防御 XSS、点击劫持、MIME 嗅探、协议降级等多种攻击。与代码层面的防护相比，安全头配置简单、生效迅速、成本低廉，是性价比极高的安全加固手段。本文将详解几个关键安全头的作用与配置方法，帮助你构筑网站的安全防线。响应头的基础知识可先阅读<a href="/blog/understanding-http-headers.html">HTTP 响应头详解</a>。</p>
+
+                <h2>一、HTTP 安全头的作用与价值</h2>
+                <p>HTTP 安全头是服务器通过响应头向浏览器下达的"安全指令"，告诉浏览器在处理页面时遵循哪些安全策略。例如：只允许加载同源脚本、强制使用 HTTPS、禁止被嵌入 iframe。这些指令在浏览器层面执行，能在攻击发生前就阻断威胁。</p>
+                <p>安全头的价值在于"纵深防御"：即使应用代码有漏洞，安全头也能提供一层额外保护。比如 CSP 能在 XSS 漏洞被利用时阻止恶意脚本执行。配置安全头几乎不影响性能，却能显著提升安全评级。用 securityheaders.com 等工具扫描，能直观看到安全头的完备程度。</p>
+
+                <h2>二、Strict-Transport-Security (HSTS)</h2>
+                <p>HSTS（HTTP Strict Transport Security）强制浏览器始终通过 HTTPS 访问网站，防止 SSL 剥离和降级攻击。没有 HSTS，用户即使输入 HTTPS 网址，也可能被中间人降级到 HTTP。</p>
+                <p>配置示例：</p>
+                <pre><code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code></pre>
+                <p>参数说明：</p>
+                <ul>
+                    <li><code>max-age=31536000</code>：HSTS 有效期 1 年（秒），期间浏览器强制 HTTPS。</li>
+                    <li><code>includeSubDomains</code>：策略覆盖所有子域名。确认所有子域名都支持 HTTPS 后再加。</li>
+                    <li><code>preload</code>：申请加入浏览器内置的 HSTS 预加载列表，即使用户首次访问也强制 HTTPS。</li>
+                </ul>
+                <p>注意事项：HSTS 一旦生效，在 max-age 内无法撤销（浏览器会持续强制 HTTPS）。建议先用短 max-age（如 300 秒）测试，确认全站 HTTPS 稳定后再设为一年。加入 preload 列表需谨慎，因为移除缓慢。这是<a href="/blog/http-vs-https-difference.html">迁移 HTTPS</a>后的重要加固步骤。</p>
+
+                <h2>三、Content-Security-Policy (CSP)</h2>
+                <p>CSP（内容安全策略）是防御 XSS 最强大的安全头，通过白名单机制限制页面能加载哪些资源、能执行哪些脚本。合理配置 CSP 能让即使存在 XSS 注入点，恶意脚本也无法执行。</p>
+                <p>配置示例：</p>
+                <pre><code>Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.example.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.example.com; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'</code></pre>
+                <p>常用指令说明：</p>
+                <ul>
+                    <li><code>default-src 'self'</code>：默认只允许同源资源，是 CSP 的兜底策略。</li>
+                    <li><code>script-src</code>：限制 JS 来源，是防 XSS 的核心。</li>
+                    <li><code>style-src</code>：限制 CSS 来源。<code>'unsafe-inline'</code> 允许内联样式，会降低安全性。</li>
+                    <li><code>img-src</code>：限制图片来源。<code>data:</code> 允许 base64 图片。</li>
+                    <li><code>connect-src</code>：限制 AJAX/Fetch/WebSocket 的连接目标。</li>
+                    <li><code>frame-ancestors 'none'</code>：禁止页面被任何站点 iframe 嵌入，替代 X-Frame-Options。</li>
+                    <li><code>object-src 'none'</code>：禁止 Flash、Java 等插件。</li>
+                </ul>
+                <p>CSP 配置建议用"先报告后 enforcing"的方式逐步收紧：</p>
+                <ol>
+                    <li>先用 <code>Content-Security-Policy-Report-Only</code> 头，只报告违规不拦截，收集日志。</li>
+                    <li>分析报告，把合法资源加入白名单。</li>
+                    <li>报告稳定无遗漏后，切换为正式的 <code>Content-Security-Policy</code> 强制执行。</li>
+                    <li>持续监控报告，发现新增资源及时调整策略。</li>
+                </ol>
+                <p>CSP 配置复杂，但安全收益极高，是值得投入的安全加固。</p>
+
+                <div id="ad-slot"></div>
+
+                <h2>四、X-Frame-Options</h2>
+                <p>X-Frame-Options 防御点击劫持（Clickjacking），控制页面是否允许被 iframe、frame、object 嵌入。攻击者可以把你的页面透明叠在诱导按钮上，骗用户点击触发敏感操作。</p>
+                <p>配置示例：</p>
+                <pre><code>X-Frame-Options: DENY</code></pre>
+                <p>取值：</p>
+                <ul>
+                    <li><code>DENY</code>：完全禁止任何页面嵌入。</li>
+                    <li><code>SAMEORIGIN</code>：只允许同源页面嵌入。</li>
+                    <li><code>ALLOW-FROM uri</code>：已废弃，现代浏览器不支持。</li>
+                </ul>
+                <p>X-Frame-Options 已被 CSP 的 <code>frame-ancestors</code> 取代，但为兼容旧浏览器，建议两者都配置。如果已配 CSP frame-ancestors，X-Frame-Options 可设 SAMEORIGIN 或 DENY 作为补充。</p>
+
+                <h2>五、X-Content-Type-Options</h2>
+                <p>设为 <code>nosniff</code>，禁止浏览器对资源类型进行 MIME 嗅探。没有这个头，浏览器可能把声明为 text/plain 的文件当脚本执行，引发安全隐患。</p>
+                <pre><code>X-Content-Type-Options: nosniff</code></pre>
+                <p>这是最简单却必备的安全头，一行配置就能避免 MIME 嗅探攻击，建议所有站点都启用。</p>
+
+                <h2>六、Referrer-Policy</h2>
+                <p>控制 Referer 头的发送策略，保护用户隐私，避免把完整 URL（含查询参数、token）泄露给第三方。</p>
+                <pre><code>Referrer-Policy: strict-origin-when-cross-origin</code></pre>
+                <p>常用取值：</p>
+                <ul>
+                    <li><code>no-referrer</code>：完全不发送 Referer。</li>
+                    <li><code>same-origin</code>：同源请求才发送。</li>
+                    <li><code>strict-origin-when-cross-origin</code>（推荐）：同源发送完整 URL，跨源只发送 origin，HTTPS 到 HTTP 不发送。</li>
+                    <li><code>no-referrer-when-downgrade</code>：HTTPS 到 HTTPS 发送，HTTPS 到 HTTP 不发送。</li>
+                </ul>
+                <p><code>strict-origin-when-cross-origin</code> 是现代浏览器的默认值，兼顾隐私和功能，推荐显式声明。</p>
+
+                <h2>七、Permissions-Policy</h2>
+                <p>Permissions-Policy（原 Feature-Policy）控制页面能使用哪些浏览器 API 和功能，如摄像头、麦克风、地理位置、支付等。即使页面被注入恶意脚本，也无法调用被禁用的功能。</p>
+                <pre><code>Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()</code></pre>
+                <p><code>()</code> 表示完全禁用该功能，<code>self</code> 表示允许同源使用。按需配置，禁用站点不需要的功能，缩小攻击面。</p>
+
+                <h2>八、完整配置示例</h2>
+
+                <h3>Nginx 配置</h3>
+                <pre><code>server {
+    listen 443 ssl http2;
+    server_name example.com;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    # 其余配置...
+}</code></pre>
+                <p>关键点：<code>always</code> 参数确保即使返回错误响应（如 404、500）也带上安全头；在 location 块中重复 <code>add_header</code> 会覆盖继承，需要把安全头在所有 location 都声明，或用 include 复用。</p>
+
+                <h3>Apache 配置</h3>
+                <pre><code>&lt;IfModule mod_headers.c&gt;
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+&lt;/IfModule&gt;</code></pre>
+
+                <h2>九、配置后的检测与验证</h2>
+        <p>配置完成后必须验证是否生效：</p>
+        <ul>
+            <li><strong>SiteCheck HTTP Headers 工具</strong>：用 <a href="/tools/http-headers.html">HTTP Headers 检测</a>查看响应头，确认安全头都已配置。</li>
+            <li><strong>securityheaders.com</strong>：扫描网站安全头并给出评分（A+ 到 F），是评估安全头完备度的标准工具。</li>
+            <li><strong>curl</strong>：<code>curl -I https://example.com</code> 快速查看响应头。</li>
+            <li><strong>浏览器开发者工具</strong>：Network 面板查看 Response Headers。</li>
+            <li><strong>CSP 报告</strong>：查看 CSP Report-Only 的报告端点，确认没有误拦合法资源。</li>
+        </ul>
+        <p>目标是通过 securityheaders.com 的扫描拿到 A 或 A+ 评级。</p>
+
+                <h2>十、常见问题与注意事项</h2>
+        <ul>
+            <li><strong>CSP 误伤功能</strong>：CSP 太严格会拦截合法资源导致功能异常。务必用 Report-Only 模式先测试，逐步收紧。</li>
+            <li><strong>HSTS 误启用</strong>：全站没做好 HTTPS 就开 HSTS 会让 HTTP 用户彻底无法访问。先确保 HTTPS 稳定。</li>
+            <li><strong>add_header 覆盖问题</strong>：Nginx 中 location 块的 add_header 会覆盖 server 块的，导致安全头丢失。用 include 复用或每个 location 重复声明。</li>
+            <li><strong>第三方资源</strong>：统计、广告等第三方脚本要在 CSP 白名单中放行，否则会被拦截。</li>
+            <li><strong>内联脚本/样式</strong>：CSP 默认禁止内联，需要改用 nonce 或 hash，或临时用 'unsafe-inline'（不推荐长期使用）。</li>
+            <li><strong>CDN/反向代理</strong>：确认 CDN 或代理没有剥离或覆盖你配置的安全头。</li>
+        </ul>
+
+                <h2>十一、安全头配置优先级</h2>
+        <p>如果一次性配置所有安全头有难度，建议按优先级分步实施：</p>
+        <ol>
+            <li><strong>第一优先</strong>：X-Content-Type-Options、X-Frame-Options——配置最简单，无副作用。</li>
+            <li><strong>第二优先</strong>：HSTS、Referrer-Policy——HTTPS 站点必配。</li>
+            <li><strong>第三优先</strong>：CSP——收益最大但配置最复杂，用 Report-Only 模式逐步推进。</li>
+            <li><strong>第四优先</strong>：Permissions-Policy——按需禁用不需要的浏览器功能。</li>
+        </ol>
+
+                <h2>十二、总结</h2>
+        <p>HTTP 安全头是性价比极高的安全加固手段，几行配置就能防御 XSS、点击劫持、降级攻击、MIME 嗅探等多种威胁。本文详解了 HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy 等关键安全头的作用与配置，并给出 Nginx/Apache 示例。核心要点：HSTS 强制 HTTPS，CSP 是防 XSS 核心但需逐步收紧，X-Content-Type-Options 和 X-Frame-Options 简单必备，Referrer-Policy 保护隐私。</p>
+        <p>安全头配置不是一劳永逸，要随业务变化持续维护——新增第三方资源要更新 CSP 白名单，新功能上线要评估是否需要调整策略。建议你今天就用自己的网站用 securityheaders.com 扫描一次，对照本文补齐缺失的安全头，逐步把安全评级提到 A+。配合 SSL 证书（参考<a href="/blog/how-to-check-ssl-certificate.html">证书检测</a>）和 HTTPS 迁移，你的网站安全防线将更加坚固。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

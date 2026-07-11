@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Headers 分析工具 - SiteCheck</title>
+    <meta name="description" content="免费的在线 HTTP 响应头分析工具，输入网址即可查看全部 HTTP 响应头，并自动检测 HSTS、CSP、X-Frame-Options 等安全头的配置情况，帮助您提升网站安全性。">
+    <meta name="keywords" content="HTTP Headers,响应头分析,安全头检测,HSTS,CSP,X-Frame-Options,X-Content-Type-Options,Referrer-Policy,在线工具">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="tool-page">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回首页
+            </a>
+            <h1>HTTP Headers 分析</h1>
+            <p class="subtitle">输入网址，查看其 HTTP 响应头信息，并检测关键安全头的配置情况。</p>
+
+            <div class="input-group">
+                <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') analyze()">
+                <button class="btn btn-primary" id="check-btn" onclick="analyze()">分析</button>
+            </div>
+
+            <div id="ad-slot"></div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('tools');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        function esc(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 需要重点检测的安全头及其说明
+        const SECURITY_HEADERS = [
+            { name: 'Strict-Transport-Security', label: 'HSTS', desc: '强制使用 HTTPS 连接，防止降级攻击' },
+            { name: 'Content-Security-Policy', label: 'CSP', desc: '内容安全策略，防止 XSS 等注入攻击' },
+            { name: 'X-Frame-Options', label: 'X-Frame-Options', desc: '防止页面被嵌入 iframe（点击劫持防护）' },
+            { name: 'X-Content-Type-Options', label: 'X-Content-Type-Options', desc: '阻止 MIME 类型嗅探' },
+            { name: 'Referrer-Policy', label: 'Referrer-Policy', desc: '控制 Referer 头的泄露信息' }
+        ];
+
+        async function analyze() {
+            const inputEl = document.getElementById('url-input');
+            const btn = document.getElementById('check-btn');
+            let input = inputEl.value.trim();
+
+            if (!input) {
+                showError('results', '请输入要分析的网址。');
+                return;
+            }
+            if (!/^https?:\/\//i.test(input)) {
+                input = 'https://' + input;
+            }
+
+            btn.disabled = true;
+            showLoading('results', '正在获取 HTTP 响应头...');
+
+            const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent(input);
+
+            try {
+                const res = await fetch(proxyUrl, { method: 'GET', redirect: 'follow' });
+                const status = res.status || 0;
+
+                // 收集所有响应头
+                const headers = [];
+                res.headers.forEach((value, key) => {
+                    headers.push({ key, value });
+                });
+
+                if (headers.length === 0) {
+                    showError('results', '未能获取到响应头信息。代理服务可能未暴露响应头，请稍后重试。');
+                    return;
+                }
+
+                renderResult(input, status, headers, res);
+            } catch (err) {
+                showError('results', '分析失败：' + err.message + '。请确认网址可访问后重试。');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResult(url, status, headers, res) {
+            const cls = getStatusCodeClass(status);
+
+            // 安全头检测结果
+            const securityRows = SECURITY_HEADERS.map(h => {
+                const value = res.headers.get(h.name);
+                const present = value !== null;
+                return `
+                    <tr>
+                        <td><strong>${esc(h.label)}</strong><br><span style="font-size:12px;color:var(--gray-400);">${esc(h.desc)}</span></td>
+                        <td style="text-align:center;font-size:20px;width:60px;">
+                            ${present
+                                ? '<span style="color:var(--success);" title="已配置">&#10004;</span>'
+                                : '<span style="color:var(--danger);" title="未配置">&#10006;</span>'}
+                        </td>
+                        <td>${present ? esc(value) : '<span style="color:var(--gray-400);">未配置</span>'}</td>
+                    </tr>`;
+            }).join('');
+
+            const presentCount = SECURITY_HEADERS.filter(h => res.headers.get(h.name) !== null).length;
+            const securityScore = Math.round((presentCount / SECURITY_HEADERS.length) * 100);
+
+            let scoreClass = 'danger';
+            if (securityScore >= 80) scoreClass = 'success';
+            else if (securityScore >= 50) scoreClass = 'warning';
+
+            // 所有响应头表格
+            const headerRows = headers.map(h => `
+                <tr>
+                    <td style="white-space:nowrap;"><strong>${esc(h.key)}</strong></td>
+                    <td>${esc(h.value)}</td>
+                </tr>`).join('');
+
+            document.getElementById('results').innerHTML = `
+                <div class="result-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+                        <div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">HTTP 状态码</div>
+                            <span class="status-badge ${cls}" style="font-size:16px;font-weight:700;padding:6px 16px;">${status}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">安全头评分</div>
+                            <span class="status-badge ${scoreClass}" style="font-size:16px;font-weight:700;padding:6px 16px;">${securityScore} 分（${presentCount}/${SECURITY_HEADERS.length}）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">安全头检测结果</div>
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th>安全头</th>
+                                    <th style="text-align:center;width:60px;">状态</th>
+                                    <th>值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${securityRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">全部响应头（共 ${headers.length} 项）</div>
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${headerRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="result-card" style="font-size:13px;color:var(--gray-500);">
+                    说明：绿色对勾表示该安全头已配置，红色叉号表示缺失。配置完整的安全头可有效提升网站安全性。部分响应头可能因 CORS 代理未暴露而无法显示。
+                </div>`;
+        }
+    </script>
+</body>
+</html>

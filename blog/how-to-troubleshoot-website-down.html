@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站打不开？完整排查指南 | SiteCheck博客</title>
+    <meta name="description" content="网站打不开原因众多：DNS、服务器、SSL、防火墙都可能出问题。本文提供一套系统化的分层排查流程，助你快速定位并解决网站访问故障。">
+    <meta name="keywords" content="网站打不开,网站无法访问,故障排查,DNS故障,服务器故障,SSL错误,网站排查">
+    <meta property="og:title" content="网站打不开？完整排查指南">
+    <meta property="og:description" content="系统化的分层排查流程，助你快速定位并解决网站访问故障。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/how-to-troubleshoot-website-down.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">故障排查</div>
+                <h1>网站打不开？完整排查指南</h1>
+                <div class="blog-post-meta">2026年7月2日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>"网站打不开了！"——这大概是运维和站长最怕听到的一句话。网站无法访问的原因五花八门：可能是 DNS 解析失败、服务器宕机、SSL 证书出问题，也可能是防火墙拦截或应用代码崩溃。面对故障，慌乱地到处试往往浪费时间，正确的做法是按层次系统地排查。本文提供一套从用户端到服务器端的完整排查流程，帮助你快速定位故障根因并恢复服务。</p>
+
+                <h2>一、排查前的准备工作</h2>
+                <p>开始排查前，先确认几个关键信息，避免走弯路：</p>
+                <ul>
+                    <li><strong>是所有人打不开，还是只有你打不开？</strong>用手机 4G 网络、问朋友、或用在线检测工具（如 SiteCheck）测试。如果别人能打开，问题多半在你的本地网络或设备。</li>
+                    <li><strong>是间歇性打不开，还是完全打不开？</strong>间歇性通常是服务器过载或网络抖动，完全打不开更可能是 DNS 或服务宕机。</li>
+                    <li><strong>具体是什么错误提示？</strong>"无法访问此网站""连接超时""SSL 错误""502 Bad Gateway"——不同提示指向不同问题层级。</li>
+                </ul>
+                <p>带着这些信息，我们按从下到上的层次逐一排查。</p>
+
+                <h2>二、第一层：DNS 解析排查</h2>
+                <p>DNS 是访问的第一步，域名解析不成功，后面一切都是空谈。判断 DNS 是否正常的方法：</p>
+                <ol>
+                    <li><strong>ping 域名</strong>：<code>ping example.com</code>，看是否能解析出 IP。如果提示"找不到主机"，基本就是 DNS 问题。</li>
+                    <li><strong>dig/nslookup</strong>：<code>dig example.com</code> 查看详细解析过程和返回的 A 记录。</li>
+                    <li><strong>在线 DNS 查询</strong>：用 <a href="/tools/dns-lookup.html">DNS 查询工具</a>从多个节点检测解析结果是否一致。</li>
+                </ol>
+                <p>DNS 层常见问题：</p>
+                <ul>
+                    <li><strong>域名过期</strong>：忘了续费，域名被注册商暂停解析。检查域名注册商后台。</li>
+                    <li><strong>DNS 记录配置错误</strong>：A 记录指向了错误 IP，或 NS 记录没正确指向 DNS 服务商。用 dig 确认权威服务器返回的记录。</li>
+                    <li><strong>DNS 服务器故障</strong>：DNS 服务商自身宕机。换用公共 DNS（如 8.8.8.8、1.1.1.1）测试。</li>
+                    <li><strong>DNS 传播中</strong>：刚修改记录，部分地区还没生效。关于传播机制，参考<a href="/blog/dns-propagation-explained.html">DNS 传播原理</a>。</li>
+                </ul>
+                <p>如果 DNS 解析正常，能拿到正确 IP，进入下一层。</p>
+
+                <h2>三、第二层：网络连通性排查</h2>
+                <p>DNS 正常但打不开，可能是网络层不通。排查服务器 IP 是否可达：</p>
+                <ol>
+                    <li><strong>ping IP</strong>：<code>ping 192.0.2.1</code>，直接 ping 服务器 IP（绕过 DNS）。不通可能是服务器关机、防火墙禁 ICMP 或网络中断。</li>
+                    <li><strong>traceroute</strong>：<code>traceroute example.com</code>，追踪数据包路径，看在哪一跳断掉，判断是本地网络、运营商还是机房问题。</li>
+                    <li><strong>telnet/nc 测试端口</strong>：<code>telnet example.com 443</code> 或 <code>nc -zv example.com 443</code>，测试 80/443 端口是否通。端口不通通常是防火墙或安全组没放行。</li>
+                </ol>
+                <p>网络层常见问题：</p>
+                <ul>
+                    <li><strong>服务器宕机</strong>：登录云控制台看实例状态，可能需要重启。</li>
+                    <li><strong>安全组/防火墙</strong>：云服务器安全组没放行 80/443 端口，或系统防火墙（iptables/ufw/firewalld）拦截。</li>
+                    <li><strong>IP 被封</strong>：服务器 IP 因违规或被攻击被运营商封禁。</li>
+                    <li><strong>本地网络问题</strong>：DNS 缓存中毒、代理软件干扰、hosts 文件错误配置。清 DNS 缓存：<code>ipconfig /flushdns</code>（Windows）或 <code>systemd-resolve --flush-caches</code>（Linux）。</li>
+                </ul>
+
+                <h2>四、第三层：SSL/TLS 排查</h2>
+                <p>端口通了但浏览器报 SSL 错误，问题在证书层。常见 SSL 错误及原因：</p>
+                <ul>
+                    <li><strong>NET::ERR_CERT_DATE_INVALID</strong>：证书过期。解决方案见<a href="/blog/ssl-certificate-expired-fix.html">SSL 证书过期解决方案</a>。</li>
+                    <li><strong>NET::ERR_CERT_COMMON_NAME_INVALID</strong>：证书域名不匹配，访问的域名不在证书 SAN 列表。</li>
+                    <li><strong>NET::ERR_CERT_AUTHORITY_INVALID</strong>：证书链不完整或用了不受信任的 CA。</li>
+                    <li><strong>ERR_SSL_PROTOCOL_ERROR</strong>：协议版本不匹配，如服务器只支持 TLS 1.2 而客户端太旧。</li>
+                </ul>
+                <p>用 <a href="/tools/ssl-checker.html">SSL 证书检测工具</a>或 <code>openssl s_client -connect example.com:443</code> 深入诊断证书状态。更多证书检测方法可参考<a href="/blog/how-to-check-ssl-certificate.html">如何检测 SSL 证书</a>。</p>
+
+                <div id="ad-slot"></div>
+
+                <h2>五、第四层：HTTP/Web 服务器排查</h2>
+                <p>SSL 正常但返回错误状态码，问题在 Web 服务器或应用层。先看状态码：</p>
+                <ul>
+                    <li><strong>连接被拒（Connection refused）</strong>：Web 服务（Nginx/Apache）没启动或没监听对应端口。登录服务器 <code>systemctl status nginx</code> 检查。</li>
+                    <li><strong>403 Forbidden</strong>：文件权限不对、目录无 index、或 Nginx 配置 deny。检查网站根目录权限和配置。</li>
+                    <li><strong>404 Not Found</strong>：根目录为空或 root 路径配置错误。</li>
+                    <li><strong>500 Internal Server Error</strong>：应用代码出错。看应用日志和 Nginx error.log 定位异常。</li>
+                    <li><strong>502 Bad Gateway</strong>：反向代理后端服务挂了。检查 PHP-FPM、Node.js 等后端进程是否存活、端口是否监听。</li>
+                    <li><strong>504 Gateway Timeout</strong>：后端响应超时。可能是数据库慢查询或后端处理不过来。</li>
+                </ul>
+                <p>排查 Web 服务器问题，日志是最好的朋友。Nginx 的 access.log 和 error.log、应用的运行日志，往往直接给出错误原因。状态码的含义可参考<a href="/blog/what-is-http-status-code.html">HTTP 状态码详解</a>。</p>
+
+                <h2>六、第五层：应用与数据库排查</h2>
+                <p>Web 服务器正常但应用异常，进入应用层排查：</p>
+                <ul>
+                    <li><strong>数据库连接失败</strong>：应用连不上数据库会报 500。检查数据库是否运行、连接数是否打满、账号密码是否正确、白名单是否放行应用服务器 IP。</li>
+                    <li><strong>应用进程崩溃</strong>：OOM（内存不足）被系统杀进程，或代码异常退出。看 <code>dmesg</code> 和应用日志。</li>
+                    <li><strong>磁盘满</strong>：日志或上传文件把磁盘写满，导致服务异常。<code>df -h</code> 查看磁盘，清理空间。</li>
+                    <li><strong>依赖服务故障</strong>：Redis、Elasticsearch 等依赖服务挂掉，级联影响应用。</li>
+                    <li><strong>配置错误</strong>：最近部署改了配置（环境变量、连接串）导致应用起不来。</li>
+                </ul>
+
+                <h2>七、常见故障场景速查</h2>
+                <p>把上面的排查流程浓缩成几个典型场景的速查：</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>现象</th>
+                            <th>可能原因</th>
+                            <th>排查工具</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>找不到主机/DNS 错误</td><td>域名过期、DNS 记录错、DNS 服务商故障</td><td>dig、DNS 查询工具</td></tr>
+                        <tr><td>连接超时</td><td>服务器宕机、防火墙拦截、网络中断</td><td>ping、traceroute、telnet</td></tr>
+                        <tr><td>SSL 警告</td><td>证书过期/不匹配/链不完整</td><td>SSL 检测工具、openssl</td></tr>
+                        <tr><td>502/504</td><td>后端服务挂了或超时</td><td>系统服务状态、日志</td></tr>
+                        <tr><td>500</td><td>应用代码异常、数据库连不上</td><td>应用日志、error.log</td></tr>
+                        <tr><td>只有自己打不开</td><td>本地 DNS 缓存、代理、hosts</td><td>换网络、清缓存</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>八、建立故障排查的标准化流程</h2>
+                <p>故障排查不是临时抱佛脚，而应建立标准化流程，做到"闻警即动，按图索骥"：</p>
+                <ol>
+                    <li><strong>分层定位</strong>：按 DNS → 网络 → SSL → Web 服务器 → 应用的顺序逐层排除，避免跳跃式排查。</li>
+                    <li><strong>最小化变量</strong>：每次只改一个地方，观察效果，便于定位因果。</li>
+                    <li><strong>留痕记录</strong>：排查过程记录时间线、操作和现象，事后复盘改进。</li>
+                    <li><strong>监控先行</strong>：用 <a href="/blog/website-monitoring-best-practices.html">网站监控</a>在故障发生第一时间告警，而非等用户反馈。</li>
+                    <li><strong>应急预案</strong>：准备常见故障的应急手册（域名续费流程、证书续期步骤、服务器重启方法），缩短恢复时间。</li>
+                </ol>
+
+                <h2>九、善用工具提效</h2>
+                <p>排查效率很大程度取决于工具熟练度。推荐常备以下工具：</p>
+                <ul>
+                    <li><strong>在线综合检测</strong>：SiteCheck 的 HTTP 状态、DNS 查询、SSL 检测、响应时间、HTTP Headers 工具，覆盖大部分排查需求。</li>
+                    <li><strong>命令行</strong>：ping、dig、traceroute、curl、telnet、openssl，运维必备。</li>
+                    <li><strong>日志分析</strong>：grep/journalctl 快速过滤日志，或用 ELK 等日志平台。</li>
+                    <li><strong>监控告警</strong>：Prometheus + Grafana + AlertManager，故障秒级感知。</li>
+                </ul>
+
+                <h2>十、总结</h2>
+                <p>网站打不开并不可怕，可怕的是没有章法地乱试。本文提供了一套从 DNS、网络、SSL、Web 服务器到应用层的分层排查流程，每个层级都给出了具体的检测方法和常见问题。核心思路是：先判断影响范围，再按层次逐层排除，用工具和数据说话，而不是凭猜测。</p>
+                <p>建议你把这套排查流程整理成自己的应急手册，遇到故障时按步骤执行。更重要的是，通过持续监控把故障发现提前到用户感知之前。排查能力是运维的基本功，多经历几次故障、多复盘总结，你的排查速度和准确度都会显著提升。当你能从容应对各种"打不开"的告警时，就已经是一名合格的网站守护者了。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

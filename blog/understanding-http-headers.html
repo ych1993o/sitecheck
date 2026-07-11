@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP响应头详解与安全配置指南 | SiteCheck博客</title>
+    <meta name="description" content="详解常见 HTTP 响应头的作用与配置，涵盖 Cache-Control、Content-Type、CORS、Set-Cookie 等通用头，以及安全头配置实践，助你掌控网站行为与安全。">
+    <meta name="keywords" content="HTTP响应头,HTTP Headers,Cache-Control,CORS,Set-Cookie,安全头,HTTP头配置">
+    <meta property="og:title" content="HTTP响应头详解与安全配置指南">
+    <meta property="og:description" content="详解常见 HTTP 响应头的作用与安全配置实践，助你掌控网站行为与安全。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/understanding-http-headers.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">安全</div>
+                <h1>HTTP响应头详解与安全配置指南</h1>
+                <div class="blog-post-meta">2026年7月4日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>每次浏览器向服务器发送请求，服务器返回的不仅是状态码和内容，还有一组 HTTP 响应头（Response Headers）。这些键值对承载着缓存控制、内容类型、安全策略、跨域规则等关键信息，是浏览器与服务器"对话"的重要语言。理解响应头，才能精确控制网站的行为和安全。本文将详解常见响应头的作用，并给出安全配置实践。</p>
+
+                <h2>一、HTTP 头的基础概念</h2>
+                <p>HTTP 头分为请求头（Request Headers）和响应头（Response Headers）。请求头由浏览器发送，告诉服务器客户端的信息和需求；响应头由服务器返回，告诉浏览器如何处理响应。两者都是"键: 值"格式，每行一个。</p>
+                <p>响应头又可细分为：通用头（如 Date、Connection）、实体头（描述响应体，如 Content-Type、Content-Length）和扩展头。掌握常用响应头，能帮助你诊断缓存问题、排查跨域错误、加固网站安全。</p>
+                <p>想查看一个网站的实际响应头，最方便的方式是用 SiteCheck 的 <a href="/tools/http-headers.html">HTTP Headers 检测工具</a>，或用 <code>curl -I https://example.com</code> 命令。</p>
+
+                <h2>二、内容与类型相关响应头</h2>
+
+                <h3>Content-Type</h3>
+                <p>告诉浏览器响应体的 MIME 类型，决定了浏览器如何解析内容。例如 <code>text/html; charset=utf-8</code> 表示 HTML 文档，<code>application/json</code> 表示 JSON 数据。如果 Content-Type 设置错误，浏览器可能把 HTML 当纯文本显示，或导致乱码。务必声明正确的 charset，避免编码问题。</p>
+
+                <h3>Content-Length</h3>
+                <p>响应体的字节长度，让浏览器知道要接收多少数据，便于显示进度条和判断是否传输完整。</p>
+
+                <h3>Content-Encoding</h3>
+                <p>响应体的压缩编码，如 <code>gzip</code>、<code>br</code>（Brotli）。浏览器据此解压内容。配合压缩能大幅减少传输量。</p>
+
+                <h3>Content-Disposition</h3>
+                <p>控制浏览器如何处理响应体。<code>inline</code> 表示直接显示，<code>attachment; filename="report.pdf"</code> 表示下载并指定文件名。文件下载场景必用。</p>
+
+                <h2>三、缓存控制响应头</h2>
+                <p>缓存是性能优化的核心，而缓存行为由响应头控制。理解这几个头至关重要。</p>
+
+                <h3>Cache-Control</h3>
+                <p>最强大的缓存控制头，常用指令包括：</p>
+                <ul>
+                    <li><code>max-age=31536000</code>：缓存有效期 1 年（秒）。</li>
+                    <li><code>public</code>：可被浏览器和 CDN 等中间代理缓存。</li>
+                    <li><code>private</code>：只允许浏览器缓存，CDN 不缓存（适用于用户个性化内容）。</li>
+                    <li><code>no-cache</code>：每次使用前必须向服务器验证（配合 ETag）。</li>
+                    <li><code>no-store</code>：完全不缓存，适用于敏感数据。</li>
+                    <li><code>immutable</code>：资源永不变，无需验证（用于带哈希的文件名）。</li>
+                </ul>
+
+                <h3>ETag 与 Last-Modified</h3>
+                <p>这两个头用于协商缓存。ETag 是资源的唯一标识（通常是内容哈希），Last-Modified 是最后修改时间。浏览器下次请求会带上 <code>If-None-Match</code> 或 <code>If-Modified-Since</code>，服务器比对后若未变化则返回 304，让浏览器用缓存。ETag 比 Last-Modified 更精确，优先级也更高。</p>
+
+                <h3>Expires</h3>
+                <p>老式缓存头，指定一个绝对过期时间（如 <code>Expires: Wed, 09 Jul 2026 00:00:00 GMT</code>）。已被 Cache-Control 取代，但为兼容旧客户端仍可保留。当 Cache-Control 和 Expires 同时存在时，Cache-Control 优先。</p>
+
+                <h2>四、跨域与 Cookie 相关响应头</h2>
+
+                <h3>Access-Control-Allow-Origin</h3>
+                <p>CORS（跨域资源共享）的核心头。浏览器有同源策略，默认禁止跨域请求。服务器通过这个头声明允许哪些源访问资源。例如 <code>Access-Control-Allow-Origin: https://example.com</code> 只允许该源跨域访问，<code>*</code> 表示允许任意源（但不适用于带凭证的请求）。</p>
+
+                <h3>Access-Control-Allow-Methods / Headers</h3>
+                <p>预检请求（OPTIONS）的响应中，声明允许的 HTTP 方法和自定义头。如 <code>Access-Control-Allow-Methods: GET, POST, PUT, DELETE</code>。</p>
+
+                <h3>Set-Cookie</h3>
+                <p>服务器通过这个头向浏览器设置 Cookie。一个响应可包含多个 Set-Cookie。关键属性包括：</p>
+                <ul>
+                    <li><code>HttpOnly</code>：禁止 JS 访问 Cookie，防 XSS 窃取。</li>
+                    <li><code>Secure</code>：只在 HTTPS 下发送。</li>
+                    <li><code>SameSite=Lax|Strict|None</code>：控制跨站请求是否携带 Cookie，防 CSRF。</li>
+                    <li><code>Max-Age</code> / <code>Expires</code>：Cookie 生命周期。</li>
+                </ul>
+
+                <div id="ad-slot"></div>
+
+                <h2>五、安全相关响应头</h2>
+                <p>安全头是抵御 Web 攻击的第一道防线。这里做概览，详细的配置方法请阅读<a href="/blog/http-security-headers-guide.html">HTTP 安全头配置指南</a>。</p>
+
+                <h3>Strict-Transport-Security (HSTS)</h3>
+                <p>强制浏览器后续访问一律使用 HTTPS，防止降级攻击和 SSL 剥离。典型配置：<code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code>。</p>
+
+                <h3>Content-Security-Policy (CSP)</h3>
+                <p>限制页面能加载哪些资源，是防御 XSS 的利器。例如 <code>default-src 'self'</code> 只允许加载同源资源。CSP 配置需要逐步收紧，避免误伤正常功能。</p>
+
+                <h3>X-Frame-Options</h3>
+                <p>控制页面是否允许被 iframe 嵌入，防点击劫持。<code>DENY</code> 完全禁止，<code>SAMEORIGIN</code> 只允许同源嵌入。新标准用 CSP 的 <code>frame-ancestors</code> 替代。</p>
+
+                <h3>X-Content-Type-Options</h3>
+                <p>设为 <code>nosniff</code>，禁止浏览器 MIME 嗅探，防止把非脚本文件当脚本执行。</p>
+
+                <h3>Referrer-Policy</h3>
+                <p>控制 Referer 头的发送策略，如 <code>strict-origin-when-cross-origin</code>，保护用户隐私不泄露完整 URL。</p>
+
+                <h2>六、其他实用响应头</h2>
+
+                <h3>Location</h3>
+                <p>配合 3xx 重定向状态码使用，指向新的 URL。也用于 201 Created 指向新创建资源的地址。</p>
+
+                <h3>Server</h3>
+                <p>服务器软件标识，如 <code>nginx/1.24.0</code>。出于安全考虑，建议隐藏或修改此头，避免暴露服务器版本给攻击者提供信息。</p>
+
+                <h3>X-Request-ID / X-Correlation-ID</h3>
+                <p>请求追踪标识，在微服务架构中用于串联一次请求经过的所有服务，便于日志排查。这是自定义头的常见实践。</p>
+
+                <h3>Vary</h3>
+                <p>告诉缓存服务器，响应内容会随哪些请求头变化。例如 <code>Vary: Accept-Encoding</code> 表示对支持 gzip 和不支持的客户端要分别缓存。配置不当会导致缓存串内容，需谨慎。</p>
+
+                <h2>七、Nginx 配置响应头实战</h2>
+                <p>在 Nginx 中添加响应头非常简单，用 <code>add_header</code> 指令：</p>
+                <pre><code>server {
+    listen 443 ssl http2;
+    server_name example.com;
+
+    # 安全头
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # 静态资源长缓存
+    location ~* \.(js|css|png|jpg|webp)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # HTML 协商缓存
+    location / {
+        add_header Cache-Control "no-cache";
+    }
+}</code></pre>
+                <p>注意 <code>add_header</code> 在 location 块中会覆盖上层继承的头，所以安全头需要在每个 location 重复声明，或使用 include 复用。加 <code>always</code> 参数确保错误响应也带上安全头。</p>
+
+                <h2>八、响应头常见问题排查</h2>
+                <ul>
+                    <li><strong>资源不缓存，每次都重新下载</strong>：检查 Cache-Control 是否被设成 no-store，或被 no-cache 误用。</li>
+                    <li><strong>跨域请求被浏览器拦截</strong>：看响应是否带正确的 Access-Control-Allow-Origin，且与请求 Origin 匹配。</li>
+                    <li><strong>页面被恶意 iframe 嵌套</strong>：配置 X-Frame-Options 或 CSP frame-ancestors。</li>
+                    <li><strong>Cookie 被 XSS 偷走</strong>：确认 Cookie 设置了 HttpOnly 和 Secure。</li>
+                    <li><strong>缓存串内容（移动端看到桌面版）</strong>：检查 Vary 头是否包含 User-Agent 或 Accept。</li>
+                </ul>
+
+                <h2>九、如何检测自己的响应头</h2>
+                <p>配置完成后务必验证。推荐方式：</p>
+                <ul>
+                    <li><strong>在线工具</strong>：SiteCheck 的 HTTP Headers 检测工具，可视化展示所有头并标注安全头缺失情况。</li>
+                    <li><strong>curl</strong>：<code>curl -I https://example.com</code> 快速查看。</li>
+                    <li><strong>浏览器开发者工具</strong>：Network 面板点击请求，查看 Response Headers。</li>
+                    <li><strong>安全头评分</strong>：用 securityheaders.com 等工具给安全头配置打分，查漏补缺。</li>
+                </ul>
+
+                <h2>十、总结</h2>
+                <p>HTTP 响应头是控制网站行为和安全的关键手段。本文系统讲解了内容类型、缓存控制、跨域、Cookie、安全策略等几大类响应头的作用与配置。核心要点：用 Cache-Control 和 ETag 精确控制缓存；用 CORS 头解决跨域；用 Set-Cookie 的 HttpOnly/Secure/SameSite 保护会话；用 HSTS、CSP、X-Frame-Options 等安全头构筑防线。</p>
+                <p>响应头配置虽然简单，但影响深远。建议你用检测工具审视一下自己网站的响应头，补齐缺失的安全头，优化缓存策略。一个配置良好的响应头集合，能让网站更快、更安全、更可控。结合本文和后续的安全头专题文章，你将建立起完整的 HTTP 头知识体系。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

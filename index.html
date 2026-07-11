@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiteCheck - 免费在线网站检测工具</title>
+    <meta name="description" content="SiteCheck 提供免费的在线网站检测工具，包括 HTTP 状态检测、DNS 查询、SSL 证书检测、响应时间测试和 HTTP Headers 分析。">
+    <meta name="keywords" content="网站检测,HTTP状态检测,DNS查询,SSL证书检测,响应时间,HTTP Headers,网站监控">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <section class="hero">
+            <h1>免费在线网站检测工具</h1>
+            <p>一站式网站诊断平台，提供 HTTP 状态、DNS 解析、SSL 证书、响应时间和 HTTP Headers 检测，帮助你快速排查网站问题。</p>
+        </section>
+
+        <div class="tool-grid">
+            <a href="/tools/http-status.html" class="tool-card">
+                <div class="tool-icon blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <h3>HTTP 状态检测</h3>
+                <p>检测网站的 HTTP 状态码，了解网站是否正常在线访问，快速排查 404、500 等错误。</p>
+            </a>
+
+            <a href="/tools/dns-lookup.html" class="tool-card">
+                <div class="tool-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <h3>DNS 查询</h3>
+                <p>查询域名的 A、CNAME、MX、NS、TXT 等各种 DNS 记录，支持多类型解析查询。</p>
+            </a>
+
+            <a href="/tools/ssl-checker.html" class="tool-card">
+                <div class="tool-icon orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h3>SSL 证书检测</h3>
+                <p>检测网站 HTTPS 证书状态，查看证书颁发机构、有效期和到期时间，确保网站安全。</p>
+            </a>
+
+            <a href="/tools/response-time.html" class="tool-card">
+                <div class="tool-icon purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <h3>响应时间检测</h3>
+                <p>测量网站的加载响应时间，评估网站性能，帮助你优化用户体验。</p>
+            </a>
+
+            <a href="/tools/http-headers.html" class="tool-card">
+                <div class="tool-icon red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </div>
+                <h3>HTTP Headers 检测</h3>
+                <p>查看网站的 HTTP 响应头信息，检测安全头配置（CSP、HSTS、X-Frame-Options 等）。</p>
+            </a>
+        </div>
+
+        <div id="ad-slot"></div>
+
+        <section style="margin-top: 60px;">
+            <h2 style="font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 24px;">最新文章</h2>
+            <div class="blog-grid" id="latest-posts"></div>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('home');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        // Latest posts preview
+        const latestPosts = [
+            { url: '/blog/what-is-http-status-code.html', title: 'HTTP 状态码详解：从 200 到 503 的完整指南', category: '网络基础', date: '2026-07-10', excerpt: '了解 HTTP 状态码的含义，掌握网站排查技能...' },
+            { url: '/blog/how-to-check-ssl-certificate.html', title: '如何检测网站的 SSL 证书是否有效', category: '安全', date: '2026-07-09', excerpt: 'SSL 证书是网站安全的基础，本文教你如何检测...' },
+            { url: '/blog/dns-configuration-guide.html', title: 'DNS 配置入门教程：从 A 记录到 MX 记录', category: '教程', date: '2026-07-08', excerpt: 'DNS 是互联网的电话簿，本文带你了解各种 DNS 记录...' }
+        ];
+        document.getElementById('latest-posts').innerHTML = latestPosts.map(p => `
+            <div class="blog-card">
+                <div class="blog-card-body">
+                    <div class="blog-card-category">${p.category}</div>
+                    <h3><a href="${p.url}">${p.title}</a></h3>
+                    <p>${p.excerpt}</p>
+                    <div class="blog-card-meta">${p.date}</div>
+                </div>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>

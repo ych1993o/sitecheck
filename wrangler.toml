@@ -1,0 +1,42 @@
+# Cloudflare Worker 配置文件 - SiteCheck API
+# 文档: https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "sitecheck-api"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# 启用 nodejs_compat 以支持部分 Node.js API（如需）
+# 启用 TCP socket (cloudflare:sockets) 用于 SSL 证书检测
+compatibility_flags = ["nodejs_compat"]
+
+# 环境变量（按需修改）
+[vars]
+SITE_DOMAIN = "212128.xyz"
+CONTACT_EMAIL = "contact@212128.xyz"
+
+# 部署说明：
+# 1. 安装 Wrangler CLI: npm install -g wrangler
+# 2. 登录 Cloudflare: wrangler login
+# 3. 本地开发: wrangler dev
+# 4. 部署到生产: wrangler deploy
+#
+# 该 Worker 提供以下 API 接口：
+#   GET /api/http-status?url=xxx
+#   GET /api/ssl-check?domain=xxx
+#   GET /api/dns-lookup?domain=xxx&type=xxx
+#   GET /api/headers?url=xxx
+#
+# 可通过 Cloudflare Pages 的 Functions 或自定义路由 (routes) 绑定到主域名。
+# 若与 Pages 站点共用同一域名，可将 worker.js 放置于 /functions/api/ 目录下，
+# 或在 Cloudflare Dashboard 中配置路由规则：
+#   route = "212128.xyz/api/*"
+#   zone_name = "212128.xyz"
+
+# 示例：通过 routes 将 /api/* 绑定到该 Worker（取消注释并按需修改）
+# routes = [
+#   { pattern = "212128.xyz/api/*", zone_name = "212128.xyz" }
+# ]
+
+# 可观测性
+[observability]
+enabled = true

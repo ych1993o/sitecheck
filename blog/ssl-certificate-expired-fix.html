@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL证书过期怎么办？完整解决方案 | SiteCheck博客</title>
+    <meta name="description" content="SSL 证书过期会导致浏览器安全警告甚至业务中断。本文讲解证书过期的影响、紧急续期步骤、Let's Encrypt 自动续期方案与监控预警，避免再次过期。">
+    <meta name="keywords" content="SSL证书过期,证书续期,Let's Encrypt,acme.sh,Certbot,自动续期,证书监控">
+    <meta property="og:title" content="SSL证书过期怎么办？完整解决方案">
+    <meta property="og:description" content="讲解证书过期影响、续期步骤与自动续期方案，避免再次过期。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/ssl-certificate-expired-fix.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">安全</div>
+                <h1>SSL证书过期怎么办？完整解决方案</h1>
+                <div class="blog-post-meta">2026年6月29日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>某天早上你打开网站，浏览器弹出一个刺眼的红色警告："您的连接不是私密连接"，用户纷纷反馈无法访问——这很可能就是 SSL 证书过期了。证书过期是网站运维中最常见的"低级失误"，却可能造成高昂代价：用户信任流失、业务中断、SEO 受损。本文将完整讲解 SSL 证书过期的影响、紧急处理步骤、续期方法以及如何用自动续期一劳永逸地解决这个问题。</p>
+
+                <h2>一、SSL 证书过期的影响</h2>
+                <p>不要小看证书过期，它的连锁反应远超想象：</p>
+                <ul>
+                    <li><strong>用户访问受阻</strong>：现代浏览器对过期证书零容忍，直接拦截并显示警告，用户必须手动点"继续访问"才能进入，绝大多数用户会直接离开。</li>
+                    <li><strong>业务损失</strong>：电商、金融类网站一旦无法访问，订单和交易直接中断，损失按小时计算。</li>
+                    <li><strong>信任受损</strong>：安全警告会严重打击用户对网站的信任，即使后续恢复，负面影响也会持续。</li>
+                    <li><strong>SEO 影响</strong>：Google 倾向 HTTPS 网站，证书过期导致访问异常，爬虫抓取失败，可能影响收录和排名。</li>
+                    <li><strong>API 调用失败</strong>：依赖该域名的第三方服务和 API 集成会因证书校验失败而报错，影响范围扩大。</li>
+                </ul>
+                <p>正因为影响如此严重，证书管理才必须做到"绝不依赖人工记忆"。下面先讲紧急处理，再讲长治久安。</p>
+
+                <h2>二、紧急处理：证书过期后的快速恢复</h2>
+                <p>当发现证书已过期，首要任务是尽快恢复访问。按以下步骤操作：</p>
+                <ol>
+                    <li><strong>确认过期的域名和证书</strong>：用 <a href="/tools/ssl-checker.html">SSL 证书检测工具</a>查看具体哪个域名、哪个证书过期了，以及证书来源（Let's Encrypt 还是商业 CA）。更多检测方法见<a href="/blog/how-to-check-ssl-certificate.html">如何检测 SSL 证书</a>。</li>
+                    <li><strong>立即续期</strong>：根据证书类型选择续期方式（见下一节）。Let's Encrypt 几分钟就能搞定，商业证书可能需要几小时。</li>
+                    <li><strong>部署新证书</strong>：把新证书放到服务器，重载 Web 服务器配置。</li>
+                    <li><strong>验证恢复</strong>：用浏览器和检测工具确认证书已更新、警告消失。</li>
+                    <li><strong>通知相关方</strong>：如果故障影响了用户或合作伙伴，及时发布状态说明。</li>
+                </ol>
+                <p>如果是商业证书续期需要时间，临时方案可以先部署一张 Let's Encrypt 证书应急，等商业证书签发后再替换。</p>
+
+                <h2>三、证书续期的两种方式</h2>
+
+                <h3>方式一：Let's Encrypt 免费证书续期</h3>
+                <p>Let's Encrypt 提供免费的 DV 证书，有效期 90 天。续期本质上是重新签发一张新证书。常用工具有 acme.sh 和 Certbot。</p>
+                <p>用 acme.sh 续期：</p>
+                <pre><code># 安装 acme.sh
+curl https://get.acme.sh | sh
+
+# 签发证书（以 DNS 验证为例）
+acme.sh --issue --dns dns_cf -d example.com -d www.example.com
+
+# 安装证书到指定路径并重载 Nginx
+acme.sh --install-cert -d example.com \
+    --key-file /etc/nginx/ssl/example.key \
+    --fullchain-file /etc/nginx/ssl/example.crt \
+    --reloadcmd "systemctl reload nginx"</code></pre>
+                <p>acme.sh 安装后会自动添加一个 cron 任务，每天检查并自动续期即将过期的证书，基本无需人工干预。</p>
+                <p>用 Certbot 续期：</p>
+                <pre><code># 安装 Certbot
+apt install certbot python3-certbot-nginx
+
+# 签发并自动配置 Nginx
+certbot --nginx -d example.com -d www.example.com
+
+# 手动测试续期
+certbot renew --dry-run</code></pre>
+                <p>Certbot 同样会安装 systemd timer 自动续期。<code>renew --dry-run</code> 用于模拟续期过程，确保自动续期能正常工作。</p>
+
+                <h3>方式二：商业 CA 证书续期</h3>
+                <p>商业证书（OV/EV）有效期通常 1 年，续期流程：</p>
+                <ol>
+                    <li>登录 CA 服务商控制台，找到即将过期的证书，点击续期（重新购买）。</li>
+                    <li>生成新的 CSR（证书签名请求）：<code>openssl req -new -newkey rsa:2048 -nodes -keyout example.key -out example.csr</code></li>
+                    <li>提交 CSR 完成域名验证和企业验证（OV/EV 需要）。</li>
+                    <li>下载签发的证书文件，合并中间证书生成 fullchain。</li>
+                    <li>部署到服务器并重载 Web 服务。</li>
+                </ol>
+                <p>建议在到期前 30 天就开始续期流程，预留充足的验证和部署时间。</p>
+
+                <div id="ad-slot"></div>
+
+                <h2>四、部署新证书到 Web 服务器</h2>
+                <p>拿到新证书后，部署步骤以 Nginx 为例：</p>
+                <pre><code>server {
+    listen 443 ssl http2;
+    server_name example.com;
+
+    ssl_certificate     /etc/nginx/ssl/example.crt;  # 含中间证书的 fullchain
+    ssl_certificate_key /etc/nginx/ssl/example.key;
+
+    # 强制 TLS 1.2/1.3，禁用过时协议
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+}</code></pre>
+                <p>关键点：使用 fullchain（终端证书+中间证书）而非单独的终端证书，否则部分浏览器会报证书链不完整。配置完后用 <code>nginx -t</code> 测试语法，再 <code>systemctl reload nginx</code> 平滑重载，避免中断现有连接。</p>
+
+                <h2>五、配置自动续期，一劳永逸</h2>
+                <p>人工续期总有疏漏，自动续期才是根本之策。Let's Encrypt 的 90 天有效期就是为自动续期设计的。确保自动续期可靠运行的关键：</p>
+                <ul>
+                    <li><strong>确认 cron/timer 存在</strong>：acme.sh 安装时自动添加 cron，Certbot 自动添加 systemd timer。用 <code>systemctl list-timers</code> 或 <code>crontab -l</code> 确认。</li>
+                    <li><strong>验证续期能成功</strong>：定期执行 <code>acme.sh --list</code> 或 <code>certbot renew --dry-run</code>，确保验证方式和重载命令都正常。</li>
+                    <li><strong>检查重载命令</strong>：续期后必须重载 Web 服务才生效。确认 <code>--reloadcmd</code> 或 deploy hook 配置正确。</li>
+                    <li><strong>验证方式可用性</strong>：DNS 验证依赖 API token，HTTP 验证依赖 80 端口可访问。任一条件失效续期就会失败。</li>
+                    <li><strong>续期后留够余量</strong>：Let's Encrypt 在到期前 30 天允许续期，acme.sh 默认 60 天续期，留足容错时间。</li>
+                </ul>
+
+                <h2>六、建立证书到期监控</h2>
+                <p>即使有自动续期，监控也必不可少——自动续期本身也可能失效。建立多层监控：</p>
+                <ul>
+                    <li><strong>到期天数告警</strong>：用脚本或监控平台定期检查证书剩余天数，30 天、7 天、1 天分别告警。Prometheus 的 blackbox_exporter 就支持证书到期监控。</li>
+                    <li><strong>自动续期失败告警</strong>：监控 cron/timer 的执行结果，续期失败立即通知。把续期日志接入日志系统。</li>
+                    <li><strong>证书变更告警</strong>：监控证书指纹变化，及时发现异常更换。</li>
+                    <li><strong>多节点检测</strong>：从不同地域检测证书状态，避免单点监控盲区。</li>
+                </ul>
+                <p>一个简单的到期检查脚本示例：</p>
+                <pre><code>#!/bin/bash
+DOMAIN="example.com"
+DAYS=30
+EXPIRY=$(echo | openssl s_client -connect $DOMAIN:443 -servername $DOMAIN 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
+NOW_EPOCH=$(date +%s)
+DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+
+if [ $DAYS_LEFT -lt $DAYS ]; then
+    echo "警告: $DOMAIN 证书将在 ${DAYS_LEFT} 天后过期!"
+    # 此处接入告警通知
+fi</code></pre>
+                <p>把脚本加入 cron 每天执行，就能在到期前收到提醒。生产环境建议用专业监控平台替代手写脚本。</p>
+
+                <h2>七、常见续期问题与解决</h2>
+                <ul>
+                    <li><strong>续期报端口 80 被占用</strong>：HTTP 验证需要 80 端口。改用 DNS 验证，或临时停掉占用 80 的服务。</li>
+                    <li><strong>DNS 验证 API 失效</strong>：DNS 服务商 API token 过期或权限不足。更新 token 并测试。</li>
+                    <li><strong>续期成功但浏览器仍报错</strong>：可能是重载命令没生效，或 CDN 还缓存着旧证书。清 CDN 缓存，确认 Web 服务已重载。</li>
+                    <li><strong>商业证书续期慢</strong>：OV/EV 需要企业验证。提前 30 天启动，或先用 Let's Encrypt 应急。</li>
+                    <li><strong>通配符证书续期</strong>：必须用 DNS 验证，acme.sh 和 Certbot 都支持，需配置 DNS API。</li>
+                </ul>
+
+                <h2>八、证书管理最佳实践</h2>
+                <p>把证书过期问题上升到证书管理体系，做到防患于未然：</p>
+                <ol>
+                    <li><strong>优先用 Let's Encrypt + 自动续期</strong>：免费、自动化、短有效期降低风险，适合绝大多数站点。</li>
+                    <li><strong>建立证书清单</strong>：记录所有证书的域名、颁发机构、到期时间、部署位置，一目了然。</li>
+                    <li><strong>统一续期工具</strong>：全公司统一用 acme.sh 或 Certbot，便于维护和排查。</li>
+                    <li><strong>多层监控告警</strong>：到期天数 + 续期结果 + 证书变更，三重保障。</li>
+                    <li><strong>定期演练</strong>：每季度演练一次证书续期流程，确保应急能力在线。</li>
+                </ol>
+
+                <h2>九、总结</h2>
+                <p>SSL 证书过期看似是个小问题，却可能引发大故障。本文从过期影响、紧急处理、续期方法、自动续期、监控告警到最佳实践，给出了完整的解决方案。核心要点：过期的紧急情况先用 Let's Encrypt 快速续期恢复；长期则务必配置自动续期，让证书管理从人工记忆变成自动化流程；同时建立多层监控，确保自动续期失效时也能及时发现。</p>
+                <p>证书管理是网站运维的基本功，也是体现专业度的细节。建议你今天就检查一下所有证书的到期时间，确认自动续期正常运行，配置好到期告警。把这些做好，你就能彻底告别"证书过期"这个低级却高频的故障，把精力放在更有价值的事情上。安全无小事，从管好每一张证书开始。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

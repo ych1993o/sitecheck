@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS 记录查询工具 - SiteCheck</title>
+    <meta name="description" content="免费的在线 DNS 查询工具，支持查询域名的 A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 等多种 DNS 记录，基于 Google Public DNS，快速获取域名解析信息。">
+    <meta name="keywords" content="DNS查询,DNS记录,A记录,MX记录,NS记录,TXT记录,CNAME,域名解析,在线DNS工具">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="tool-page">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回首页
+            </a>
+            <h1>DNS 记录查询</h1>
+            <p class="subtitle">输入域名并选择记录类型，查询其 DNS 解析记录（数据来源：Google Public DNS）。</p>
+
+            <div class="input-group">
+                <select id="record-type" style="padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;background:#fff;cursor:pointer;">
+                    <option value="A">A</option>
+                    <option value="AAAA">AAAA</option>
+                    <option value="CNAME">CNAME</option>
+                    <option value="MX">MX</option>
+                    <option value="NS">NS</option>
+                    <option value="TXT">TXT</option>
+                    <option value="SOA">SOA</option>
+                    <option value="CAA">CAA</option>
+                </select>
+                <input type="text" id="domain-input" placeholder="example.com" onkeypress="if(event.key==='Enter') lookup()">
+                <button class="btn btn-primary" id="lookup-btn" onclick="lookup()">查询</button>
+            </div>
+
+            <div id="ad-slot"></div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('tools');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        // DNS 状态码含义
+        const DNS_STATUS = {
+            0: 'NOERROR（正常）',
+            1: 'FORMERR（格式错误）',
+            2: 'SERVFAIL（服务器失败）',
+            3: 'NXDOMAIN（域名不存在）',
+            4: 'NOTIMP（未实现）',
+            5: 'REFUSED（拒绝查询）'
+        };
+
+        // 记录类型编号 -> 名称
+        const TYPE_MAP = {
+            1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 15: 'MX',
+            16: 'TXT', 28: 'AAAA', 257: 'CAA', 33: 'SRV', 99: 'SPF'
+        };
+
+        // 转义 HTML，防止记录数据中包含特殊字符
+        function esc(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        async function lookup() {
+            const inputEl = document.getElementById('domain-input');
+            const typeEl = document.getElementById('record-type');
+            const btn = document.getElementById('lookup-btn');
+            const domain = cleanDomain(inputEl.value);
+            const type = typeEl.value;
+
+            if (!domain) {
+                showError('results', '请输入要查询的域名。');
+                return;
+            }
+
+            btn.disabled = true;
+            showLoading('results', '正在查询 ' + esc(domain) + ' 的 ' + type + ' 记录...');
+
+            const apiUrl = 'https://dns.google/resolve?name=' + encodeURIComponent(domain) + '&type=' + type;
+
+            try {
+                const res = await fetch(apiUrl);
+                if (!res.ok) {
+                    throw new Error('DNS 服务器返回错误（HTTP ' + res.status + '）');
+                }
+                const data = await res.json();
+                renderResult(domain, type, data);
+            } catch (err) {
+                showError('results', '查询失败：' + err.message + '。请检查网络连接或域名是否正确。');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResult(domain, type, data) {
+            const status = data.Status;
+            const statusText = DNS_STATUS[status] || ('状态码 ' + status);
+            const answers = data.Answer || [];
+
+            let html = `
+                <div class="result-card">
+                    <table class="result-table">
+                        <tr><th style="width:140px;">查询域名</th><td>${esc(domain)}</td></tr>
+                        <tr><th>记录类型</th><td>${type}</td></tr>
+                        <tr><th>查询状态</th><td><span class="status-badge ${status === 0 ? 'success' : 'warning'}">${esc(statusText)}</span></td></tr>
+                    </table>
+                </div>`;
+
+            if (answers.length === 0) {
+                html += `
+                <div class="result-card" style="text-align:center;color:var(--gray-500);">
+                    未找到该域名的 <strong>${type}</strong> 记录。
+                </div>`;
+            } else {
+                html += `
+                <div class="result-card">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>类型</th>
+                                    <th>TTL（秒）</th>
+                                    <th>数据</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${answers.map(a => `
+                                    <tr>
+                                        <td>${esc(a.name)}</td>
+                                        <td><span class="status-badge info">${esc(TYPE_MAP[a.type] || a.type)}</span></td>
+                                        <td>${a.TTL}</td>
+                                        <td>${esc(a.data)}</td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            html += `
+                <div class="result-card" style="font-size:13px;color:var(--gray-500);">
+                    说明：TTL 为记录的缓存时间（单位：秒）。MX 记录数据格式为“优先级 邮件服务器”，TXT 记录包含引号文本，SOA 记录包含主域名服务器与管理员信息。
+                </div>`;
+
+            document.getElementById('results').innerHTML = html;
+        }
+    </script>
+</body>
+</html>

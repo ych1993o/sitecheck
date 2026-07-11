@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP 状态码检测工具 - SiteCheck</title>
+    <meta name="description" content="免费的在线 HTTP 状态码检测工具，输入网址即可检测网站返回的 HTTP 状态码、响应时间、最终 URL 和重定向次数，快速排查 404、500 等错误。">
+    <meta name="keywords" content="HTTP状态码,状态码检测,网站状态,响应时间,重定向,404,500,在线检测工具">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="tool-page">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回首页
+            </a>
+            <h1>HTTP 状态码检测</h1>
+            <p class="subtitle">输入网址，检测其 HTTP 状态码、响应时间、最终 URL 和重定向次数。</p>
+
+            <div class="input-group">
+                <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') checkStatus()">
+                <button class="btn btn-primary" id="check-btn" onclick="checkStatus()">开始检测</button>
+            </div>
+
+            <div id="ad-slot"></div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('tools');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        // 常见 HTTP 状态码描述
+        const STATUS_TEXT = {
+            200: 'OK', 201: 'Created', 204: 'No Content',
+            301: 'Moved Permanently', 302: 'Found', 304: 'Not Modified', 307: 'Temporary Redirect', 308: 'Permanent Redirect',
+            400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found', 405: 'Method Not Allowed', 408: 'Request Timeout', 429: 'Too Many Requests',
+            500: 'Internal Server Error', 501: 'Not Implemented', 502: 'Bad Gateway', 503: 'Service Unavailable', 504: 'Gateway Timeout'
+        };
+
+        function getStatusText(code) {
+            return STATUS_TEXT[code] || '';
+        }
+
+        // 手动跟踪重定向链（仅对支持 CORS 的站点可读取 Location，跨域受限时回退代理结果）
+        async function followRedirects(url, max) {
+            let current = url;
+            let count = 0;
+            let status = 0;
+            for (let i = 0; i < max; i++) {
+                const res = await fetch(current, { method: 'GET', redirect: 'manual' });
+                status = res.status;
+                if (res.type === 'opaqueredirect' || (status >= 300 && status < 400)) {
+                    const loc = res.headers.get('Location');
+                    if (loc) {
+                        current = new URL(loc, current).href;
+                        count++;
+                    } else {
+                        count++;
+                        return { count, finalUrl: null, status };
+                    }
+                } else {
+                    return { count, finalUrl: current, status };
+                }
+            }
+            return { count, finalUrl: current, status };
+        }
+
+        async function checkStatus() {
+            const inputEl = document.getElementById('url-input');
+            const btn = document.getElementById('check-btn');
+            let input = inputEl.value.trim();
+
+            if (!input) {
+                showError('results', '请输入要检测的网址。');
+                return;
+            }
+
+            // 补全协议
+            if (!/^https?:\/\//i.test(input)) {
+                input = 'https://' + input;
+            }
+
+            btn.disabled = true;
+            showLoading('results', '正在检测 HTTP 状态，请稍候...');
+
+            const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent(input);
+
+            try {
+                // 通过 CORS 代理获取状态码与响应时间（稳定可靠）
+                const start = performance.now();
+                const res = await fetch(proxyUrl, { method: 'GET', redirect: 'follow' });
+                const time = Math.round(performance.now() - start);
+                const status = res.status || 0;
+
+                // 尝试手动跟踪重定向链以获取最终 URL 与重定向次数（CORS 受限时回退默认值）
+                let finalUrl = input;
+                let redirectCount = 0;
+                try {
+                    const chain = await followRedirects(input, 10);
+                    if (chain.finalUrl) finalUrl = chain.finalUrl;
+                    redirectCount = chain.count;
+                } catch (e) {
+                    // 跨域无法读取 Location，保持默认值
+                }
+
+                renderResult(status, time, input, finalUrl, redirectCount);
+            } catch (err) {
+                showError('results', '检测失败：' + err.message + '。请确认网址可访问后重试。');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResult(status, time, targetUrl, finalUrl, redirectCount) {
+            const cls = getStatusCodeClass(status);
+            const text = getStatusText(status);
+            const finalDisplay = (finalUrl && finalUrl !== targetUrl) ? finalUrl : targetUrl;
+
+            document.getElementById('results').innerHTML = `
+                <div class="result-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+                        <div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">HTTP 状态码</div>
+                            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                                <span class="status-badge ${cls}" style="font-size:18px;font-weight:700;padding:6px 16px;">${status}</span>
+                                ${text ? `<span style="font-size:16px;color:var(--gray-600);">${text}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">响应时间</div>
+                            <div style="font-size:26px;font-weight:700;color:var(--primary);">${time} ms</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <table class="result-table">
+                        <tr><th style="width:140px;">目标 URL</th><td>${targetUrl}</td></tr>
+                        <tr><th>最终 URL</th><td>${finalDisplay}</td></tr>
+                        <tr><th>重定向次数</th><td>${redirectCount}</td></tr>
+                    </table>
+                </div>
+                <div class="result-card" style="font-size:13px;color:var(--gray-500);">
+                    说明：状态码 2xx 表示成功，3xx 表示重定向，4xx 表示客户端错误，5xx 表示服务器错误。由于浏览器跨域限制，部分站点的重定向链可能无法完整追踪。
+                </div>`;
+        }
+    </script>
+</body>
+</html>

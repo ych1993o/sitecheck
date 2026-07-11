@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL 证书检测工具 - SiteCheck</title>
+    <meta name="description" content="免费的在线 SSL 证书检测工具，输入域名即可查看 HTTPS 证书的颁发机构、生效时间、到期时间、剩余有效期和证书状态，帮助您及时发现即将过期的证书。">
+    <meta name="keywords" content="SSL证书检测,HTTPS证书,证书到期,证书查询,crt.sh,证书颁发机构,SSL检查,在线工具">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="tool-page">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回首页
+            </a>
+            <h1>SSL 证书检测</h1>
+            <p class="subtitle">输入域名，检测其 SSL/HTTPS 证书的颁发机构、有效期与剩余天数（数据来源：crt.sh 证书透明度日志）。</p>
+
+            <div class="input-group">
+                <input type="text" id="domain-input" placeholder="example.com" onkeypress="if(event.key==='Enter') checkSSL()">
+                <button class="btn btn-primary" id="check-btn" onclick="checkSSL()">检测证书</button>
+            </div>
+
+            <div id="ad-slot"></div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('tools');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        function esc(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 从 issuer_name 中提取 CN（通用名称）作为可读的颁发机构
+        function extractIssuerCN(issuer) {
+            if (!issuer) return '未知';
+            const m = issuer.match(/CN=([^,]+)/);
+            return m ? m[1] : issuer;
+        }
+
+        async function checkSSL() {
+            const inputEl = document.getElementById('domain-input');
+            const btn = document.getElementById('check-btn');
+            const domain = cleanDomain(inputEl.value);
+
+            if (!domain) {
+                showError('results', '请输入要检测的域名。');
+                return;
+            }
+
+            btn.disabled = true;
+            showLoading('results', '正在查询 ' + esc(domain) + ' 的证书信息，可能需要数秒...');
+
+            const crtUrl = 'https://crt.sh/?q=' + encodeURIComponent(domain) + '&output=json';
+            const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent(crtUrl);
+
+            // 设置超时控制（crt.sh 响应较慢）
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+            try {
+                const res = await fetch(proxyUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!res.ok) {
+                    throw new Error('证书查询服务返回错误（HTTP ' + res.status + '）');
+                }
+                const text = await res.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error('无法解析证书数据，请稍后重试。');
+                }
+                if (!Array.isArray(data) || data.length === 0) {
+                    showError('results', '未找到 ' + esc(domain) + ' 的证书记录。该域名可能未启用 HTTPS 或无公开的证书记录。');
+                    return;
+                }
+                renderResult(domain, data);
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    showError('results', '查询超时，crt.sh 响应时间过长，请稍后重试。');
+                } else {
+                    showError('results', '检测失败：' + err.message);
+                }
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResult(domain, data) {
+            // 选取最近签发的证书（not_before 最新的）
+            const sorted = data
+                .filter(c => c.not_before && c.not_after)
+                .sort((a, b) => new Date(b.not_before) - new Date(a.not_before));
+
+            const latest = sorted[0];
+
+            const now = new Date();
+            const validFrom = new Date(latest.not_before);
+            const validTo = new Date(latest.not_after);
+            const daysRemaining = Math.ceil((validTo - now) / (1000 * 60 * 60 * 24));
+
+            let statusLabel, statusClass;
+            if (now < validFrom) {
+                statusLabel = '尚未生效';
+                statusClass = 'warning';
+            } else if (daysRemaining < 0) {
+                statusLabel = '已过期';
+                statusClass = 'danger';
+            } else if (daysRemaining <= 30) {
+                statusLabel = '即将过期';
+                statusClass = 'warning';
+            } else {
+                statusLabel = '有效';
+                statusClass = 'success';
+            }
+
+            const issuer = extractIssuerCN(latest.issuer_name);
+            const commonName = latest.common_name || domain;
+
+            // 统计证书总数
+            const totalCount = data.length;
+
+            let html = `
+                <div class="result-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:8px;">
+                        <div style="font-size:18px;font-weight:600;color:var(--gray-900);">${esc(commonName)}</div>
+                        <span class="status-badge ${statusClass}" style="font-size:14px;padding:4px 14px;">${statusLabel}</span>
+                    </div>
+                    <table class="result-table">
+                        <tr><th style="width:140px;">颁发机构</th><td>${esc(issuer)}</td></tr>
+                        <tr><th>生效时间</th><td>${formatDate(validFrom)} ${validFrom.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
+                        <tr><th>到期时间</th><td>${formatDate(validTo)} ${validTo.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
+                        <tr><th>剩余天数</th><td>${daysRemaining < 0 ? '已过期 ' + Math.abs(daysRemaining) + ' 天' : daysRemaining + ' 天'}</td></tr>
+                    </table>
+                </div>
+
+                <div class="result-card" style="font-size:13px;color:var(--gray-500);">
+                    证书透明度日志中共找到 <strong style="color:var(--gray-700);">${totalCount}</strong> 条相关证书记录。以上展示的是最近签发的证书信息。剩余天数小于 30 天建议尽快续期。
+                </div>`;
+
+            // 额外展示最近 5 条证书记录
+            const recent = sorted.slice(0, 5);
+            if (recent.length > 1) {
+                html += `
+                <div class="result-card">
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:12px;">最近签发的证书</div>
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th>颁发机构</th>
+                                    <th>生效时间</th>
+                                    <th>到期时间</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recent.map(c => {
+                                    const vf = new Date(c.not_before);
+                                    const vt = new Date(c.not_after);
+                                    const dr = Math.ceil((vt - now) / (1000 * 60 * 60 * 24));
+                                    let lbl, cls;
+                                    if (now < vf) { lbl = '未生效'; cls = 'warning'; }
+                                    else if (dr < 0) { lbl = '已过期'; cls = 'danger'; }
+                                    else if (dr <= 30) { lbl = '即将过期'; cls = 'warning'; }
+                                    else { lbl = '有效'; cls = 'success'; }
+                                    return `
+                                    <tr>
+                                        <td>${esc(extractIssuerCN(c.issuer_name))}</td>
+                                        <td>${formatDate(vf)}</td>
+                                        <td>${formatDate(vt)}</td>
+                                        <td><span class="status-badge ${cls}">${lbl}</span></td>
+                                    </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            document.getElementById('results').innerHTML = html;
+        }
+    </script>
+</body>
+</html>

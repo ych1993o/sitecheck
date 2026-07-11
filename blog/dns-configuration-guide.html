@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS配置入门教程：从A记录到MX记录 | SiteCheck博客</title>
+    <meta name="description" content="DNS 配置入门教程，从零讲解 A、AAAA、CNAME、MX、TXT、NS 等记录的格式与配置方法，带你完成域名解析的完整流程，适合新手系统学习。">
+    <meta name="keywords" content="DNS配置,DNS教程,A记录,CNAME记录,MX记录,域名解析,DNS记录">
+    <meta property="og:title" content="DNS配置入门教程：从A记录到MX记录">
+    <meta property="og:description" content="从零讲解各类 DNS 记录的格式与配置方法，带你完成域名解析的完整流程。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/dns-configuration-guide.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">教程</div>
+                <h1>DNS配置入门教程：从A记录到MX记录</h1>
+                <div class="blog-post-meta">2026年7月8日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>DNS（Domain Name System，域名系统）被称为"互联网的电话簿"，它负责把人类易记的域名翻译成机器识别的 IP 地址。无论你搭建个人博客、企业官网还是邮件服务，都绕不开 DNS 配置。然而很多新手面对一堆记录类型（A、CNAME、MX、TXT）时往往一头雾水。本教程将从零开始，带你理解 DNS 的基本概念，掌握各类记录的配置方法，并完成一个完整的域名解析流程。</p>
+
+                <h2>一、DNS 解析的基本原理</h2>
+                <p>在动手配置之前，先理解 DNS 是怎么工作的。当用户在浏览器输入 <code>www.example.com</code> 时，解析过程大致如下：</p>
+                <ol>
+                    <li>浏览器先查本地 DNS 缓存，命中则直接使用。</li>
+                    <li>未命中则向操作系统的递归解析器（通常由 ISP 或公共 DNS 如 8.8.8.8 提供）发起查询。</li>
+                    <li>递归解析器依次查询根域名服务器、顶级域名服务器（.com）、权威域名服务器，最终拿到域名对应的记录。</li>
+                    <li>结果返回浏览器，同时被各级缓存，按 TTL 时间失效。</li>
+                </ol>
+                <p>我们做 DNS 配置，本质上就是在"权威域名服务器"上添加记录，告诉全世界你的域名该解析到哪里。理解这一点，你就明白为什么修改 DNS 后需要等待一段时间才全球生效——因为各级缓存的存在。关于这部分原理，我们会在<a href="/blog/dns-propagation-explained.html">DNS 传播原理</a>一文中深入讲解。</p>
+
+                <h2>二、TTL：缓存的生命周期</h2>
+                <p>每条 DNS 记录都有一个 TTL（Time To Live，生存时间）属性，单位是秒，表示这条记录在解析器缓存中保留多久。TTL 是 DNS 配置中最容易被忽视却又很关键的参数：</p>
+                <ul>
+                    <li><strong>TTL 越大</strong>（如 3600 秒即 1 小时）：缓存命中率高，解析快，但修改后生效慢。</li>
+                    <li><strong>TTL 越小</strong>（如 60 秒）：修改后能快速生效，适合频繁切换 IP 的场景，但解析压力略大。</li>
+                </ul>
+                <p>实用建议：稳定运行时用 3600 秒；准备迁移服务器时，提前 24 小时把 TTL 调到 60 秒，迁移完成后再调回。这样既保证稳定期性能，又能让迁移快速生效。</p>
+
+                <h2>三、A 记录：把域名指向 IPv4 地址</h2>
+                <p>A 记录是最基础也最常用的记录类型，作用是把域名指向一个 IPv4 地址。配置一条 A 记录需要三个要素：主机名、记录类型、IP 地址。</p>
+                <p>常见的主机名写法：</p>
+                <ul>
+                    <li><code>@</code>：代表根域名本身，即 <code>example.com</code>。</li>
+                    <li><code>www</code>：代表 <code>www.example.com</code>。</li>
+                    <li><code>blog</code>：代表 <code>blog.example.com</code>。</li>
+                    <li><code>*</code>：通配符，匹配所有未单独配置的子域名。</li>
+                </ul>
+                <p>例如，要把 <code>example.com</code> 指向服务器 IP <code>192.0.2.1</code>，就添加一条 A 记录：主机名 <code>@</code>，值为 <code>192.0.2.1</code>。要让 <code>www.example.com</code> 也指向同一台服务器，再加一条主机名为 <code>www</code> 的 A 记录即可。</p>
+                <blockquote>提示：一个主机名可以配置多条 A 记录指向不同 IP，实现简单的 DNS 负载均衡，解析器会轮询返回这些 IP。</blockquote>
+
+                <h2>四、AAAA 记录：指向 IPv6 地址</h2>
+                <p>AAAA 记录（四个 A，因为 IPv6 地址是 128 位，是 IPv4 的四倍）的作用和 A 记录一样，只是指向的是 IPv6 地址。随着 IPv6 普及，建议同时配置 A 和 AAAA 记录以支持双栈。例如主机名 <code>@</code>，AAAA 值 <code>2001:db8::1</code>。</p>
+
+                <h2>五、CNAME 记录：把域名别名指向另一个域名</h2>
+                <p>CNAME（Canonical Name）记录把一个域名别名指向另一个域名。常用于把子域名指向第三方服务，例如：</p>
+                <ul>
+                    <li>把 <code>blog.example.com</code> 指向 GitHub Pages 的 <code>username.github.io</code>。</li>
+                    <li>把 <code>cdn.example.com</code> 指向 CDN 服务商提供的域名。</li>
+                    <li>把 <code>mail.example.com</code> 指向企业邮箱服务商的域名。</li>
+                </ul>
+                <p>使用 CNAME 有几个重要规则：根域名（<code>@</code>）通常不能配置 CNAME（RFC 规范限制，因为根域名必须有 SOA 和 NS 记录），只能用 A 记录；CNAME 指向的目标域名必须能正常解析；一个主机名要么配置 CNAME，要么配置 A 记录，不能同时存在。</p>
+
+                <h2>六、MX 记录：配置邮件服务</h2>
+                <p>MX（Mail Exchange）记录用于指定负责接收该域名邮件的邮件服务器。没有 MX 记录，别人就发不了邮件到 <code>@example.com</code> 的邮箱。MX 记录特殊之处在于它有两个值：优先级和邮件服务器域名。</p>
+                <p>例如配置企业邮箱：</p>
+                <pre><code>主机名: @
+类型: MX
+优先级: 10
+值: mx1.mailprovider.com
+
+主机名: @
+类型: MX
+优先级: 20
+值: mx2.mailprovider.com</code></pre>
+                <p>优先级数字越小越优先。发件方会先尝试优先级 10 的服务器，失败后再尝试 20 的，实现邮件服务的高可用。注意 MX 记录的值必须是域名而非 IP，且该域名应有 A 记录。</p>
+
+                <div id="ad-slot"></div>
+
+                <h2>七、TXT 记录：域名验证与配置</h2>
+                <p>TXT 记录用来存储任意文本信息，如今最广泛的用途是域名所有权验证和安全策略配置：</p>
+                <ul>
+                    <li><strong>SPF</strong>：声明哪些邮件服务器有权以该域名发信，防止邮件被伪造。</li>
+                    <li><strong>DKIM</strong>：存放公钥，用于邮件签名验证。</li>
+                    <li><strong>DMARC</strong>：定义邮件验证失败后的处理策略。</li>
+                    <li><strong>域名验证</strong>：Google Search Console、各种云服务在添加域名时要求配置一条特定 TXT 记录来证明你拥有该域名。</li>
+                </ul>
+                <p>SPF 记录示例：主机名 <code>@</code>，TXT 值 <code>v=spf1 include:_spf.mailprovider.com ~all</code>，表示允许 mailprovider 的服务器发信，其他来源标记为软失败。</p>
+
+                <h2>八、NS 记录：指定权威服务器</h2>
+                <p>NS（Name Server）记录指定由哪些域名服务器来解析该域名。当你注册域名后，需要把注册商处的 NS 记录指向你的 DNS 服务商（如 Cloudflare、阿里云 DNS）。修改 NS 记录后，全球生效通常需要 24-48 小时，因为这是最顶层的委托。NS 记录的值必须是域名形式，如 <code>ns1.cloudflare.com</code>。</p>
+
+                <h2>九、实战：完整配置一个域名</h2>
+                <p>假设我们有一个域名 <code>example.com</code>，要搭建一个网站和一个邮箱服务。完整配置如下：</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>主机名</th>
+                            <th>类型</th>
+                            <th>值</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>@</td><td>A</td><td>192.0.2.1</td><td>主站指向服务器</td></tr>
+                        <tr><td>www</td><td>A</td><td>192.0.2.1</td><td>www 子域名</td></tr>
+                        <tr><td>@</td><td>AAAA</td><td>2001:db8::1</td><td>IPv6 支持</td></tr>
+                        <tr><td>blog</td><td>CNAME</td><td>username.github.io</td><td>博客托管在 GitHub</td></tr>
+                        <tr><td>@</td><td>MX</td><td>10 mx1.mail.com</td><td>主邮件服务器</td></tr>
+                        <tr><td>@</td><td>TXT</td><td>v=spf1 include:_spf.mail.com ~all</td><td>SPF 防伪造</td></tr>
+                    </tbody>
+                </table>
+                <p>配置完成后，用 <a href="/tools/dns-lookup.html">DNS 查询工具</a>逐项验证每条记录是否生效。如果某条记录查不到，检查主机名拼写、记录类型是否选对、以及是否还在传播期内。</p>
+
+                <h2>十、配置后的验证与排查</h2>
+                <p>配置完成后，验证是必不可少的环节。推荐几种验证方式：</p>
+                <ul>
+                    <li><strong>dig 命令</strong>：<code>dig example.com A</code>、<code>dig example.com MX</code>，分别查不同类型记录。</li>
+                    <li><strong>nslookup</strong>：跨平台的工具，<code>nslookup -type=mx example.com</code>。</li>
+                    <li><strong>在线工具</strong>：SiteCheck 的 DNS 查询工具，可视化展示所有记录，适合不熟悉命令行的用户。</li>
+                </ul>
+                <p>常见问题排查：记录查不到可能是 TTL 缓存或 NS 未生效；解析到错误 IP 检查是否有冲突记录；邮件发不出重点查 MX 和 SPF 配置；子域名不生效确认是否在正确的区域文件中添加。</p>
+
+                <h2>十一、总结</h2>
+                <p>DNS 配置看似复杂，但只要理解了每种记录类型的作用，就能游刃有余。本文从 DNS 原理出发，依次讲解了 A、AAAA、CNAME、MX、TXT、NS 等核心记录的格式与配置方法，并通过一个实战案例把所有记录串联起来。记住几个要点：根域名用 A 不用 CNAME，MX 要配优先级，TXT 用于验证和安全策略，TTL 决定生效速度，NS 修改后生效最慢。</p>
+                <p>DNS 是网站的基石，配置正确才能保证访问、邮件和各项服务正常运转。建议你边读边动手，在自己的域名上把每类记录都配置一遍，并用查询工具验证。更多 DNS 深度知识，欢迎继续阅读我们的<a href="/blog/dns-records-types-explained.html">DNS 记录类型详解</a>和<a href="/blog/dns-propagation-explained.html">DNS 传播原理</a>两篇文章，构建完整的 DNS 知识体系。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

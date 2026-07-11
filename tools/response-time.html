@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站响应时间测试工具 - SiteCheck</title>
+    <meta name="description" content="免费的在线网站响应时间测试工具，输入 URL 即可连续测试 3 次响应时间，并计算平均、最小、最大值，通过柱状图直观展示网站性能表现。">
+    <meta name="keywords" content="响应时间测试,网站性能,加载速度,延迟测试,响应时间监控,网站测速,在线工具">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="tool-page">
+            <a href="/" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                返回首页
+            </a>
+            <h1>网站响应时间测试</h1>
+            <p class="subtitle">输入网址，连续测试 3 次响应时间，查看平均值、最小值、最大值及柱状图对比。</p>
+
+            <div class="input-group">
+                <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') testResponse()">
+                <button class="btn btn-primary" id="check-btn" onclick="testResponse()">开始测试</button>
+            </div>
+
+            <div id="ad-slot"></div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('tools');
+        document.getElementById('ad-slot').innerHTML = renderAd();
+
+        const TEST_COUNT = 3;
+
+        function esc(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 根据响应时间返回颜色等级
+        function getTimeColor(ms) {
+            if (ms < 500) return 'var(--success)';
+            if (ms < 1500) return 'var(--warning)';
+            return 'var(--danger)';
+        }
+
+        // 单次测试
+        async function testOnce(url) {
+            const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent(url);
+            const start = performance.now();
+            const res = await fetch(proxyUrl, { method: 'GET', redirect: 'follow', cache: 'no-store' });
+            // 读取部分响应体以确保完整计时
+            await res.text();
+            return Math.round(performance.now() - start);
+        }
+
+        async function testResponse() {
+            const inputEl = document.getElementById('url-input');
+            const btn = document.getElementById('check-btn');
+            let input = inputEl.value.trim();
+
+            if (!input) {
+                showError('results', '请输入要测试的网址。');
+                return;
+            }
+            if (!/^https?:\/\//i.test(input)) {
+                input = 'https://' + input;
+            }
+
+            btn.disabled = true;
+            showLoading('results', '正在进行响应时间测试（共 ' + TEST_COUNT + ' 次）...');
+
+            const times = [];
+            try {
+                for (let i = 0; i < TEST_COUNT; i++) {
+                    showLoading('results', '正在测试第 ' + (i + 1) + '/' + TEST_COUNT + ' 次...');
+                    const t = await testOnce(input);
+                    times.push(t);
+                }
+                renderResult(input, times);
+            } catch (err) {
+                showError('results', '测试失败：' + err.message + '。请确认网址可访问后重试。');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResult(url, times) {
+            const sum = times.reduce((a, b) => a + b, 0);
+            const avg = Math.round(sum / times.length);
+            const min = Math.min(...times);
+            const max = Math.max(...times);
+            const chartMax = Math.max(max, 1); // 防止除零
+
+            // 生成柱状图
+            const bars = times.map((t, i) => {
+                const heightPct = Math.max((t / chartMax) * 100, 4); // 最小高度 4%
+                const color = getTimeColor(t);
+                return `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:200px;">
+                        <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:6px;">${t} ms</div>
+                        <div style="width:60%;max-width:80px;height:${heightPct}%;background:${color};border-radius:6px 6px 0 0;transition:height 0.5s ease;"></div>
+                        <div style="font-size:12px;color:var(--gray-500);margin-top:8px;">第 ${i + 1} 次</div>
+                    </div>`;
+            }).join('');
+
+            document.getElementById('results').innerHTML = `
+                <div class="result-card">
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;">
+                        <div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">平均响应时间</div>
+                            <div style="font-size:26px;font-weight:700;color:${getTimeColor(avg)};">${avg} ms</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">最快</div>
+                            <div style="font-size:26px;font-weight:700;color:var(--success);">${min} ms</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">最慢</div>
+                            <div style="font-size:26px;font-weight:700;color:var(--danger);">${max} ms</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:20px;">响应时间对比图</div>
+                    <div style="display:flex;align-items:flex-end;justify-content:space-around;gap:12px;">
+                        ${bars}
+                    </div>
+                </div>
+                <div class="result-card">
+                    <table class="result-table">
+                        <tr><th style="width:140px;">测试 URL</th><td>${esc(url)}</td></tr>
+                        <tr><th>测试次数</th><td>${TEST_COUNT}</td></tr>
+                        <tr><th>各次耗时</th><td>${times.map((t, i) => '第' + (i + 1) + '次 ' + t + 'ms').join('，')}</td></tr>
+                        <tr><th>波动范围</th><td>${max - min} ms</td></tr>
+                    </table>
+                </div>
+                <div class="result-card" style="font-size:13px;color:var(--gray-500);">
+                    说明：响应时间受网络环境与服务器负载影响。绿色（&lt;500ms）性能优秀，黄色（500-1500ms）一般，红色（&gt;1500ms）较慢。由于通过 CORS 代理请求，实际耗时包含代理转发开销，仅供参考。
+                </div>`;
+        }
+    </script>
+</body>
+</html>

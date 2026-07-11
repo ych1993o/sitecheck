@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站性能优化指南：提升加载速度的10个方法 | SiteCheck博客</title>
+    <meta name="description" content="总结 10 个经过验证的网站性能优化方法，涵盖资源压缩、缓存策略、图片优化、CDN、懒加载、HTTP/2 等，全面提升网站加载速度与用户体验。">
+    <meta name="keywords" content="网站性能优化,加载速度,网页优化,CDN,懒加载,HTTP/2,图片优化,缓存策略">
+    <meta property="og:title" content="网站性能优化指南：提升加载速度的10个方法">
+    <meta property="og:description" content="10 个经过验证的网站性能优化方法，全面提升网站加载速度与用户体验。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/website-performance-optimization.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">性能优化</div>
+                <h1>网站性能优化指南：提升加载速度的10个方法</h1>
+                <div class="blog-post-meta">2026年7月6日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>网站的加载速度直接影响用户体验、转化率和搜索引擎排名。研究表明，页面加载时间每增加 1 秒，转化率可能下降 7%；而 Google 已将页面体验（Core Web Vitals）纳入排名因素。性能优化不是一次性工作，而是需要持续投入的系统工程。本文总结 10 个经过验证的网站性能优化方法，从资源处理到架构改进，帮助你全面提升网站加载速度。</p>
+
+                <h2>一、压缩与精简资源文件</h2>
+                <p>网页加载的资源（HTML、CSS、JavaScript）中包含大量空格、注释和换行，这些对浏览器没有意义却占用带宽。压缩（Minify）能去除这些冗余字符，通常可减小 20%-60% 的体积。</p>
+                <ul>
+                    <li><strong>JS</strong>：用 Terser、UglifyJS 或 Webpack/Vite 的生产模式压缩。</li>
+                    <li><strong>CSS</strong>：用 cssnano、clean-css 压缩。</li>
+                    <li><strong>HTML</strong>：用 html-minifier 去除空白和注释。</li>
+                </ul>
+                <p>此外务必开启 Gzip 或 Brotli 传输压缩。Brotli 比 Gzip 压缩率更高（通常多 15%-25%），现代浏览器普遍支持。在 Nginx 中启用 Brotli 只需几行配置，效果立竿见影。</p>
+
+                <h2>二、优化图片资源</h2>
+                <p>图片往往是页面中体积最大的资源，优化图片收益最高。可从四个层面入手：</p>
+                <ol>
+                    <li><strong>选择现代格式</strong>：WebP 比 JPEG/PNG 小 25%-35%，AVIF 更进一步，体积更小质量更好。用 <code>&lt;picture&gt;</code> 标签提供格式回退。</li>
+                    <li><strong>压缩图片</strong>：用 TinyPNG、ImageOptim 等工具有损或无损压缩，去除元数据。</li>
+                    <li><strong>响应式图片</strong>：用 <code>srcset</code> 和 <code>sizes</code> 属性，让浏览器按设备屏幕加载合适尺寸的图。</li>
+                    <li><strong>懒加载</strong>：用 <code>loading="lazy"</code> 属性延迟加载视口外图片，首屏只加载必要资源。</li>
+                </ol>
+
+                <h2>三、合理利用浏览器缓存</h2>
+                <p>缓存能避免用户重复下载相同资源，是提升二次访问速度的关键。通过 HTTP 响应头控制缓存策略：</p>
+                <ul>
+                    <li><strong>强缓存</strong>：对带哈希的静态资源（如 <code>app.3a7b9c.js</code>）设置 <code>Cache-Control: max-age=31536000</code>，缓存一年。</li>
+                    <li><strong>协商缓存</strong>：对 HTML 等需要及时更新的资源，用 <code>ETag</code> 或 <code>Last-Modified</code> 配合 304 响应。</li>
+                </ul>
+                <p>关键原则是：文件名带内容哈希的资源可以长期强缓存；不带哈希的资源用协商缓存。这样既保证缓存命中率，又能及时更新。关于缓存头的深入配置，可参考<a href="/blog/understanding-http-headers.html">HTTP 响应头详解</a>。</p>
+
+                <h2>四、使用 CDN 加速分发</h2>
+                <p>CDN（内容分发网络）在全球部署边缘节点，把静态资源缓存在离用户最近的节点，大幅降低延迟。即使用户与源站相隔万里，也能从附近节点获取资源。CDN 的价值包括：</p>
+                <ul>
+                    <li>缩短资源传输距离，降低延迟。</li>
+                    <li>分担源站压力，提升并发能力。</li>
+                    <li>提供 DDoS 防护和 WAF 等安全能力。</li>
+                </ul>
+                <p>选择 CDN 时关注节点覆盖、回源策略和价格。把静态资源（JS、CSS、图片、字体）放到 CDN 域名下，HTML 仍由源站提供，是常见的分离策略。</p>
+
+                <h2>五、减少 HTTP 请求数量</h2>
+                <p>每个 HTTP 请求都有建立连接、发送、等待、接收的开销。减少请求数能显著提升加载速度，尤其在网络条件差时：</p>
+                <ul>
+                    <li><strong>合并文件</strong>：把多个 JS/CSS 打包成少数几个文件（注意 HTTP/2 下不必过度合并）。</li>
+                    <li><strong>雪碧图</strong>：把小图标合并成一张大图，用 CSS 背景定位显示。现代方案可用 SVG symbol 或 icon font 替代。</li>
+                    <li><strong>内联关键资源</strong>：首屏关键 CSS 内联到 HTML，避免额外请求阻塞渲染。</li>
+                    <li><strong>移除无用资源</strong>：定期清理未使用的 CSS 和 JS，避免加载了却没用。</li>
+                </ul>
+
+                <div id="ad-slot"></div>
+
+                <h2>六、优化关键渲染路径</h2>
+                <p>关键渲染路径指浏览器把 HTML、CSS、JS 转换成屏幕像素的过程。优化目标是让首屏内容尽快呈现：</p>
+                <ul>
+                    <li><strong>CSS 放头部</strong>：CSS 阻塞渲染，应尽早加载，避免 FOUC（无样式闪烁）。</li>
+                    <li><strong>JS 放底部或异步</strong>：JS 会阻塞 HTML 解析，非关键脚本加 <code>defer</code> 或 <code>async</code> 属性。<code>defer</code> 按顺序执行且在 DOM 解析后，<code>async</code> 下载完立即执行。</li>
+                    <li><strong>预加载关键资源</strong>：用 <code>&lt;link rel="preload"&gt;</code> 提前加载字体、关键 CSS 等高优先级资源。</li>
+                    <li><strong>减少阻塞资源</strong>：识别并消除阻塞首屏渲染的第三方脚本。</li>
+                </ul>
+
+                <h2>七、升级到 HTTP/2 或 HTTP/3</h2>
+                <p>HTTP/1.1 时代，浏览器对同一域名并发请求有限制（通常 6 个），导致资源多时要排队。HTTP/2 引入多路复用，一个连接上可并行传输多个请求，大幅减少队头阻塞。HTTP/3 基于 QUIC（UDP），进一步降低了连接建立延迟。</p>
+                <p>启用 HTTP/2 需要 HTTPS（HTTP/3 同理），这也印证了全站 HTTPS 的必要性。启用后，原本为减少请求而做的文件合并、域名分片等 HTTP/1.1 优化反而可以简化，因为多路复用已经解决了并发问题。</p>
+
+                <h2>八、数据库与后端优化</h2>
+                <p>前端优化之外，后端响应速度同样关键。一个慢查询能让首字节时间（TTFB）飙升：</p>
+                <ul>
+                    <li><strong>加索引</strong>：为常用查询字段建索引，避免全表扫描。</li>
+                    <li><strong>查询缓存</strong>：用 Redis 缓存热点查询结果，减少数据库压力。</li>
+                    <li><strong>分页与懒查询</strong>：列表页只查必要字段和分页数据，避免一次查全表。</li>
+                    <li><strong>异步处理</strong>：耗时操作（发邮件、生成报表）放入消息队列异步执行，不阻塞主请求。</li>
+                    <li><strong>连接池</strong>：复用数据库连接，避免频繁建立销毁的开销。</li>
+                </ul>
+                <p>用 <a href="/tools/response-time.html">响应时间检测工具</a>测量 TTFB，正常应在 200ms 以内，超过 500ms 就需要优化后端。</p>
+
+                <h2>九、代码层面的优化</h2>
+                <p>应用代码质量直接影响运行性能：</p>
+                <ul>
+                    <li><strong>避免内存泄漏</strong>：及时清理事件监听器、定时器、闭包引用，防止内存占用持续增长。</li>
+                    <li><strong>防抖与节流</strong>：对 scroll、resize、input 等高频事件做防抖（debounce）或节流（throttle），减少不必要的计算。</li>
+                    <li><strong>虚拟列表</strong>：长列表渲染用虚拟滚动（如 react-window），只渲染可视区域元素。</li>
+                    <li><strong>代码分割</strong>：用动态 import() 按路由或交互拆分代码，按需加载。</li>
+                </ul>
+
+                <h2>十、持续监控与测量</h2>
+                <p>优化不能凭感觉，必须用数据驱动。建立持续的性能监控体系：</p>
+                <ul>
+                    <li><strong>实验室数据</strong>：用 Lighthouse、WebPageTest 定期测试，得到 FCP、LCP、TBT、CLS 等指标。关于这些指标的含义，可阅读<a href="/blog/website-speed-testing-guide.html">网站速度测试指南</a>。</li>
+                    <li><strong>真实用户监控（RUM）</strong>：用浏览器 Performance API 采集真实用户的性能数据，了解长尾用户的真实体验。</li>
+                    <li><strong>性能预算</strong>：设定 JS 体积、图片大小等预算阈值，CI 中超预算即报警，防止性能退化。</li>
+                    <li><strong>告警机制</strong>：当 LCP 或 TTFB 超过阈值时自动告警，及时发现问题。</li>
+                </ul>
+                <p>关注 Core Web Vitals 三大指标：LCP（最大内容绘制）应小于 2.5 秒，INP（交互到下一次绘制）应小于 200 毫秒，CLS（累积布局偏移）应小于 0.1。这三个指标是 Google 衡量页面体验的核心标准。</p>
+
+                <h2>十一、优化优先级建议</h2>
+                <p>面对众多优化手段，新手常不知从何下手。按投入产出比排序，建议的优化顺序是：</p>
+                <ol>
+                    <li>开启 Gzip/Brotli 压缩（投入小，收益大）。</li>
+                    <li>配置静态资源长缓存。</li>
+                    <li>压缩和懒加载图片。</li>
+                    <li>启用 CDN。</li>
+                    <li>精简和延迟加载 JS。</li>
+                    <li>升级 HTTP/2。</li>
+                    <li>优化后端与数据库。</li>
+                    <li>建立性能监控。</li>
+                </ol>
+                <p>先做高收益低成本的项，再逐步深入。每次优化后用工具测量对比，确认效果。</p>
+
+                <h2>十二、总结</h2>
+                <p>网站性能优化是一个系统工程，涉及前端、后端、网络和监控多个层面。本文介绍的 10 个方法——资源压缩、图片优化、缓存策略、CDN、减少请求、关键渲染路径、HTTP/2、后端优化、代码优化、持续监控——覆盖了性能优化的主要方面。核心原则是：减少资源体积、减少请求数量、缩短传输距离、加快渲染速度、用数据驱动决策。</p>
+                <p>性能优化没有终点，随着业务增长和内容增多，性能问题会反复出现。建议把性能意识融入开发流程，建立监控、设定预算、持续改进。从今天开始，先用 Lighthouse 跑一次你网站的测试，找到最薄弱的环节动手优化，你会看到明显的改善。性能提升带来的不只是更快的速度，更是更好的用户体验和更高的业务转化。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>

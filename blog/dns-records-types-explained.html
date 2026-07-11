@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS记录类型详解：A、CNAME、MX、TXT、SRV全解析 | SiteCheck博客</title>
+    <meta name="description" content="全面解析 A、AAAA、CNAME、MX、TXT、SRV、NS、CAA 等各类 DNS 记录类型的含义、格式与应用场景，附配置示例，助你彻底搞懂 DNS 记录。">
+    <meta name="keywords" content="DNS记录类型,A记录,AAAA记录,CNAME记录,MX记录,TXT记录,SRV记录,NS记录,CAA记录">
+    <meta property="og:title" content="DNS记录类型详解：A、CNAME、MX、TXT、SRV全解析">
+    <meta property="og:description" content="全面解析各类 DNS 记录类型的含义、格式与应用场景，附配置示例。">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://sitecheck.example/blog/dns-records-types-explained.html">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content">
+        <article class="blog-post">
+            <a href="/blog/index.html" class="back-link">← 返回博客</a>
+            <header class="blog-post-header">
+                <div class="blog-card-category">网络基础</div>
+                <h1>DNS记录类型详解：A、CNAME、MX、TXT、SRV全解析</h1>
+                <div class="blog-post-meta">2026年6月8日 · SiteCheck</div>
+            </header>
+            <div class="blog-post-body">
+                <p>DNS 记录是域名系统的"数据单元"，每条记录定义了域名与某种资源（IP、别名、邮件服务器、文本等）的映射关系。配置域名时，面对 A、AAAA、CNAME、MX、TXT、SRV 等一堆记录类型，新手常感到困惑：它们各自做什么？什么时候该用哪种？本文将全面解析各类 DNS 记录类型的含义、格式与应用场景，帮你彻底搞懂 DNS 记录。如果你想先了解配置流程，可阅读<a href="/blog/dns-configuration-guide.html">DNS 配置教程</a>。</p>
+
+                <h2>一、DNS 记录的基本结构</h2>
+                <p>每条 DNS 记录通常包含几个字段：名称（主机名/域）、类型（Type）、TTL（缓存时间）、值（记录内容）。在 DNS 区域文件中，一条记录看起来像这样：</p>
+                <pre><code>www  IN  A     3600  192.0.2.1</code></pre>
+                <p>这表示 <code>www.example.com</code> 的 A 记录指向 IP <code>192.0.2.1</code>，TTL 为 3600 秒。在大多数 DNS 服务商的控制台里，你只需填写主机名、选择类型、填入值，TTL 用默认即可。</p>
+
+                <h2>二、A 记录：域名到 IPv4</h2>
+                <p>A 记录是最基础最常用的记录，把域名映射到一个 IPv4 地址。当你访问 <code>www.example.com</code>，A 记录告诉浏览器它的服务器 IP 是什么。</p>
+                <ul>
+                    <li><strong>名称</strong>：<code>@</code>（根域）、<code>www</code>、<code>blog</code> 等</li>
+                    <li><strong>值</strong>：IPv4 地址，如 <code>192.0.2.1</code></li>
+                    <li><strong>用途</strong>：网站指向服务器 IP</li>
+                </ul>
+                <p>一个名称可以配多条 A 记录指向不同 IP，实现 DNS 轮询负载均衡。一个名称也可以同时配 A 和 AAAA 记录，支持双栈。</p>
+
+                <h2>三、AAAA 记录：域名到 IPv6</h2>
+                <p>AAAA 记录（Quad-A）与 A 记录对应，把域名映射到 IPv6 地址。随着 IPv6 普及，配置 AAAA 记录越来越重要。</p>
+                <ul>
+                    <li><strong>名称</strong>：同 A 记录</li>
+                    <li><strong>值</strong>：IPv6 地址，如 <code>2001:db8::1</code></li>
+                    <li><strong>用途</strong>：支持 IPv6 访问</li>
+                </ul>
+                <p>支持双栈的客户端会优先尝试 IPv6（AAAA），失败再回退 IPv4（A）。配置 AAAA 前确保服务器 IPv6 真的可用，否则可能导致部分用户访问变慢（等待 IPv6 超时后才回退）。</p>
+
+                <h2>四、CNAME 记录：域名别名</h2>
+                <p>CNAME 记录把一个域名别名指向另一个域名（规范名），而不是直接指向 IP。常用于把子域名指向第三方服务。</p>
+                <ul>
+                    <li><strong>名称</strong>：如 <code>cdn</code>、<code>blog</code></li>
+                    <li><strong>值</strong>：目标域名，如 <code>example.github.io</code></li>
+                    <li><strong>用途</strong>：指向 CDN、托管服务、SaaS 平台</li>
+                </ul>
+                <p>CNAME 的几条重要规则：</p>
+                <ul>
+                    <li>根域名（<code>@</code>）通常不能配 CNAME，因为根域必须有 SOA 和 NS 记录，RFC 不允许与其他记录共存。部分现代 DNS 服务商通过 CNAME Flattening 绕过此限制。</li>
+                    <li>一个名称配了 CNAME 就不能配其他类型记录（如 A），CNAME 必须是该名称的唯一记录。</li>
+                    <li>CNAME 指向的目标必须能正常解析，否则别名也解析失败。</li>
+                    <li>CNAME 会有额外的解析步骤（先解析别名再解析目标），略微增加延迟。</li>
+                </ul>
+
+                <h2>五、MX 记录：邮件交换</h2>
+                <p>MX 记录指定负责接收该域名邮件的邮件服务器。没有 MX 记录，邮件就无法投递到 <code>@example.com</code>。</p>
+                <ul>
+                    <li><strong>名称</strong>：通常 <code>@</code></li>
+                    <li><strong>值</strong>：优先级 + 邮件服务器域名，如 <code>10 mail.example.com</code></li>
+                    <li><strong>用途</strong>：配置企业邮箱、邮件服务</li>
+                </ul>
+                <p>MX 记录的优先级数字越小越优先。发件方按优先级从大到小尝试（数字小优先），主服务器不可用时自动用备用服务器。注意 MX 的值必须是域名（有 A 或 AAAA 记录），不能是 IP。一个域名可配多条 MX 实现邮件高可用。</p>
+
+                <div id="ad-slot"></div>
+
+                <h2>六、TXT 记录：文本记录</h2>
+                <p>TXT 记录用于存储任意文本，如今主要用于域名验证和安全策略。虽然叫"文本"，但常用特定格式表达结构化信息。</p>
+                <p>主要用途：</p>
+                <ul>
+                    <li><strong>SPF</strong>：声明哪些服务器有权以该域名发信，防邮件伪造。如 <code>v=spf1 include:_spf.google.com ~all</code>。</li>
+                    <li><strong>DKIM</strong>：存放公钥用于邮件签名验证，记录名形如 <code>selector._domainkey</code>。</li>
+                    <li><strong>DMARC</strong>：定义 SPF/DKIM 验证失败后的处理策略，记录名 <code>_dmarc</code>。如 <code>v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com</code>。</li>
+                    <li><strong>域名所有权验证</strong>：Google Search Console、云服务等要求添加特定 TXT 记录证明域名所有权。</li>
+                    <li><strong>其他</strong>：site verification、BIMI、MTA-STS 等。</li>
+                </ul>
+                <p>一个名称可配多条 TXT 记录，但单条 TXT 值有长度限制（通常 255 字符，超长需拆分）。</p>
+
+                <h2>七、SRV 记录：服务定位</h2>
+                <p>SRV 记录用于指定提供特定服务的服务器，比 MX 更通用——MX 专用于邮件，SRV 可用于任何服务。</p>
+                <p>SRV 记录的格式较复杂：<code>优先级 权重 端口 目标</code>。</p>
+                <pre><code>_sip._tcp  IN  SRV  10  60  5060  sipserver.example.com</code></pre>
+                <p>名称格式为 <code>_服务._协议</code>，如 <code>_sip._tcp</code>、<code>_xmpp._tcp</code>。</p>
+                <ul>
+                    <li><strong>优先级</strong>：同 MX，数字小优先。</li>
+                    <li><strong>权重</strong>：同优先级内的负载比例。</li>
+                    <li><strong>端口</strong>：服务监听端口。</li>
+                    <li><strong>目标</strong>：提供服务的主机域名。</li>
+                </ul>
+                <p>SRV 常用于 SIP（VoIP）、XMPP（即时通讯）、Active Directory、Kerberos 等服务的自动发现和定位。</p>
+
+                <h2>八、NS 记录：权威服务器</h2>
+                <p>NS 记录指定哪些域名服务器是该域名的权威服务器，即由谁来解析这个域名的记录。</p>
+                <ul>
+                    <li><strong>名称</strong>：<code>@</code> 或子域名</li>
+                    <li><strong>值</strong>：权威服务器域名，如 <code>ns1.cloudflare.com</code></li>
+                    <li><strong>用途</strong>：委托 DNS 解析权</li>
+                </ul>
+                <p>当你把域名从 A 服务商迁到 B 服务商，本质就是修改注册商处的 NS 记录，指向 B 的权威服务器。NS 变更的<a href="/blog/dns-propagation-explained.html">传播时间</a>最长（24-48 小时），因为涉及顶级域名服务器的缓存。NS 的值必须是域名而非 IP。</p>
+
+                <h2>九、CAA 记录：证书授权限制</h2>
+                <p>CAA（Certification Authority Authorization）记录指定哪些 CA 机构有权为该域名签发证书，防止证书被未授权的 CA 签发。</p>
+                <pre><code>@  IN  CAA  0 issue "letsencrypt.org"
+@  IN  CAA  0 issuewild ";"
+@  IN  CAA  0 iodef "mailto:security@example.com"</code></pre>
+                <ul>
+                    <li><code>issue</code>：允许指定 CA 签发证书。</li>
+                    <li><code>issuewild</code>：控制通配符证书签发。<code>";"</code> 表示禁止。</li>
+                    <li><code>iodef</code>：违规签发 attempt 的报告地址。</li>
+                </ul>
+                <p>配置 CAA 能降低证书被恶意签发的风险，是 HTTPS 站点的安全加固措施。更多证书知识见<a href="/blog/how-to-check-ssl-certificate.html">SSL 证书检测</a>。</p>
+
+                <h2>十、其他常见记录类型</h2>
+                <ul>
+                    <li><strong>SOA</strong>：起始授权机构记录，每个区域必须有一条，包含主服务器、管理员邮箱、序列号、刷新/重试/过期时间。一般由 DNS 服务商自动生成。</li>
+                    <li><strong>PTR</strong>：反向解析记录，把 IP 反查回域名，常用于邮件服务器反垃圾。配置在 IP 所属的 in-addr.arpa 区域。</li>
+                    <li><strong>ANAME / ALIAS</strong>：部分服务商提供的扩展记录，类似 CNAME 但可用于根域名（根域指向另一域名）。</li>
+                    <li><strong>HTTPS / SVCB</strong>：较新的记录类型，用于服务绑定和 HTTPS 记录提示，可加速 HTTPS 连接建立。</li>
+                </ul>
+
+                <h2>十一、记录类型速查表</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>类型</th>
+                            <th>作用</th>
+                            <th>值示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>A</td><td>域名→IPv4</td><td>192.0.2.1</td></tr>
+                        <tr><td>AAAA</td><td>域名→IPv6</td><td>2001:db8::1</td></tr>
+                        <tr><td>CNAME</td><td>域名→别名域名</td><td>example.github.io</td></tr>
+                        <tr><td>MX</td><td>邮件服务器</td><td>10 mail.example.com</td></tr>
+                        <tr><td>TXT</td><td>文本/验证/策略</td><td>v=spf1 include:_spf.x.com ~all</td></tr>
+                        <tr><td>SRV</td><td>服务定位</td><td>10 60 5060 sip.example.com</td></tr>
+                        <tr><td>NS</td><td>权威服务器</td><td>ns1.cloudflare.com</td></tr>
+                        <tr><td>CAA</td><td>证书授权</td><td>0 issue "letsencrypt.org"</td></tr>
+                        <tr><td>PTR</td><td>IP→域名（反解）</td><td>example.com</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>十二、如何查询 DNS 记录</h2>
+        <p>配置或排查时，查询记录是必备操作：</p>
+        <ul>
+            <li><strong>SiteCheck DNS 工具</strong>：用 <a href="/tools/dns-lookup.html">DNS 查询</a>可视化查询所有记录类型，适合不熟悉命令行的用户。</li>
+            <li><strong>dig</strong>：<code>dig example.com A</code>、<code>dig example.com MX</code>、<code>dig example.com ANY</code>，分别查不同类型。</li>
+            <li><strong>nslookup</strong>：<code>nslookup -type=mx example.com</code>，跨平台。</li>
+            <li><strong>host</strong>：<code>host -t txt example.com</code>，简洁输出。</li>
+        </ul>
+        <p>查询时注意：不同 DNS 解析器的缓存可能不同，刚修改的记录可能要等 TTL 过期才查到新值。排查时可用 <code>dig @8.8.8.8</code> 指定解析器，或 <code>+trace</code> 追踪完整解析链路。</p>
+
+                <h2>十三、DNS 记录配置常见问题</h2>
+        <ul>
+            <li><strong>根域名不能配 CNAME</strong>：用 A 记录或支持 CNAME Flattening 的服务商。</li>
+            <li><strong>邮件发不出</strong>：检查 MX 记录是否正确，SPF/DKIM/DMARC 是否配置。</li>
+            <li><strong>子域名解析失败</strong>：确认记录添加在正确的域名区域，主机名拼写无误。</li>
+            <li><strong>CNAME 与 A 冲突</strong>：一个名称只能有一种，不能同时配 CNAME 和 A。</li>
+            <li><strong>记录修改不生效</strong>：可能是 TTL 缓存未过期，等待或调小 TTL。</li>
+            <li><strong>CAA 阻止证书签发</strong>：CA 不在 CAA 白名单会拒绝签发，确认白名单包含你的 CA。</li>
+        </ul>
+
+                <h2>十四、总结</h2>
+        <p>DNS 记录类型虽然多，但每种都有明确的用途。本文全面解析了 A、AAAA、CNAME、MX、TXT、SRV、NS、CAA 等核心记录类型的含义、格式与应用场景。核心记忆：A/AAAA 指向 IP，CNAME 指向别名，MX 配邮件，TXT 做验证和安全策略，SRV 定位服务，NS 委托解析权，CAA 限制证书签发。理解了每种记录的作用，配置域名时就能有的放矢。</p>
+        <p>DNS 是网站的基础设施，记录配置正确才能保证访问、邮件、证书等各项服务正常。建议把本文作为速查参考，配置时对照格式规范操作，并用查询工具验证。结合<a href="/blog/dns-configuration-guide.html">配置教程</a>和<a href="/blog/dns-propagation-explained.html">传播原理</a>，你将建立起完整实用的 DNS 知识体系，从容应对各种域名解析需求。</p>
+            </div>
+        </article>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="/assets/js/common.js"></script>
+    <script>
+        initPage('blog');
+        document.getElementById('ad-slot').innerHTML = renderAd('article');
+    </script>
+</body>
+</html>
