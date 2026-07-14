@@ -10,31 +10,31 @@
 
     <!-- 检测工具页 -->
     <url>
-        <loc>https://212128.xyz/tools/http-status.html</loc>
+        <loc>https://212128.xyz/tools/http-status</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/tools/dns-lookup.html</loc>
+        <loc>https://212128.xyz/tools/dns-lookup</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/tools/ssl-checker.html</loc>
+        <loc>https://212128.xyz/tools/ssl-checker</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/tools/response-time.html</loc>
+        <loc>https://212128.xyz/tools/response-time</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/tools/http-headers.html</loc>
+        <loc>https://212128.xyz/tools/http-headers</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
@@ -42,7 +42,7 @@
 
     <!-- 博客索引 -->
     <url>
-        <loc>https://212128.xyz/blog/index.html</loc>
+        <loc>https://212128.xyz/blog/index</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
@@ -50,91 +50,91 @@
 
     <!-- 博客文章 -->
     <url>
-        <loc>https://212128.xyz/blog/what-is-http-status-code.html</loc>
+        <loc>https://212128.xyz/blog/what-is-http-status-code</loc>
         <lastmod>2026-07-10</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/how-to-check-ssl-certificate.html</loc>
+        <loc>https://212128.xyz/blog/how-to-check-ssl-certificate</loc>
         <lastmod>2026-07-09</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/dns-configuration-guide.html</loc>
+        <loc>https://212128.xyz/blog/dns-configuration-guide</loc>
         <lastmod>2026-07-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/website-performance-optimization.html</loc>
+        <loc>https://212128.xyz/blog/website-performance-optimization</loc>
         <lastmod>2026-07-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/understanding-http-headers.html</loc>
+        <loc>https://212128.xyz/blog/understanding-http-headers</loc>
         <lastmod>2026-07-04</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/how-to-troubleshoot-website-down.html</loc>
+        <loc>https://212128.xyz/blog/how-to-troubleshoot-website-down</loc>
         <lastmod>2026-07-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/ssl-certificate-expired-fix.html</loc>
+        <loc>https://212128.xyz/blog/ssl-certificate-expired-fix</loc>
         <lastmod>2026-06-29</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/dns-propagation-explained.html</loc>
+        <loc>https://212128.xyz/blog/dns-propagation-explained</loc>
         <lastmod>2026-06-26</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/http-vs-https-difference.html</loc>
+        <loc>https://212128.xyz/blog/http-vs-https-difference</loc>
         <lastmod>2026-06-23</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/website-monitoring-best-practices.html</loc>
+        <loc>https://212128.xyz/blog/website-monitoring-best-practices</loc>
         <lastmod>2026-06-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/cloudflare-vs-aws-dns.html</loc>
+        <loc>https://212128.xyz/blog/cloudflare-vs-aws-dns</loc>
         <lastmod>2026-06-17</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/free-website-monitoring-tools.html</loc>
+        <loc>https://212128.xyz/blog/free-website-monitoring-tools</loc>
         <lastmod>2026-06-14</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/http-security-headers-guide.html</loc>
+        <loc>https://212128.xyz/blog/http-security-headers-guide</loc>
         <lastmod>2026-06-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/dns-records-types-explained.html</loc>
+        <loc>https://212128.xyz/blog/dns-records-types-explained</loc>
         <lastmod>2026-06-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/blog/website-speed-testing-guide.html</loc>
+        <loc>https://212128.xyz/blog/website-speed-testing-guide</loc>
         <lastmod>2026-06-05</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -142,25 +142,25 @@
 
     <!-- 信息页 -->
     <url>
-        <loc>https://212128.xyz/about.html</loc>
+        <loc>https://212128.xyz/about</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/contact.html</loc>
+        <loc>https://212128.xyz/contact</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/privacy-policy.html</loc>
+        <loc>https://212128.xyz/privacy-policy</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.4</priority>
     </url>
     <url>
-        <loc>https://212128.xyz/terms-of-service.html</loc>
+        <loc>https://212128.xyz/terms-of-service</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.4</priority>
