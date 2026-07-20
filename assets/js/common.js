@@ -35,6 +35,9 @@ const translations = {
         error_retry: '。请确认网址可访问后重试。',
         latest_articles: '最新文章',
         ad_placeholder: '广告位（Google AdSense 审核通过后启用）',
+        blog_h1: 'SiteCheck 博客',
+        blog_subtitle: '网站检测、DNS、SSL、HTTP、性能优化与安全运维的原创知识库，助你全面掌握网站运维技能。',
+        blog_page_title: 'SiteCheck 博客 - 网站检测与运维知识库',
         // Tool page titles and subtitles
         tool_http_title: 'HTTP 状态码检测',
         tool_http_subtitle: '输入网址，检测其 HTTP 状态码、响应时间、最终 URL 和重定向次数。',
@@ -138,6 +141,9 @@ const translations = {
         error_retry: '. Please confirm the URL is accessible and try again.',
         latest_articles: 'Latest Articles',
         ad_placeholder: 'Ad Slot (Enable after Google AdSense approval)',
+        blog_h1: 'SiteCheck Blog',
+        blog_subtitle: 'Original knowledge base for website diagnostics, DNS, SSL, HTTP, performance optimization, and security operations.',
+        blog_page_title: 'SiteCheck Blog - Web Diagnostic & DevOps Knowledge Base',
         // Tool page titles and subtitles
         tool_http_title: 'HTTP Status Code Checker',
         tool_http_subtitle: 'Enter a URL to check its HTTP status code, response time, final URL, and redirect count.',
