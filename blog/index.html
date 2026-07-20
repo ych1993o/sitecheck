@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SiteCheck 博客 - 网站检测、DNS、SSL、HTTP 与安全运维知识库</title>
-    <meta name="description" content="SiteCheck 博客分享网站检测、DNS 配置、SSL 证书、HTTP 状态码、性能优化与安全运维的原创教程与最佳实践，帮助你全面掌握网站运维技能。">
-    <meta name="keywords" content="网站检测博客,DNS教程,SSL证书,HTTP状态码,网站性能优化,网站安全,网站监控,HTTP Headers">
-    <meta property="og:title" content="SiteCheck 博客 - 网站检测与运维知识库">
-    <meta property="og:description" content="原创网站检测、DNS、SSL、HTTP、性能与安全运维教程，帮助你全面掌握网站运维技能。">
+    <title data-i18n="blog_page_title">SiteCheck Blog - Web Diagnostic & DevOps Knowledge Base</title>
+    <meta name="description" content="SiteCheck blog shares original tutorials and best practices on website diagnostics, DNS configuration, SSL certificates, HTTP status codes, performance optimization, and security operations.">
+    <meta name="keywords" content="website diagnostic blog,DNS tutorial,SSL certificate,HTTP status code,website performance optimization,website security,website monitoring,HTTP Headers">
+    <meta property="og:title" content="SiteCheck Blog - Web Diagnostic & DevOps Knowledge Base">
+    <meta property="og:description" content="Original tutorials on website diagnostics, DNS, SSL, HTTP, performance, and security operations to help you master website DevOps skills.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sitecheck.example/blog/index.html">
-    <link rel="canonical" href="https://sitecheck.example/blog/index.html">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PPKQ144LSH');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -19,8 +19,8 @@
 
     <main class="main-content">
         <section class="hero" style="padding: 32px 20px 24px;">
-            <h1>SiteCheck 博客</h1>
-            <p>网站检测、DNS、SSL、HTTP、性能优化与安全运维的原创知识库，助你全面掌握网站运维技能。</p>
+            <h1 data-i18n="blog_h1">SiteCheck 博客</h1>
+            <p data-i18n="blog_subtitle">网站检测、DNS、SSL、HTTP、性能优化与安全运维的原创知识库，助你全面掌握网站运维技能。</p>
         </section>
 
         <div id="ad-slot-top"></div>
@@ -39,120 +39,181 @@
             {
                 url: '/blog/what-is-http-status-code.html',
                 title: 'HTTP状态码详解：从200到503的完整指南',
+                en_title: 'HTTP Status Codes Explained: Complete Guide from 200 to 503',
                 category: '网络基础',
+                en_category: 'Networking',
                 date: '2026-07-10',
-                excerpt: 'HTTP 状态码是服务器对客户端请求的响应标识，本文系统讲解 1xx 到 5xx 各类状态码的含义、常见场景与排查方法。'
+                excerpt: 'HTTP 状态码是服务器对客户端请求的响应标识，本文系统讲解 1xx 到 5xx 各类状态码的含义、常见场景与排查方法。',
+                en_excerpt: 'HTTP status codes are the server\'s response identifiers to client requests. This article systematically explains the meaning, common scenarios, and troubleshooting methods for 1xx to 5xx status codes.'
             },
             {
                 url: '/blog/how-to-check-ssl-certificate.html',
                 title: '如何检测网站的SSL证书是否有效',
+                en_title: 'How to Check if a Website\'s SSL Certificate is Valid',
                 category: '安全',
+                en_category: 'Security',
                 date: '2026-07-09',
-                excerpt: 'SSL 证书是网站安全的基础。本文教你用多种方法检测证书有效性、查看颁发机构与到期时间，避免证书问题导致的访问失败。'
+                excerpt: 'SSL 证书是网站安全的基础。本文教你用多种方法检测证书有效性、查看颁发机构与到期时间，避免证书问题导致的访问失败。',
+                en_excerpt: 'SSL certificates are the foundation of website security. This article teaches you multiple methods to check certificate validity, view issuing authority and expiration date, and avoid access failures caused by certificate issues.'
             },
             {
                 url: '/blog/dns-configuration-guide.html',
                 title: 'DNS配置入门教程：从A记录到MX记录',
+                en_title: 'DNS Configuration Guide: From A Records to MX Records',
                 category: '教程',
+                en_category: 'Tutorial',
                 date: '2026-07-08',
-                excerpt: 'DNS 是互联网的电话簿。本教程从零讲解 A、CNAME、MX、TXT 等记录的配置方法，带你完成域名解析的完整流程。'
+                excerpt: 'DNS 是互联网的电话簿。本教程从零讲解 A、CNAME、MX、TXT 等记录的配置方法，带你完成域名解析的完整流程。',
+                en_excerpt: 'DNS is the phone book of the Internet. This tutorial explains from scratch how to configure A, CNAME, MX, TXT records, guiding you through the complete domain resolution process.'
             },
             {
                 url: '/blog/website-performance-optimization.html',
                 title: '网站性能优化指南：提升加载速度的10个方法',
+                en_title: 'Website Performance Optimization Guide: 10 Ways to Improve Loading Speed',
                 category: '性能优化',
+                en_category: 'Performance',
                 date: '2026-07-06',
-                excerpt: '加载速度直接影响用户体验与 SEO 排名。本文总结 10 个经过验证的网站性能优化方法，从资源压缩到缓存策略全覆盖。'
+                excerpt: '加载速度直接影响用户体验与 SEO 排名。本文总结 10 个经过验证的网站性能优化方法，从资源压缩到缓存策略全覆盖。',
+                en_excerpt: 'Loading speed directly affects user experience and SEO ranking. This article summarizes 10 proven website performance optimization methods, from resource compression to caching strategies.'
             },
             {
                 url: '/blog/understanding-http-headers.html',
                 title: 'HTTP响应头详解与安全配置指南',
+                en_title: 'HTTP Response Headers Explained: Security Configuration Guide',
                 category: '安全',
+                en_category: 'Security',
                 date: '2026-07-04',
-                excerpt: 'HTTP 响应头承载着缓存控制、安全策略与内容协商等关键信息。本文详解常见响应头的作用与安全配置实践。'
+                excerpt: 'HTTP 响应头承载着缓存控制、安全策略与内容协商等关键信息。本文详解常见响应头的作用与安全配置实践。',
+                en_excerpt: 'HTTP response headers carry critical information for cache control, security policies, and content negotiation. This article explains common headers and security configuration best practices.'
             },
             {
                 url: '/blog/how-to-troubleshoot-website-down.html',
                 title: '网站打不开？完整排查指南',
+                en_title: 'Website Not Loading? Complete Troubleshooting Guide',
                 category: '故障排查',
+                en_category: 'Troubleshooting',
                 date: '2026-07-02',
-                excerpt: '网站打不开原因众多：DNS、服务器、SSL、防火墙都可能出问题。本文提供一套系统化的排查流程，助你快速定位故障。'
+                excerpt: '网站打不开原因众多：DNS、服务器、SSL、防火墙都可能出问题。本文提供一套系统化的排查流程，助你快速定位故障。',
+                en_excerpt: 'There are many reasons a website won\'t load: DNS, server, SSL, firewall issues. This article provides a systematic troubleshooting process to help you quickly identify the problem.'
             },
             {
                 url: '/blog/ssl-certificate-expired-fix.html',
                 title: 'SSL证书过期怎么办？完整解决方案',
+                en_title: 'SSL Certificate Expired? Complete Solution Guide',
                 category: '安全',
+                en_category: 'Security',
                 date: '2026-06-29',
-                excerpt: 'SSL 证书过期会导致浏览器安全警告甚至业务中断。本文讲解证书过期的影响、续期步骤与自动续期方案。'
+                excerpt: 'SSL 证书过期会导致浏览器安全警告甚至业务中断。本文讲解证书过期的影响、续期步骤与自动续期方案。',
+                en_excerpt: 'Expired SSL certificates cause browser security warnings and even business disruption. This article explains the impact of certificate expiration, renewal steps, and auto-renewal solutions.'
             },
             {
                 url: '/blog/dns-propagation-explained.html',
                 title: 'DNS传播原理与全球生效时间详解',
+                en_title: 'DNS Propagation Explained: How Global Propagation Works',
                 category: '网络基础',
+                en_category: 'Networking',
                 date: '2026-06-26',
-                excerpt: '修改 DNS 后为何要等很久才全球生效？本文深入讲解 DNS 传播原理、TTL 机制与加速全球生效的实用技巧。'
+                excerpt: '修改 DNS 后为何要等很久才全球生效？本文深入讲解 DNS 传播原理、TTL 机制与加速全球生效的实用技巧。',
+                en_excerpt: 'Why does it take so long for DNS changes to take effect globally? This article explains DNS propagation principles, TTL mechanisms, and practical tips to speed up global propagation.'
             },
             {
                 url: '/blog/http-vs-https-difference.html',
                 title: 'HTTP与HTTPS的区别及迁移指南',
+                en_title: 'HTTP vs HTTPS: Differences and Migration Guide',
                 category: '安全',
+                en_category: 'Security',
                 date: '2026-06-23',
-                excerpt: 'HTTPS 已成为网站标配。本文对比 HTTP 与 HTTPS 的区别，并给出从 HTTP 全站迁移到 HTTPS 的完整步骤与注意事项。'
+                excerpt: 'HTTPS 已成为网站标配。本文对比 HTTP 与 HTTPS 的区别，并给出从 HTTP 全站迁移到 HTTPS 的完整步骤与注意事项。',
+                en_excerpt: 'HTTPS has become the standard for websites. This article compares HTTP and HTTPS, and provides complete steps and considerations for migrating from HTTP to HTTPS site-wide.'
             },
             {
                 url: '/blog/website-monitoring-best-practices.html',
                 title: '网站监控最佳实践：如何7x24小时保障可用性',
+                en_title: 'Website Monitoring Best Practices: Ensuring 24/7 Availability',
                 category: '运维',
+                en_category: 'Operations',
                 date: '2026-06-20',
-                excerpt: '可用性是网站的生命线。本文分享网站监控的最佳实践，涵盖监控指标、告警策略与值班机制，助你 7x24 小时保障稳定。'
+                excerpt: '可用性是网站的生命线。本文分享网站监控的最佳实践，涵盖监控指标、告警策略与值班机制，助你 7x24 小时保障稳定。',
+                en_excerpt: 'Availability is the lifeline of a website. This article shares website monitoring best practices, covering monitoring metrics, alerting strategies, and on-call mechanisms for 24/7 stability.'
             },
             {
                 url: '/blog/cloudflare-vs-aws-dns.html',
                 title: 'Cloudflare vs AWS DNS：哪个DNS服务更好',
+                en_title: 'Cloudflare vs AWS DNS: Which DNS Service is Better?',
                 category: '工具对比',
+                en_category: 'Comparison',
                 date: '2026-06-17',
-                excerpt: 'Cloudflare 与 AWS Route 53 是两大主流 DNS 服务。本文从速度、价格、功能与易用性多维度对比，帮你做出选择。'
+                excerpt: 'Cloudflare 与 AWS Route 53 是两大主流 DNS 服务。本文从速度、价格、功能与易用性多维度对比，帮你做出选择。',
+                en_excerpt: 'Cloudflare and AWS Route 53 are two major DNS services. This article compares them across speed, pricing, features, and ease of use to help you choose.'
             },
             {
                 url: '/blog/free-website-monitoring-tools.html',
                 title: '2026年最佳免费网站监控工具推荐',
+                en_title: 'Best Free Website Monitoring Tools in 2026',
                 category: '工具推荐',
+                en_category: 'Tools',
                 date: '2026-06-14',
-                excerpt: '预算有限也能做好监控。本文盘点 2026 年值得使用的免费网站监控工具，涵盖可用性、性能与安全监控场景。'
+                excerpt: '预算有限也能做好监控。本文盘点 2026 年值得使用的免费网站监控工具，涵盖可用性、性能与安全监控场景。',
+                en_excerpt: 'You can do effective monitoring on a budget. This article rounds up the best free website monitoring tools worth using in 2026, covering availability, performance, and security monitoring.'
             },
             {
                 url: '/blog/http-security-headers-guide.html',
                 title: 'HTTP安全头配置指南：CSP、HSTS、X-Frame-Options',
+                en_title: 'HTTP Security Headers Guide: CSP, HSTS, X-Frame-Options',
                 category: '安全',
+                en_category: 'Security',
                 date: '2026-06-11',
-                excerpt: 'HTTP 安全头是抵御 XSS、点击劫持等攻击的第一道防线。本文详解 CSP、HSTS、X-Frame-Options 等安全头的配置方法。'
+                excerpt: 'HTTP 安全头是抵御 XSS、点击劫持等攻击的第一道防线。本文详解 CSP、HSTS、X-Frame-Options 等安全头的配置方法。',
+                en_excerpt: 'HTTP security headers are the first line of defense against XSS, clickjacking, and other attacks. This article explains how to configure CSP, HSTS, X-Frame-Options, and other security headers.'
             },
             {
                 url: '/blog/dns-records-types-explained.html',
                 title: 'DNS记录类型详解：A、CNAME、MX、TXT、SRV全解析',
+                en_title: 'DNS Record Types Explained: A, CNAME, MX, TXT, SRV Complete Guide',
                 category: '网络基础',
+                en_category: 'Networking',
                 date: '2026-06-08',
-                excerpt: 'DNS 记录类型繁多，各有用途。本文全面解析 A、AAAA、CNAME、MX、TXT、SRV、NS 等记录的含义、格式与应用场景。'
+                excerpt: 'DNS 记录类型繁多，各有用途。本文全面解析 A、AAAA、CNAME、MX、TXT、SRV、NS 等记录的含义、格式与应用场景。',
+                en_excerpt: 'There are many types of DNS records, each with its purpose. This article comprehensively explains the meaning, format, and use cases of A, AAAA, CNAME, MX, TXT, SRV, NS records.'
             },
             {
                 url: '/blog/website-speed-testing-guide.html',
                 title: '网站速度测试完全指南：工具、指标与优化',
+                en_title: 'Website Speed Testing Guide: Tools, Metrics, and Optimization',
                 category: '性能优化',
+                en_category: 'Performance',
                 date: '2026-06-05',
-                excerpt: '速度测试是性能优化的起点。本文系统讲解网站速度测试的核心指标、主流工具与基于数据的优化思路。'
+                excerpt: '速度测试是性能优化的起点。本文系统讲解网站速度测试的核心指标、主流工具与基于数据的优化思路。',
+                en_excerpt: 'Speed testing is the starting point of performance optimization. This article systematically explains core metrics, mainstream tools, and data-driven optimization strategies for website speed testing.'
             }
         ];
 
-        document.getElementById('blog-list').innerHTML = posts.map(p => `
-            <div class="blog-card">
-                <div class="blog-card-body">
-                    <div class="blog-card-category">${p.category}</div>
-                    <h3><a href="${p.url}">${p.title}</a></h3>
-                    <p>${p.excerpt}</p>
-                    <div class="blog-card-meta">${formatDate(p.date)}</div>
-                </div>
-            </div>
-        `).join('');
+        function renderBlogList() {
+            const isEn = currentLang === 'en';
+            document.getElementById('blog-list').innerHTML = posts.map(p => {
+                const title = isEn && p.en_title ? p.en_title : p.title;
+                const category = isEn && p.en_category ? p.en_category : p.category;
+                const excerpt = isEn && p.en_excerpt ? p.en_excerpt : p.excerpt;
+                return `
+                <div class="blog-card">
+                    <div class="blog-card-body">
+                        <div class="blog-card-category">${category}</div>
+                        <h3><a href="${p.url}">${title}</a></h3>
+                        <p>${excerpt}</p>
+                        <div class="blog-card-meta">${formatDate(p.date)}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        renderBlogList();
+
+        // Override switchLang to also re-render blog list
+        const originalSwitchLang = window.switchLang;
+        window.switchLang = function(lang) {
+            originalSwitchLang(lang);
+            renderBlogList();
+        };
     </script>
 </body>
 </html>
