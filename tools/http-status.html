@@ -9,27 +9,29 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=OJ9lYFHJIqrpI7OlIEWrWBOMnv_8_SuOD2DpEVTlfQA-1784515110.3336172-1.2.1.1-q1LPadjkbX30SIPUtR8MS6KnKTaoKUKOvsLDUM_AD3w" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <div class="tool-page">
-            <a href="/" class="back-link">
+            <a href="/" class="back-link" data-i18n="back_home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
                 返回首页
             </a>
-            <h1>HTTP 状态码检测</h1>
-            <p class="subtitle">输入网址，检测其 HTTP 状态码、响应时间、最终 URL 和重定向次数。</p>
+            <h1 data-i18n="tool_http_title">HTTP 状态码检测</h1>
+            <p class="subtitle" data-i18n="tool_http_subtitle">输入网址，检测其 HTTP 状态码、响应时间、最终 URL 和重定向次数。</p>
 
             <div class="input-group">
                 <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') checkStatus()">
-                <button class="btn btn-primary" id="check-btn" onclick="checkStatus()">开始检测</button>
+                <button class="btn btn-primary" id="check-btn" onclick="checkStatus()" data-i18n="btn_check">开始检测</button>
             </div>
 
             <div id="ad-slot"></div>
+
+            <div class="tool-description" data-i18n="tool_http_description">HTTP 状态码是 Web 服务器在响应客户端请求时返回的三位数字代码，用于表示请求的处理结果。200 系列状态码表示请求成功，如 200 OK 表示正常返回内容，204 No Content 表示成功但无内容返回。300 系列表示重定向，如 301 表示永久跳转，302 表示临时跳转。400 系列表示客户端错误，最常见的 404 Not Found 表示请求的资源不存在，403 Forbidden 表示服务器拒绝访问。500 系列表示服务器内部错误，如 502 Bad Gateway 表示网关错误，503 Service Unavailable 表示服务暂时不可用。通过本工具，你可以快速检测任意网址的 HTTP 状态码，判断网站是否正常运行，排查访问故障。</div>
 
             <div class="results" id="results"></div>
         </div>
@@ -133,29 +135,29 @@
                 <div class="result-card">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
                         <div>
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">HTTP 状态码</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">${t('label_http_status')}</div>
                             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                                 <span class="status-badge ${cls}" style="font-size:18px;font-weight:700;padding:6px 16px;">${status}</span>
                                 ${text ? `<span style="font-size:16px;color:var(--gray-600);">${text}</span>` : ''}
                             </div>
                         </div>
                         <div style="text-align:right;">
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">响应时间</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">${t('label_response_time')}</div>
                             <div style="font-size:26px;font-weight:700;color:var(--primary);">${time} ms</div>
                         </div>
                     </div>
                 </div>
                 <div class="result-card">
                     <table class="result-table">
-                        <tr><th style="width:140px;">目标 URL</th><td>${targetUrl}</td></tr>
-                        <tr><th>最终 URL</th><td>${finalDisplay}</td></tr>
-                        <tr><th>重定向次数</th><td>${redirectCount}</td></tr>
+                        <tr><th style="width:140px;">${t('label_target_url')}</th><td>${targetUrl}</td></tr>
+                        <tr><th>${t('label_final_url')}</th><td>${finalDisplay}</td></tr>
+                        <tr><th>${t('label_redirect_count')}</th><td>${redirectCount}</td></tr>
                     </table>
                 </div>
                 <div class="result-card" style="font-size:13px;color:var(--gray-500);">
-                    说明：状态码 2xx 表示成功，3xx 表示重定向，4xx 表示客户端错误，5xx 表示服务器错误。由于浏览器跨域限制，部分站点的重定向链可能无法完整追踪。
+                    ${t('http_status_note')}
                 </div>`;
         }
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de970f9cc31de3',t:'MTc4NDUxNTExMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

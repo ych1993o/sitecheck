@@ -9,27 +9,29 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=hqBDlNxZUV1KkBApUJ9QD3Mb0ft_yeYTyLEj0A88pRo-1784515113.3671541-1.2.1.1-DV6azRNW7dS6KaWfbTgEufes2iZBMcktv_aV3ZvqzLo" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <div class="tool-page">
-            <a href="/" class="back-link">
+            <a href="/" class="back-link" data-i18n="back_home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
                 返回首页
             </a>
-            <h1>网站响应时间测试</h1>
-            <p class="subtitle">输入网址，连续测试 3 次响应时间，查看平均值、最小值、最大值及柱状图对比。</p>
+            <h1 data-i18n="tool_response_title">网站响应时间测试</h1>
+            <p class="subtitle" data-i18n="tool_response_subtitle">输入网址，连续测试 3 次响应时间，查看平均值、最小值、最大值及柱状图对比。</p>
 
             <div class="input-group">
                 <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') testResponse()">
-                <button class="btn btn-primary" id="check-btn" onclick="testResponse()">开始测试</button>
+                <button class="btn btn-primary" id="check-btn" onclick="testResponse()" data-i18n="btn_test">开始测试</button>
             </div>
 
             <div id="ad-slot"></div>
+
+            <div class="tool-description" data-i18n="tool_response_description">网站响应时间是指从用户发起请求到收到服务器第一个字节响应所经历的时间，通常称为 TTFB（Time to First Byte）。响应时间是衡量网站性能的核心指标之一。一般来说，200ms 以内为优秀，200-500ms 为良好，500ms-1s 为一般，超过 1s 则需要优化。影响响应时间的因素包括服务器地理位置、服务器性能、网络带宽、数据库查询效率、CDN 配置等。通过本工具，你可以测量任意网站的响应时间，评估网站性能，帮助定位加载缓慢的原因。</div>
 
             <div class="results" id="results"></div>
         </div>
@@ -111,7 +113,7 @@
                     <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:200px;">
                         <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:6px;">${t} ms</div>
                         <div style="width:60%;max-width:80px;height:${heightPct}%;background:${color};border-radius:6px 6px 0 0;transition:height 0.5s ease;"></div>
-                        <div style="font-size:12px;color:var(--gray-500);margin-top:8px;">第 ${i + 1} 次</div>
+                        <div style="font-size:12px;color:var(--gray-500);margin-top:8px;">${currentLang === 'en' ? 'Test #' + (i + 1) : '第 ' + (i + 1) + ' 次'}</div>
                     </div>`;
             }).join('');
 
@@ -119,37 +121,37 @@
                 <div class="result-card">
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;">
                         <div>
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">平均响应时间</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">${t('label_avg_time')}</div>
                             <div style="font-size:26px;font-weight:700;color:${getTimeColor(avg)};">${avg} ms</div>
                         </div>
                         <div>
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">最快</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">${t('label_fastest')}</div>
                             <div style="font-size:26px;font-weight:700;color:var(--success);">${min} ms</div>
                         </div>
                         <div>
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">最慢</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">${t('label_slowest')}</div>
                             <div style="font-size:26px;font-weight:700;color:var(--danger);">${max} ms</div>
                         </div>
                     </div>
                 </div>
                 <div class="result-card">
-                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:20px;">响应时间对比图</div>
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:20px;">${t('label_time_chart')}</div>
                     <div style="display:flex;align-items:flex-end;justify-content:space-around;gap:12px;">
                         ${bars}
                     </div>
                 </div>
                 <div class="result-card">
                     <table class="result-table">
-                        <tr><th style="width:140px;">测试 URL</th><td>${esc(url)}</td></tr>
-                        <tr><th>测试次数</th><td>${TEST_COUNT}</td></tr>
-                        <tr><th>各次耗时</th><td>${times.map((t, i) => '第' + (i + 1) + '次 ' + t + 'ms').join('，')}</td></tr>
-                        <tr><th>波动范围</th><td>${max - min} ms</td></tr>
+                        <tr><th style="width:140px;">${t('label_test_url')}</th><td>${esc(url)}</td></tr>
+                        <tr><th>${t('label_test_count')}</th><td>${TEST_COUNT}</td></tr>
+                        <tr><th>${t('label_each_time')}</th><td>${times.map((t2, i) => (currentLang === 'en' ? '#' : '第') + (i + 1) + (currentLang === 'en' ? '' : '次') + ' ' + t2 + 'ms').join(currentLang === 'en' ? ', ' : '，')}</td></tr>
+                        <tr><th>${t('label_range')}</th><td>${max - min} ms</td></tr>
                     </table>
                 </div>
                 <div class="result-card" style="font-size:13px;color:var(--gray-500);">
-                    说明：响应时间受网络环境与服务器负载影响。绿色（&lt;500ms）性能优秀，黄色（500-1500ms）一般，红色（&gt;1500ms）较慢。由于通过 CORS 代理请求，实际耗时包含代理转发开销，仅供参考。
+                    ${t('response_note')}
                 </div>`;
         }
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de97228e45ea2a',t:'MTc4NDUxNTExMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

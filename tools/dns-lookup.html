@@ -9,20 +9,20 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=.CVmFLSVPLW2_8Ie21uxYZF9fdEmn.Tn2DvN.JAiqAk-1784515111.5095472-1.2.1.1-pVfmK6soh5WLmK38Jo8Zuf.g5_lcA7UOReg_FqWUc3o" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <div class="tool-page">
-            <a href="/" class="back-link">
+            <a href="/" class="back-link" data-i18n="back_home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
                 返回首页
             </a>
-            <h1>DNS 记录查询</h1>
-            <p class="subtitle">输入域名并选择记录类型，查询其 DNS 解析记录（数据来源：Google Public DNS）。</p>
+            <h1 data-i18n="tool_dns_title">DNS 记录查询</h1>
+            <p class="subtitle" data-i18n="tool_dns_subtitle">输入域名并选择记录类型，查询其 DNS 解析记录（数据来源：Google Public DNS）。</p>
 
             <div class="input-group">
                 <select id="record-type" style="padding:12px 16px;border:1px solid var(--gray-300);border-radius:var(--radius);font-size:15px;background:#fff;cursor:pointer;">
@@ -36,10 +36,12 @@
                     <option value="CAA">CAA</option>
                 </select>
                 <input type="text" id="domain-input" placeholder="example.com" onkeypress="if(event.key==='Enter') lookup()">
-                <button class="btn btn-primary" id="lookup-btn" onclick="lookup()">查询</button>
+                <button class="btn btn-primary" id="lookup-btn" onclick="lookup()" data-i18n="btn_lookup">查询</button>
             </div>
 
             <div id="ad-slot"></div>
+
+            <div class="tool-description" data-i18n="tool_dns_description">DNS（域名系统）是互联网的"电话簿"，负责将人类可读的域名（如 example.com）翻译为计算机可识别的 IP 地址。A 记录是最基础的 DNS 记录类型，将域名指向一个 IPv4 地址。CNAME 记录将域名指向另一个域名，常用于 CDN 和子域名管理。MX 记录指定接收该域名的邮件服务器地址。NS 记录指定域名由哪些 DNS 服务器负责解析。TXT 记录通常用于域名验证、SPF 邮件安全配置等。通过本工具，你可以快速查询任意域名的各种 DNS 记录，排查域名解析问题。</div>
 
             <div class="results" id="results"></div>
         </div>
@@ -112,16 +114,16 @@
             let html = `
                 <div class="result-card">
                     <table class="result-table">
-                        <tr><th style="width:140px;">查询域名</th><td>${esc(domain)}</td></tr>
-                        <tr><th>记录类型</th><td>${type}</td></tr>
-                        <tr><th>查询状态</th><td><span class="status-badge ${status === 0 ? 'success' : 'warning'}">${esc(statusText)}</span></td></tr>
+                        <tr><th style="width:140px;">${t('label_query_domain')}</th><td>${esc(domain)}</td></tr>
+                        <tr><th>${t('label_record_type')}</th><td>${type}</td></tr>
+                        <tr><th>${t('label_query_status')}</th><td><span class="status-badge ${status === 0 ? 'success' : 'warning'}">${esc(statusText)}</span></td></tr>
                     </table>
                 </div>`;
 
             if (answers.length === 0) {
                 html += `
                 <div class="result-card" style="text-align:center;color:var(--gray-500);">
-                    未找到该域名的 <strong>${type}</strong> 记录。
+                    ${t('dns_not_found').replace('{type}', type)}
                 </div>`;
             } else {
                 html += `
@@ -130,10 +132,10 @@
                         <table class="result-table">
                             <thead>
                                 <tr>
-                                    <th>名称</th>
-                                    <th>类型</th>
-                                    <th>TTL（秒）</th>
-                                    <th>数据</th>
+                                    <th>${t('label_name')}</th>
+                                    <th>${t('label_type')}</th>
+                                    <th>${t('label_ttl')}</th>
+                                    <th>${t('label_data')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -152,11 +154,11 @@
 
             html += `
                 <div class="result-card" style="font-size:13px;color:var(--gray-500);">
-                    说明：TTL 为记录的缓存时间（单位：秒）。MX 记录数据格式为“优先级 邮件服务器”，TXT 记录包含引号文本，SOA 记录包含主域名服务器与管理员信息。
+                    ${t('dns_note')}
                 </div>`;
 
             document.getElementById('results').innerHTML = html;
         }
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de9716eda40b7c',t:'MTc4NDUxNTExMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

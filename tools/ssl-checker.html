@@ -9,27 +9,29 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=ONXTUctPExDmI6akv.EuJmO4VcWLBKkYRhCb3_YCl_s-1784515112.4157863-1.2.1.1-h92T_NobvydE.xFQdxwgOj.LB7nQV4nqfedhVJ3y6yU" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <div class="tool-page">
-            <a href="/" class="back-link">
+            <a href="/" class="back-link" data-i18n="back_home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
                 返回首页
             </a>
-            <h1>SSL 证书检测</h1>
-            <p class="subtitle">输入域名，检测其 SSL/HTTPS 证书的颁发机构、有效期与剩余天数（数据来源：crt.sh 证书透明度日志）。</p>
+            <h1 data-i18n="tool_ssl_title">SSL 证书检测</h1>
+            <p class="subtitle" data-i18n="tool_ssl_subtitle">输入域名，检测其 SSL/HTTPS 证书的颁发机构、有效期与剩余天数（数据来源：crt.sh 证书透明度日志）。</p>
 
             <div class="input-group">
                 <input type="text" id="domain-input" placeholder="example.com" onkeypress="if(event.key==='Enter') checkSSL()">
-                <button class="btn btn-primary" id="check-btn" onclick="checkSSL()">检测证书</button>
+                <button class="btn btn-primary" id="check-btn" onclick="checkSSL()" data-i18n="btn_check_ssl">检测证书</button>
             </div>
 
             <div id="ad-slot"></div>
+
+            <div class="tool-description" data-i18n="tool_ssl_description">SSL/TLS 证书是网站实现 HTTPS 加密连接的基础，它确保用户与网站之间的数据传输经过加密，防止中间人攻击和信息窃取。证书由受信任的证书颁发机构（CA）签发，包含域名信息、有效期和公钥等。常见的证书类型包括域名验证证书（DV）、组织验证证书（OV）和扩展验证证书（EV）。证书通常有效期为 90 天到 1 年，过期后需要续签。通过本工具，你可以检测任意 HTTPS 网站的 SSL 证书状态，查看证书颁发机构、有效期、到期时间和加密协议等信息，确保你的网站和访问的网站安全可靠。</div>
 
             <div class="results" id="results"></div>
         </div>
@@ -117,16 +119,16 @@
 
             let statusLabel, statusClass;
             if (now < validFrom) {
-                statusLabel = '尚未生效';
+                statusLabel = t('ssl_not_yet_valid');
                 statusClass = 'warning';
             } else if (daysRemaining < 0) {
-                statusLabel = '已过期';
+                statusLabel = t('ssl_expired');
                 statusClass = 'danger';
             } else if (daysRemaining <= 30) {
-                statusLabel = '即将过期';
+                statusLabel = t('ssl_expiring');
                 statusClass = 'warning';
             } else {
-                statusLabel = '有效';
+                statusLabel = t('ssl_valid');
                 statusClass = 'success';
             }
 
@@ -143,15 +145,15 @@
                         <span class="status-badge ${statusClass}" style="font-size:14px;padding:4px 14px;">${statusLabel}</span>
                     </div>
                     <table class="result-table">
-                        <tr><th style="width:140px;">颁发机构</th><td>${esc(issuer)}</td></tr>
-                        <tr><th>生效时间</th><td>${formatDate(validFrom)} ${validFrom.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
-                        <tr><th>到期时间</th><td>${formatDate(validTo)} ${validTo.toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
-                        <tr><th>剩余天数</th><td>${daysRemaining < 0 ? '已过期 ' + Math.abs(daysRemaining) + ' 天' : daysRemaining + ' 天'}</td></tr>
+                        <tr><th style="width:140px;">${t('label_issuer')}</th><td>${esc(issuer)}</td></tr>
+                        <tr><th>${t('label_valid_from')}</th><td>${formatDate(validFrom)} ${validFrom.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
+                        <tr><th>${t('label_valid_to')}</th><td>${formatDate(validTo)} ${validTo.toLocaleTimeString(currentLang === 'en' ? 'en-US' : 'zh-CN', {hour:'2-digit',minute:'2-digit'})}</td></tr>
+                        <tr><th>${t('label_days_remaining')}</th><td>${daysRemaining < 0 ? t('ssl_expired_days').replace('{days}', Math.abs(daysRemaining)) : t('ssl_days_left').replace('{days}', daysRemaining)}</td></tr>
                     </table>
                 </div>
 
                 <div class="result-card" style="font-size:13px;color:var(--gray-500);">
-                    证书透明度日志中共找到 <strong style="color:var(--gray-700);">${totalCount}</strong> 条相关证书记录。以上展示的是最近签发的证书信息。剩余天数小于 30 天建议尽快续期。
+                    ${t('ssl_note').replace('{count}', totalCount)}
                 </div>`;
 
             // 额外展示最近 5 条证书记录
@@ -159,15 +161,15 @@
             if (recent.length > 1) {
                 html += `
                 <div class="result-card">
-                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:12px;">最近签发的证书</div>
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:12px;">${t('label_recent_certs')}</div>
                     <div style="overflow-x:auto;">
                         <table class="result-table">
                             <thead>
                                 <tr>
-                                    <th>颁发机构</th>
-                                    <th>生效时间</th>
-                                    <th>到期时间</th>
-                                    <th>状态</th>
+                                    <th>${t('label_issuer')}</th>
+                                    <th>${t('label_valid_from')}</th>
+                                    <th>${t('label_valid_to')}</th>
+                                    <th>${t('label_status_col')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -176,10 +178,10 @@
                                     const vt = new Date(c.not_after);
                                     const dr = Math.ceil((vt - now) / (1000 * 60 * 60 * 24));
                                     let lbl, cls;
-                                    if (now < vf) { lbl = '未生效'; cls = 'warning'; }
-                                    else if (dr < 0) { lbl = '已过期'; cls = 'danger'; }
-                                    else if (dr <= 30) { lbl = '即将过期'; cls = 'warning'; }
-                                    else { lbl = '有效'; cls = 'success'; }
+                                    if (now < vf) { lbl = t('ssl_not_yet_valid'); cls = 'warning'; }
+                                    else if (dr < 0) { lbl = t('ssl_expired'); cls = 'danger'; }
+                                    else if (dr <= 30) { lbl = t('ssl_expiring'); cls = 'warning'; }
+                                    else { lbl = t('ssl_valid'); cls = 'success'; }
                                     return `
                                     <tr>
                                         <td>${esc(extractIssuerCN(c.issuer_name))}</td>
@@ -197,5 +199,5 @@
             document.getElementById('results').innerHTML = html;
         }
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de971c9d5cfb81',t:'MTc4NDUxNTExMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

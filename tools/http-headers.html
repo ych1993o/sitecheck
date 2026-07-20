@@ -9,27 +9,29 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=fYXHhAwydUCGV7DanMrRM9IPEINHiMff_srAvignvYE-1784515114.391941-1.2.1.1-Mj.03xFPRmctja3sHZ4BS7d2WwbLp_bJx_1INtebWEg" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <div class="tool-page">
-            <a href="/" class="back-link">
+            <a href="/" class="back-link" data-i18n="back_home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
                 返回首页
             </a>
-            <h1>HTTP Headers 分析</h1>
-            <p class="subtitle">输入网址，查看其 HTTP 响应头信息，并检测关键安全头的配置情况。</p>
+            <h1 data-i18n="tool_headers_title">HTTP Headers 分析</h1>
+            <p class="subtitle" data-i18n="tool_headers_subtitle">输入网址，查看其 HTTP 响应头信息，并检测关键安全头的配置情况。</p>
 
             <div class="input-group">
                 <input type="text" id="url-input" placeholder="example.com 或 https://example.com" onkeypress="if(event.key==='Enter') analyze()">
-                <button class="btn btn-primary" id="check-btn" onclick="analyze()">分析</button>
+                <button class="btn btn-primary" id="check-btn" onclick="analyze()" data-i18n="btn_analyze">分析</button>
             </div>
 
             <div id="ad-slot"></div>
+
+            <div class="tool-description" data-i18n="tool_headers_description">HTTP 响应头是服务器在返回网页内容时发送的一系列元数据，包含了服务器类型、内容编码、缓存策略和安全配置等重要信息。常见的安全相关响应头包括：Content-Security-Policy（CSP）用于限制页面可以加载的资源来源，防止 XSS 攻击；Strict-Transport-Security（HSTS）强制浏览器使用 HTTPS 连接；X-Frame-Options 控制页面是否可以被嵌入 iframe，防止点击劫持；X-Content-Type-Options 防止浏览器进行 MIME 类型嗅探。通过本工具，你可以查看任意网站的 HTTP 响应头信息，检测安全头配置是否完善，提升网站安全等级。</div>
 
             <div class="results" id="results"></div>
         </div>
@@ -111,7 +113,7 @@
                                 ? '<span style="color:var(--success);" title="已配置">&#10004;</span>'
                                 : '<span style="color:var(--danger);" title="未配置">&#10006;</span>'}
                         </td>
-                        <td>${present ? esc(value) : '<span style="color:var(--gray-400);">未配置</span>'}</td>
+                        <td>${present ? esc(value) : '<span style="color:var(--gray-400);">' + t('ssl_not_configured') + '</span>'}</td>
                     </tr>`;
             }).join('');
 
@@ -133,25 +135,25 @@
                 <div class="result-card">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
                         <div>
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">HTTP 状态码</div>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">${t('label_http_status')}</div>
                             <span class="status-badge ${cls}" style="font-size:16px;font-weight:700;padding:6px 16px;">${status}</span>
                         </div>
                         <div style="text-align:right;">
-                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">安全头评分</div>
-                            <span class="status-badge ${scoreClass}" style="font-size:16px;font-weight:700;padding:6px 16px;">${securityScore} 分（${presentCount}/${SECURITY_HEADERS.length}）</span>
+                            <div style="font-size:13px;color:var(--gray-500);margin-bottom:6px;">${t('label_security_score')}</div>
+                            <span class="status-badge ${scoreClass}" style="font-size:16px;font-weight:700;padding:6px 16px;">${securityScore}${currentLang === 'en' ? '' : ' 分'}${currentLang === 'en' ? ' pts' : ''}（${presentCount}/${SECURITY_HEADERS.length}）</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="result-card">
-                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">安全头检测结果</div>
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">${t('label_security_check')}</div>
                     <div style="overflow-x:auto;">
                         <table class="result-table">
                             <thead>
                                 <tr>
-                                    <th>安全头</th>
-                                    <th style="text-align:center;width:60px;">状态</th>
-                                    <th>值</th>
+                                    <th>${t('label_security_header')}</th>
+                                    <th style="text-align:center;width:60px;">${t('label_status_col')}</th>
+                                    <th>${t('label_value_col')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,13 +164,13 @@
                 </div>
 
                 <div class="result-card">
-                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">全部响应头（共 ${headers.length} 项）</div>
+                    <div style="font-size:15px;font-weight:600;color:var(--gray-900);margin-bottom:16px;">${t('label_all_headers').replace('{count}', headers.length)}</div>
                     <div style="overflow-x:auto;">
                         <table class="result-table">
                             <thead>
                                 <tr>
-                                    <th>名称</th>
-                                    <th>值</th>
+                                    <th>${t('label_name')}</th>
+                                    <th>${t('label_value_col')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -178,9 +180,9 @@
                     </div>
                 </div>
                 <div class="result-card" style="font-size:13px;color:var(--gray-500);">
-                    说明：绿色对勾表示该安全头已配置，红色叉号表示缺失。配置完整的安全头可有效提升网站安全性。部分响应头可能因 CORS 代理未暴露而无法显示。
+                    ${t('headers_note')}
                 </div>`;
         }
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de9728fbd3760b',t:'MTc4NDUxNTExNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
