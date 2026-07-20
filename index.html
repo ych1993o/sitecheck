@@ -127,12 +127,19 @@
                     <div class="blog-card-category">${isEn ? p.en_category : p.category}</div>
                     <h3><a href="${url}">${isEn ? p.en_title : p.title}</a></h3>
                     <p>${isEn ? p.en_excerpt : p.excerpt}</p>
-                    <div class="blog-card-meta">${p.date}</div>
+                    <div class="blog-card-meta">${formatDate(p.date)}</div>
                 </div>
             </div>
         `}).join('');
         }
         renderLatestPosts();
+
+        // Re-render latest posts when language switches
+        const origSwitchLang = window.switchLang;
+        window.switchLang = function(lang) {
+            origSwitchLang(lang);
+            renderLatestPosts();
+        };
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de97085bf0c76c',t:'MTc4NDUxNTEwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
