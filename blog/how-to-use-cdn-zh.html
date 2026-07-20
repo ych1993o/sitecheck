@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDN 选择与配置完全指南 - SiteCheck</title>
+    <meta name="description" content="CDN 工作原理、主流服务商对比、DNS 配置、缓存规则设置、SSL 配置和常见问题排查。">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PPKQ144LSH');</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <main class="main-content" style="max-width:800px;margin:0 auto;padding:40px 20px 60px;">
+        <nav style="margin-bottom:24px;font-size:14px;color:#64748b;">
+            <a href="/" style="color:#2563eb;text-decoration:none;">首页</a> &rsaquo; 
+            <a href="/blog/index.html" style="color:#2563eb;text-decoration:none;">博客</a> &rsaquo; 
+            <span>CDN 选择与配置完全指南</span>
+        </nav>
+        <article>
+            <h1>CDN 选择与配置完全指南</h1>
+            <p style="color:#64748b;margin-bottom:32px;">发布于 2026 年 7 月 · 网站工具 · 约 8 分钟阅读</p>
+            
+            <p>内容分发网络（CDN）是现代网站架构中不可或缺的组成部分。它不仅能显著加快页面加载速度，还能增强网站的可用性和安全性。然而，面对市场上众多的 CDN 服务商和复杂的配置选项，许多站长在选择和部署时感到困惑。本文将从原理出发，系统讲解 CDN 的选型、配置和优化方法，帮助你做出明智的决策。</p>
+
+            <h2>一、什么是 CDN？工作原理简介</h2>
+            <p>CDN 是一个由分布在全球各地的服务器节点组成的网络，其核心目标是将网站内容缓存到离用户最近的位置。当用户请求一个资源时，CDN 的负载均衡系统会根据用户的地理位置、网络状况和节点健康状态，将请求导向最优的边缘节点。如果该节点已经缓存了请求的内容，就直接返回给用户；如果没有，则向源站获取并缓存后再响应。这种架构大幅减少了数据传输的物理距离和网络跳数，有效降低延迟和丢包率。除了静态内容加速，现代 CDN 还支持动态内容加速、视频流媒体分发和边缘计算等高级功能。</p>
+
+            <h2>二、主流 CDN 服务商对比</h2>
+            <p>市场上的 CDN 服务商大致可分为国际型和国内型两类。Cloudflare 是全球使用最广泛的 CDN 之一，提供免费套餐和强大的安全防护功能，适合面向海外用户的网站。Fastly 以实时缓存刷新和边缘计算能力著称，受到 GitHub、Stripe 等技术公司青睐。Akamai 拥有全球最大的边缘网络，企业级功能完善但价格较高。在国内，阿里云 CDN 和腾讯云 CDN 节点覆盖广泛，与国内运营商互联互通良好，适合主要服务中国用户的业务。华为云和百度云也提供了具有竞争力的 CDN 产品。选择时需要综合考虑节点分布、价格模型、功能特性和技术支持质量。</p>
+
+            <h2>三、选择 CDN 的 5 个关键因素</h2>
+            <p>第一，节点覆盖范围。确认 CDN 在你目标用户集中的区域有足够的边缘节点，特别是如果你服务的是特定国家或地区。第二，缓存控制能力。强大的缓存规则配置能让你精细控制哪些内容缓存、缓存多久，以及何时主动刷新。第三，安全功能。DDoS 防护、WAF 集成和 Bot 管理是现代 CDN 的标配，评估其防护能力和额外费用。第四，分析和监控。实时流量报表、缓存命中率和性能指标能帮助你持续优化配置。第五，价格透明度。了解按流量计费和按带宽计费的差异，注意是否有请求数、HTTPS 请求或缓存刷新的隐藏费用。</p>
+
+            <h2>四、CDN 的 DNS 配置方法</h2>
+            <p>启用 CDN 通常需要修改域名的 DNS 解析记录。以 CNAME 接入方式为例，首先在 CDN 控制台添加你的域名，系统会分配一个 CDN 专属的 CNAME 地址（如 <code>example.com.cdn-provider.com</code>）。然后登录你的域名注册商或 DNS 服务商，将原有记录类型从 A 记录改为 CNAME 记录，指向 CDN 提供的地址。对于根域名（裸域名），由于 DNS 协议限制不能直接设置 CNAME，可以使用 DNS 服务商提供的 CNAME 扁平化功能，或改用 A 记录指向 CDN 的 Anycast IP。配置完成后，使用 <code>dig</code> 或在线 DNS 查询工具验证解析是否生效。</p>
+
+            <h2>五、缓存规则设置详解</h2>
+            <p>缓存规则决定了哪些请求由 CDN 节点直接响应，哪些需要回源获取。通用原则是：对不经常变化的静态资源（CSS、JS、图片、字体）设置较长的缓存时间（30 天到 1 年），对动态内容（API 接口、个性化页面）设置为不缓存或极短缓存。大多数 CDN 支持基于文件扩展名、目录路径、URL 参数和请求头的多级匹配规则。配置时需要注意缓存键（Cache Key）的设计，确保同一资源的不同变体（如按语言、设备类型）被正确区分。同时启用查询字符串排序和忽略无关参数，避免同一资源因 URL 参数顺序不同而产生多个缓存副本，降低缓存命中率。</p>
+
+            <h2>六、CDN 的 SSL 证书配置</h2>
+            <p>HTTPS 已经成为网站的标配，CDN 也必须正确配置 SSL 证书才能提供加密传输。主流 CDN 都支持上传自有证书和自动申请免费证书两种模式。如果你已有商业证书，可以下载 PEM 格式的证书文件和私钥上传到 CDN 控制台。如果没有，可以直接启用 CDN 提供的免费证书服务（通常基于 Let’s Encrypt 或自签体系），系统会自动完成申请、部署和续期。配置完成后，强制开启 HTTPS 回源，确保 CDN 到源站的通信也是加密的，避免中间环节的数据泄露。定期使用 SSL Labs 测试工具检查 CDN 边缘节点的 TLS 配置安全性。</p>
+
+            <h2>七、CDN 常见问题与故障排查</h2>
+            <p>缓存不生效是最常见的问题之一，原因可能是源站响应头中带有 <code>Cache-Control: no-cache</code> 或 <code>Set-Cookie</code>，也可能是 CDN 规则匹配顺序有误。遇到这种情况，先检查源站响应头，再核对 CDN 控制台的最具体规则是否被更宽泛的规则覆盖。内容更新后用户看到旧版本，可以使用 URL 刷新或目录刷新功能主动清除缓存，或在部署时采用文件名哈希策略。HTTPS 证书错误通常是由于证书链不完整或域名不匹配导致，确保证书包含所有中间 CA。如果网站启用 CDN 后部分用户无法访问，可能是特定区域的节点故障，联系 CDN 技术支持获取节点状态信息，必要时临时切换回源站。</p>
+
+            <h2>总结</h2>
+            <p>CDN 是提升网站性能和可靠性的强大工具，但发挥其最大价值需要正确的选择和精细的配置。从理解工作原理到对比服务商，从 DNS 接入到缓存策略调优，每一个环节都值得投入时间深入研究。建议在实际部署前先通过 CDN 提供的试用期或免费额度进行充分测试，使用真实流量验证缓存命中率和加速效果。随着业务的发展，定期审视 CDN 配置，结合访问日志和性能监控持续优化，才能让 CDN 真正成为网站的高速引擎和安全屏障。</p>
+        </article>
+    </main>
+    <div id="footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script>initPage('blog');</script>
+</body>
+</html>

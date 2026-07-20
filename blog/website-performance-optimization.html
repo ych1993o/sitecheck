@@ -1,148 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>网站性能优化指南：提升加载速度的10个方法 | SiteCheck博客</title>
-    <meta name="description" content="总结 10 个经过验证的网站性能优化方法，涵盖资源压缩、缓存策略、图片优化、CDN、懒加载、HTTP/2 等，全面提升网站加载速度与用户体验。">
-    <meta name="keywords" content="网站性能优化,加载速度,网页优化,CDN,懒加载,HTTP/2,图片优化,缓存策略">
-    <meta property="og:title" content="网站性能优化指南：提升加载速度的10个方法">
-    <meta property="og:description" content="10 个经过验证的网站性能优化方法，全面提升网站加载速度与用户体验。">
-    <meta property="og:type" content="article">
-    <link rel="canonical" href="https://sitecheck.example/blog/website-performance-optimization.html">
+    <title>10 Proven Ways to Improve Website Loading Speed in 2026 - SiteCheck</title>
+    <meta name="description" content="Learn 10 proven techniques to dramatically improve your website loading speed in 2026. From image optimization and CDN configuration to lazy loading and HTTP/2, this comprehensive guide covers everything you need to make your site fast.">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PPKQ144LSH');</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="header"></div>
+    <main class="main-content" style="max-width:800px;margin:0 auto;padding:40px 20px 60px;">
+        <nav style="margin-bottom:24px;font-size:14px;color:#64748b;">
+            <a href="/" style="color:#2563eb;text-decoration:none;">Home</a> &rsaquo; 
+            <a href="/blog/index.html" style="color:#2563eb;text-decoration:none;">Blog</a> &rsaquo; 
+            <span>10 Proven Ways to Improve Website Loading Speed in 2026</span>
+        </nav>
+        <article>
+            <h1>10 Proven Ways to Improve Website Loading Speed in 2026</h1>
+            <p style="color:#64748b;margin-bottom:32px;">Published July 2026 &middot; Web Performance &middot; ~10 min read</p>
 
-    <main class="main-content">
-        <article class="blog-post">
-            <a href="/blog/index.html" class="back-link">← 返回博客</a>
-            <header class="blog-post-header">
-                <div class="blog-card-category">性能优化</div>
-                <h1>网站性能优化指南：提升加载速度的10个方法</h1>
-                <div class="blog-post-meta">2026年7月6日 · SiteCheck</div>
-            </header>
-            <div class="blog-post-body">
-                <p>网站的加载速度直接影响用户体验、转化率和搜索引擎排名。研究表明，页面加载时间每增加 1 秒，转化率可能下降 7%；而 Google 已将页面体验（Core Web Vitals）纳入排名因素。性能优化不是一次性工作，而是需要持续投入的系统工程。本文总结 10 个经过验证的网站性能优化方法，从资源处理到架构改进，帮助你全面提升网站加载速度。</p>
+            <p>Website speed is no longer a luxury—it is a fundamental requirement for online success. Studies consistently show that a one-second delay in page load time can result in a 7% reduction in conversions, a 16% decrease in customer satisfaction, and an 11% drop in page views. Google has made page experience signals a core part of its ranking algorithm, meaning slow websites not only frustrate visitors but also lose visibility in search results. In 2026, with users expecting near-instant experiences and search engines prioritizing Core Web Vitals, optimizing your website's loading speed is more critical than ever.</p>
+            <p>This guide walks you through ten proven, actionable strategies to improve your website's loading speed. Each technique is explained with specific implementation steps so you can apply them immediately to your own site, regardless of whether you are running a WordPress blog, an e-commerce store, or a custom web application.</p>
 
-                <h2>一、压缩与精简资源文件</h2>
-                <p>网页加载的资源（HTML、CSS、JavaScript）中包含大量空格、注释和换行，这些对浏览器没有意义却占用带宽。压缩（Minify）能去除这些冗余字符，通常可减小 20%-60% 的体积。</p>
-                <ul>
-                    <li><strong>JS</strong>：用 Terser、UglifyJS 或 Webpack/Vite 的生产模式压缩。</li>
-                    <li><strong>CSS</strong>：用 cssnano、clean-css 压缩。</li>
-                    <li><strong>HTML</strong>：用 html-minifier 去除空白和注释。</li>
-                </ul>
-                <p>此外务必开启 Gzip 或 Brotli 传输压缩。Brotli 比 Gzip 压缩率更高（通常多 15%-25%），现代浏览器普遍支持。在 Nginx 中启用 Brotli 只需几行配置，效果立竿见影。</p>
+            <h2>1. Optimize Images for the Web</h2>
+            <p>Images typically account for 50% to 65% of a web page's total weight, making image optimization one of the most impactful steps you can take. The goal is to reduce file sizes without noticeably degrading visual quality.</p>
+            <p><strong>Choose the right format:</strong> Use WebP or AVIF for photographic content, as these modern formats offer 25-50% smaller file sizes compared to JPEG and PNG while maintaining similar quality. Reserve PNG for images that require transparency with sharp edges, such as logos and icons. For simple graphics with flat colors, consider SVG, which is resolution-independent and often extremely lightweight.</p>
+            <p><strong>Compress aggressively:</strong> Tools like Squoosh, ImageOptim, and Sharp allow you to compress images with fine-grained control over quality settings. For JPEG, a quality setting between 70 and 85 typically provides an excellent balance. For WebP, aim for a quality of 70-80.</p>
+            <p><strong>Resize appropriately:</strong> Never serve images larger than they will be displayed. If an image is rendered at 800 pixels wide, do not upload a 4000-pixel version. Use responsive images with the <code>srcset</code> attribute to serve different sizes based on the viewport.</p>
+            <p><strong>Implementation tip:</strong> If you use a build process, integrate image optimization into your pipeline with tools like Sharp (Node.js), ImageMagick, or webpack plugins such as <code>image-webpack-loader</code>. For WordPress, plugins like Smush or ShortPixel handle this automatically.</p>
 
-                <h2>二、优化图片资源</h2>
-                <p>图片往往是页面中体积最大的资源，优化图片收益最高。可从四个层面入手：</p>
-                <ol>
-                    <li><strong>选择现代格式</strong>：WebP 比 JPEG/PNG 小 25%-35%，AVIF 更进一步，体积更小质量更好。用 <code>&lt;picture&gt;</code> 标签提供格式回退。</li>
-                    <li><strong>压缩图片</strong>：用 TinyPNG、ImageOptim 等工具有损或无损压缩，去除元数据。</li>
-                    <li><strong>响应式图片</strong>：用 <code>srcset</code> 和 <code>sizes</code> 属性，让浏览器按设备屏幕加载合适尺寸的图。</li>
-                    <li><strong>懒加载</strong>：用 <code>loading="lazy"</code> 属性延迟加载视口外图片，首屏只加载必要资源。</li>
-                </ol>
+            <h2>2. Use a Content Delivery Network (CDN)</h2>
+            <p>A Content Delivery Network distributes your static assets—images, CSS, JavaScript, fonts—across a global network of servers. When a user visits your site, they are served content from the geographically closest server, dramatically reducing latency.</p>
+            <p>Without a CDN, a user in Tokyo visiting a server in New York might experience 200-300ms of round-trip latency before any content even begins to load. With a CDN, that latency drops to 10-30ms because the content is served from a nearby edge node.</p>
+            <p><strong>How to implement:</strong> Sign up for a CDN provider such as Cloudflare (free tier available), AWS CloudFront, Fastly, or BunnyCDN. Point your domain's DNS to the CDN, and configure it to cache static assets. Most CDNs offer one-click setup for popular platforms like WordPress, Shopify, and various CMS solutions.</p>
+            <p><strong>Key configuration:</strong> Set appropriate cache durations for different asset types. Static assets like images and fonts can be cached for weeks or months, while HTML files may need shorter cache times. Enable automatic compression (gzip or Brotli) at the CDN level for additional size reductions.</p>
 
-                <h2>三、合理利用浏览器缓存</h2>
-                <p>缓存能避免用户重复下载相同资源，是提升二次访问速度的关键。通过 HTTP 响应头控制缓存策略：</p>
-                <ul>
-                    <li><strong>强缓存</strong>：对带哈希的静态资源（如 <code>app.3a7b9c.js</code>）设置 <code>Cache-Control: max-age=31536000</code>，缓存一年。</li>
-                    <li><strong>协商缓存</strong>：对 HTML 等需要及时更新的资源，用 <code>ETag</code> 或 <code>Last-Modified</code> 配合 304 响应。</li>
-                </ul>
-                <p>关键原则是：文件名带内容哈希的资源可以长期强缓存；不带哈希的资源用协商缓存。这样既保证缓存命中率，又能及时更新。关于缓存头的深入配置，可参考<a href="/blog/understanding-http-headers.html">HTTP 响应头详解</a>。</p>
+            <h2>3. Minify CSS, JavaScript, and HTML</h2>
+            <p>Minification removes unnecessary characters from your code—whitespace, line breaks, comments, and block delimiters—without changing functionality. This can reduce file sizes by 10-30% for CSS and JavaScript.</p>
+            <p><strong>For build-based projects:</strong> Use tools like Terser for JavaScript, cssnano for CSS, and html-minifier-terser for HTML. If you use webpack, Vite, or Rollup, minification is typically enabled by default in production builds.</p>
+            <p><strong>For WordPress sites:</strong> Install a plugin like Autoptimize or WP Rocket, which can automatically minify and combine CSS and JS files with minimal configuration.</p>
+            <p><strong>For custom servers:</strong> Add minification to your deployment pipeline. For example, you can use a simple npm script that processes your assets before deployment.</p>
+            <p>Remember that while minification helps, it should be combined with other techniques like tree-shaking (removing unused code) and code splitting (loading only the JavaScript needed for the current page) for maximum impact.</p>
 
-                <h2>四、使用 CDN 加速分发</h2>
-                <p>CDN（内容分发网络）在全球部署边缘节点，把静态资源缓存在离用户最近的节点，大幅降低延迟。即使用户与源站相隔万里，也能从附近节点获取资源。CDN 的价值包括：</p>
-                <ul>
-                    <li>缩短资源传输距离，降低延迟。</li>
-                    <li>分担源站压力，提升并发能力。</li>
-                    <li>提供 DDoS 防护和 WAF 等安全能力。</li>
-                </ul>
-                <p>选择 CDN 时关注节点覆盖、回源策略和价格。把静态资源（JS、CSS、图片、字体）放到 CDN 域名下，HTML 仍由源站提供，是常见的分离策略。</p>
+            <h2>4. Implement Lazy Loading for Images and Videos</h2>
+            <p>Lazy loading defers the loading of off-screen resources until the user scrolls near them. This means the browser does not waste bandwidth and processing power loading images that the user may never see.</p>
+            <p><strong>Native lazy loading:</strong> Modern browsers support the <code>loading="lazy"</code> attribute on <code>&lt;img&gt;</code> and <code>&lt;iframe&gt;</code> elements. Simply add this attribute to any image below the fold.</p>
+            <pre><code>&lt;img src="hero-image.webp" alt="Hero" loading="eager"&gt;
+&lt;img src="content-image.webp" alt="Content" loading="lazy"&gt;</code></pre>
+            <p><strong>For videos:</strong> Use a placeholder image with a play button overlay. Only load the actual video iframe when the user clicks play. This is especially important for embedded YouTube or Vimeo videos, which can add 500KB to 2MB of JavaScript to your page.</p>
+            <p><strong>JavaScript-based lazy loading:</strong> For more control or to support older browsers, libraries like Lozad.js or the Intersection Observer API can provide custom lazy loading behavior. However, native lazy loading is now supported by all major browsers and should be your first choice in 2026.</p>
 
-                <h2>五、减少 HTTP 请求数量</h2>
-                <p>每个 HTTP 请求都有建立连接、发送、等待、接收的开销。减少请求数能显著提升加载速度，尤其在网络条件差时：</p>
-                <ul>
-                    <li><strong>合并文件</strong>：把多个 JS/CSS 打包成少数几个文件（注意 HTTP/2 下不必过度合并）。</li>
-                    <li><strong>雪碧图</strong>：把小图标合并成一张大图，用 CSS 背景定位显示。现代方案可用 SVG symbol 或 icon font 替代。</li>
-                    <li><strong>内联关键资源</strong>：首屏关键 CSS 内联到 HTML，避免额外请求阻塞渲染。</li>
-                    <li><strong>移除无用资源</strong>：定期清理未使用的 CSS 和 JS，避免加载了却没用。</li>
-                </ul>
+            <h2>5. Leverage Browser Caching</h2>
+            <p>Browser caching allows returning visitors to load your site much faster by storing static assets locally on their device. When configured correctly, a repeat visitor may only need to download the HTML document, while all CSS, JavaScript, images, and fonts are loaded from the local cache.</p>
+            <p><strong>Configure cache-control headers:</strong> Set appropriate <code>Cache-Control</code> and <code>Expires</code> headers for different asset types. For assets with content hashes in their filenames (e.g., <code>app.a3f2b1.js</code>), set long cache durations of one year, since the filename changes when the content changes.</p>
+            <pre><code># Nginx example
+location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+}</code></pre>
+            <p><strong>For HTML files:</strong> Use shorter cache durations or <code>no-cache</code> with <code>ETag</code> validation, so users always get the latest version of your page content.</p>
+            <p><strong>Service Workers:</strong> For progressive web apps, implement a service worker with a cache-first strategy for static assets. This provides even more control over caching behavior and enables offline support.</p>
 
-                <div id="ad-slot"></div>
+            <h2>6. Upgrade to HTTP/2 or HTTP/3</h2>
+            <p>HTTP/2 introduced multiplexing, which allows multiple requests and responses to be sent simultaneously over a single TCP connection. This eliminates the head-of-line blocking problem of HTTP/1.1, where browsers were limited to 6 concurrent connections per origin.</p>
+            <p><strong>How to enable HTTP/2:</strong> HTTP/2 requires HTTPS in most browsers. Ensure your server has a valid SSL/TLS certificate, then configure your web server to support HTTP/2. Most modern server software (Nginx 1.9.5+, Apache 2.4.17+) supports HTTP/2 out of the box.</p>
+            <p><strong>Consider HTTP/3 (QUIC):</strong> HTTP/3 uses the QUIC protocol instead of TCP, eliminating TCP-level head-of-line blocking entirely and providing faster connection establishment. Major CDNs like Cloudflare and Google Cloud support HTTP/3, and browser support is now widespread. Enable it through your CDN or server configuration for an additional performance boost.</p>
+            <p><strong>Server push:</strong> While HTTP/2 server push was initially heralded as a major feature, its practical benefits have been debated. In 2026, the <code>&lt;link rel="preload"&gt;</code> hint is generally preferred over server push for critical resources.</p>
 
-                <h2>六、优化关键渲染路径</h2>
-                <p>关键渲染路径指浏览器把 HTML、CSS、JS 转换成屏幕像素的过程。优化目标是让首屏内容尽快呈现：</p>
-                <ul>
-                    <li><strong>CSS 放头部</strong>：CSS 阻塞渲染，应尽早加载，避免 FOUC（无样式闪烁）。</li>
-                    <li><strong>JS 放底部或异步</strong>：JS 会阻塞 HTML 解析，非关键脚本加 <code>defer</code> 或 <code>async</code> 属性。<code>defer</code> 按顺序执行且在 DOM 解析后，<code>async</code> 下载完立即执行。</li>
-                    <li><strong>预加载关键资源</strong>：用 <code>&lt;link rel="preload"&gt;</code> 提前加载字体、关键 CSS 等高优先级资源。</li>
-                    <li><strong>减少阻塞资源</strong>：识别并消除阻塞首屏渲染的第三方脚本。</li>
-                </ul>
+            <h2>7. Reduce Redirects</h2>
+            <p>Each redirect adds an additional HTTP round trip before the browser can begin loading the final page. A 301 or 302 redirect typically adds 100-500ms of latency, depending on the server's response time and the user's network conditions.</p>
+            <p><strong>Audit your redirects:</strong> Use tools like Screaming Frog, Ahrefs Site Audit, or Google Search Console to identify redirect chains (redirect to redirect to redirect). Every redirect in a chain adds latency.</p>
+            <p><strong>Common sources of unnecessary redirects:</strong></p>
+            <ul>
+                <li>HTTP to HTTPS redirects (avoidable with HSTS)</li>
+                <li>Non-www to www (or vice versa) redirects</li>
+                <li>Trailing slash redirects</li>
+                <li>Outdated marketing campaign URLs</li>
+                <li>Mobile-only redirects to separate mobile sites</li>
+            </ul>
+            <p><strong>Best practices:</strong> Link directly to final URLs in your internal links and marketing materials. Use a single 301 redirect rather than chains. If you have both HTTP-to-HTTPS and non-www-to-www redirects, configure the server to handle both in a single redirect rather than two sequential ones.</p>
 
-                <h2>七、升级到 HTTP/2 或 HTTP/3</h2>
-                <p>HTTP/1.1 时代，浏览器对同一域名并发请求有限制（通常 6 个），导致资源多时要排队。HTTP/2 引入多路复用，一个连接上可并行传输多个请求，大幅减少队头阻塞。HTTP/3 基于 QUIC（UDP），进一步降低了连接建立延迟。</p>
-                <p>启用 HTTP/2 需要 HTTPS（HTTP/3 同理），这也印证了全站 HTTPS 的必要性。启用后，原本为减少请求而做的文件合并、域名分片等 HTTP/1.1 优化反而可以简化，因为多路复用已经解决了并发问题。</p>
+            <h2>8. Use Resource Hints (Preconnect, Prefetch, Preload)</h2>
+            <p>Resource hints give the browser advance knowledge about resources it will need, allowing it to start DNS lookups, TCP handshakes, and even downloads earlier in the page load process.</p>
+            <p><strong>Preconnect:</strong> Use <code>&lt;link rel="preconnect"&gt;</code> for third-party domains your page depends on, such as CDNs, analytics providers, or font services. This starts the DNS lookup and TCP connection early.</p>
+            <pre><code>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://cdn.example.com" crossorigin&gt;</code></pre>
+            <p><strong>Preload:</strong> Use <code>&lt;link rel="preload"&gt;</code> for critical resources that the page needs immediately, such as hero images, above-the-fold CSS, or key JavaScript files. Be careful not to preload too many resources, as this can compete with actual page resources for bandwidth.</p>
+            <p><strong>Prefetch:</strong> Use <code>&lt;link rel="prefetch"&gt;</code> for resources needed on the next likely navigation, such as the next page in a multi-step form or the most commonly visited page. This uses idle network time to download resources in advance.</p>
+            <p><strong>DNS-prefetch:</strong> A lighter version of preconnect that only performs the DNS lookup. Use it for domains that are referenced later in the page load, such as social media widgets or analytics scripts.</p>
 
-                <h2>八、数据库与后端优化</h2>
-                <p>前端优化之外，后端响应速度同样关键。一个慢查询能让首字节时间（TTFB）飙升：</p>
-                <ul>
-                    <li><strong>加索引</strong>：为常用查询字段建索引，避免全表扫描。</li>
-                    <li><strong>查询缓存</strong>：用 Redis 缓存热点查询结果，减少数据库压力。</li>
-                    <li><strong>分页与懒查询</strong>：列表页只查必要字段和分页数据，避免一次查全表。</li>
-                    <li><strong>异步处理</strong>：耗时操作（发邮件、生成报表）放入消息队列异步执行，不阻塞主请求。</li>
-                    <li><strong>连接池</strong>：复用数据库连接，避免频繁建立销毁的开销。</li>
-                </ul>
-                <p>用 <a href="/tools/response-time.html">响应时间检测工具</a>测量 TTFB，正常应在 200ms 以内，超过 500ms 就需要优化后端。</p>
+            <h2>9. Optimize Web Fonts</h2>
+            <p>Web fonts are essential for typography but can significantly impact performance if not handled properly. Unoptimized font loading can cause invisible text during loading (FOIT) or layout shifts when the font loads (FOUT).</p>
+            <p><strong>Self-host fonts:</strong> Instead of loading Google Fonts from the Google CDN, self-host the font files. This eliminates a DNS lookup and third-party connection. You can download Google Fonts and serve them from your own server or CDN.</p>
+            <p><strong>Use modern font formats:</strong> Serve WOFF2 (and WOFF as a fallback) which offer superior compression. A WOFF2 font file is typically 30% smaller than its WOFF equivalent.</p>
+            <p><strong>Subset fonts:</strong> If you only use Latin characters, do not load the full Unicode font file. Use tools like glyphhanger or pyftsubset to create a subset containing only the characters your site actually uses. This can reduce font file sizes by 50-90%.</p>
+            <p><strong>Use font-display:</strong> Add <code>font-display: swap</code> to your <code>@font-face</code> declarations. This tells the browser to use a fallback font immediately and swap in the web font once it loads, preventing invisible text.</p>
+            <pre><code>@font-face {
+    font-family: 'CustomFont';
+    src: url('/fonts/custom.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}</code></pre>
+            <p><strong>Preload critical fonts:</strong> Add a preload hint for your primary web font to start the download as early as possible, reducing the time users see the fallback font.</p>
 
-                <h2>九、代码层面的优化</h2>
-                <p>应用代码质量直接影响运行性能：</p>
-                <ul>
-                    <li><strong>避免内存泄漏</strong>：及时清理事件监听器、定时器、闭包引用，防止内存占用持续增长。</li>
-                    <li><strong>防抖与节流</strong>：对 scroll、resize、input 等高频事件做防抖（debounce）或节流（throttle），减少不必要的计算。</li>
-                    <li><strong>虚拟列表</strong>：长列表渲染用虚拟滚动（如 react-window），只渲染可视区域元素。</li>
-                    <li><strong>代码分割</strong>：用动态 import() 按路由或交互拆分代码，按需加载。</li>
-                </ul>
+            <h2>10. Optimize Server Response Time (TTFB)</h2>
+            <p>Time to First Byte (TTFB) measures how long it takes for the server to send the first byte of the response back to the browser. A slow TTFB delays everything else—rendering, CSS parsing, JavaScript execution, and image loading.</p>
+            <p><strong>Target:</strong> Aim for a TTFB under 200ms for your primary content. Google considers TTFB above 800ms as "poor."</p>
+            <p><strong>Database optimization:</strong> If your site uses a database, ensure queries are properly indexed. Slow database queries are the most common cause of high TTFB for dynamic sites. Use query analysis tools like EXPLAIN to identify slow queries and add appropriate indexes.</p>
+            <p><strong>Caching:</strong> Implement server-side caching for dynamic content. Use Redis or Memcached to cache database query results, API responses, and rendered page fragments. For WordPress, caching plugins like WP Rocket or W3 Total Cache can generate static HTML files that bypass the database entirely.</p>
+            <p><strong>Upgrade your hosting:</strong> Shared hosting plans often have limited resources and inconsistent performance. Consider upgrading to a VPS, managed cloud hosting, or a dedicated server. Cloud platforms like DigitalOcean, Linode, and AWS offer scalable hosting with predictable performance.</p>
+            <p><strong>Enable OPcache:</strong> If you use PHP, enable OPcache to store precompiled script bytecode in shared memory, eliminating the need for PHP to load and parse scripts on each request. This alone can reduce TTFB by 30-50% for PHP applications.</p>
+            <p><strong>Use a reverse proxy:</strong> Place Nginx or Varnish in front of your application server as a reverse proxy. This can handle static file serving, SSL termination, and response caching, offloading work from your application server.</p>
 
-                <h2>十、持续监控与测量</h2>
-                <p>优化不能凭感觉，必须用数据驱动。建立持续的性能监控体系：</p>
-                <ul>
-                    <li><strong>实验室数据</strong>：用 Lighthouse、WebPageTest 定期测试，得到 FCP、LCP、TBT、CLS 等指标。关于这些指标的含义，可阅读<a href="/blog/website-speed-testing-guide.html">网站速度测试指南</a>。</li>
-                    <li><strong>真实用户监控（RUM）</strong>：用浏览器 Performance API 采集真实用户的性能数据，了解长尾用户的真实体验。</li>
-                    <li><strong>性能预算</strong>：设定 JS 体积、图片大小等预算阈值，CI 中超预算即报警，防止性能退化。</li>
-                    <li><strong>告警机制</strong>：当 LCP 或 TTFB 超过阈值时自动告警，及时发现问题。</li>
-                </ul>
-                <p>关注 Core Web Vitals 三大指标：LCP（最大内容绘制）应小于 2.5 秒，INP（交互到下一次绘制）应小于 200 毫秒，CLS（累积布局偏移）应小于 0.1。这三个指标是 Google 衡量页面体验的核心标准。</p>
+            <h2>Measuring Your Results</h2>
+            <p>After implementing these optimizations, measure your results with the right tools. Google PageSpeed Insights provides both lab data (Lighthouse) and field data (Chrome UX Report) for Core Web Vitals metrics. WebPageTest.org offers detailed waterfall charts showing exactly how each resource loads. GTmetrix provides historical tracking so you can monitor performance over time.</p>
+            <p>Focus on the Core Web Vitals metrics: Largest Contentful Paint (LCP) should be under 2.5 seconds, First Input Delay (FID) and Interaction to Next Paint (INP) should be under 200ms, and Cumulative Layout Shift (CLS) should be under 0.1. These are the metrics Google uses in its page experience ranking signals.</p>
 
-                <h2>十一、优化优先级建议</h2>
-                <p>面对众多优化手段，新手常不知从何下手。按投入产出比排序，建议的优化顺序是：</p>
-                <ol>
-                    <li>开启 Gzip/Brotli 压缩（投入小，收益大）。</li>
-                    <li>配置静态资源长缓存。</li>
-                    <li>压缩和懒加载图片。</li>
-                    <li>启用 CDN。</li>
-                    <li>精简和延迟加载 JS。</li>
-                    <li>升级 HTTP/2。</li>
-                    <li>优化后端与数据库。</li>
-                    <li>建立性能监控。</li>
-                </ol>
-                <p>先做高收益低成本的项，再逐步深入。每次优化后用工具测量对比，确认效果。</p>
-
-                <h2>十二、总结</h2>
-                <p>网站性能优化是一个系统工程，涉及前端、后端、网络和监控多个层面。本文介绍的 10 个方法——资源压缩、图片优化、缓存策略、CDN、减少请求、关键渲染路径、HTTP/2、后端优化、代码优化、持续监控——覆盖了性能优化的主要方面。核心原则是：减少资源体积、减少请求数量、缩短传输距离、加快渲染速度、用数据驱动决策。</p>
-                <p>性能优化没有终点，随着业务增长和内容增多，性能问题会反复出现。建议把性能意识融入开发流程，建立监控、设定预算、持续改进。从今天开始，先用 Lighthouse 跑一次你网站的测试，找到最薄弱的环节动手优化，你会看到明显的改善。性能提升带来的不只是更快的速度，更是更好的用户体验和更高的业务转化。</p>
-            </div>
+            <h2>Conclusion</h2>
+            <p>Website performance optimization is not a one-time task but an ongoing process. As your site grows, new content and features can introduce performance regressions. Make performance monitoring a regular part of your development workflow by integrating Lighthouse CI into your deployment pipeline and setting performance budgets that fail builds when metrics exceed thresholds.</p>
+            <p>Start with the techniques that will have the biggest impact for your specific site—often image optimization and caching—and then progressively implement the remaining strategies. Even implementing just a few of these ten methods can result in a dramatically faster website, better user experience, improved search rankings, and higher conversion rates. In 2026, speed is not just a technical metric—it is a competitive advantage.</p>
         </article>
     </main>
-
     <div id="footer"></div>
-
     <script src="/assets/js/common.js"></script>
-    <script>
-        initPage('blog');
-        document.getElementById('ad-slot').innerHTML = renderAd('article');
-    </script>
+    <script>initPage('blog');</script>
 </body>
 </html>

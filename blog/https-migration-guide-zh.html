@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站从 HTTP 迁移到 HTTPS 完整指南 - SiteCheck</title>
+    <meta name="description" content="SSL 证书类型对比、Let's Encrypt 免费证书申请、Nginx/Apache 配置、混合内容修复和 SEO 迁移注意事项。">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PPKQ144LSH');</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <main class="main-content" style="max-width:800px;margin:0 auto;padding:40px 20px 60px;">
+        <nav style="margin-bottom:24px;font-size:14px;color:#64748b;">
+            <a href="/" style="color:#2563eb;text-decoration:none;">首页</a> &rsaquo; 
+            <a href="/blog/index.html" style="color:#2563eb;text-decoration:none;">博客</a> &rsaquo; 
+            <span>网站从 HTTP 迁移到 HTTPS 完整指南</span>
+        </nav>
+        <article>
+            <h1>网站从 HTTP 迁移到 HTTPS 完整指南</h1>
+            <p style="color:#64748b;margin-bottom:32px;">发布于 2026 年 7 月 · 网站工具 · 约 10 分钟阅读</p>
+            
+            <p>HTTPS 已经成为现代网站的事实标准。主流浏览器对未加密的 HTTP 网站标记"不安全"警告，搜索引擎给予 HTTPS 网站排名优待，而用户也越来越关注自己的数据隐私。如果你的网站还在使用 HTTP，现在就是迁移的最佳时机。本文将提供一份完整的 HTTP 到 HTTPS 迁移指南，涵盖证书选择、服务器配置、内容修复和 SEO 注意事项，帮助你顺利完成过渡。</p>
+
+            <h2>一、为什么必须迁移到 HTTPS？</h2>
+            <p>HTTPS 通过 TLS/SSL 协议为浏览器和服务器之间的通信提供加密保护，防止数据在传输过程中被窃听、篡改或伪造。对于涉及登录、支付和个人信息的网站，HTTPS 是基本的安全要求。Google 早在 2014 年就将 HTTPS 作为搜索排名的正面信号，并在 Chrome 浏览器中逐步加强对 HTTP 网站的"不安全"提示。此外，许多现代 Web API（如 Service Workers、Geolocation、摄像头访问）仅在安全上下文中可用。不迁移到 HTTPS，意味着你的网站将在安全性、用户体验和功能支持上全面落后。</p>
+
+            <h2>二、SSL 证书类型对比：DV、OV、EV</h2>
+            <p>SSL 证书按验证级别分为三类：域名验证型（DV）、组织验证型（OV）和扩展验证型（EV）。DV 证书只验证域名所有权，颁发速度快（通常几分钟），适合个人网站和小型企业，且可以免费获取（如 Let’s Encrypt）。OV 证书除了验证域名外，还会审核申请组织的真实身份，证书详情中会显示组织名称，适合需要展示品牌可信度的中型企业。EV 证书提供最高级别的身份验证，浏览器地址栏曾显示绿色企业名称（现代浏览器已简化此展示），颁发流程最严格，适合金融机构和大型电商平台。对于大多数网站，免费的 DV 证书已经完全满足安全和功能需求。</p>
+
+            <h2>三、申请免费 SSL 证书（Let's Encrypt）</h2>
+            <p>Let's Encrypt 是一个由 Mozilla、Cisco 等组织支持的免费证书颁发机构，旨在推动 HTTPS 的普及。申请过程高度自动化，最常用的工具是 Certbot。以 Nginx 和 Ubuntu 为例，安装 Certbot 后运行 <code>sudo certbot --nginx -d example.com -d www.example.com</code>，它会自动验证域名所有权、生成证书、配置服务器并设置自动续期。验证方式包括 HTTP 验证（在网站根目录放置特定文件）和 DNS 验证（添加 TXT 记录），后者适用于通配符证书。证书有效期为 90 天，但 Certbot 默认配置了定时任务自动续期，无需人工干预。如果不想使用命令行，许多主机控制面板（如 cPanel、宝塔面板）也提供一键申请 Let's Encrypt 证书的功能。</p>
+
+            <h2>四、Nginx 服务器 HTTPS 配置</h2>
+            <p>在 Nginx 中启用 HTTPS，需要在配置文件的 server 块中监听 443 端口并指定证书路径。基本配置包括：<code>listen 443 ssl http2;</code> 启用 HTTP/2，<code>ssl_certificate</code> 指向证书文件，<code>ssl_certificate_key</code> 指向私钥文件。为了获得最佳安全性和性能，建议配置现代加密套件和协议版本：<code>ssl_protocols TLSv1.2 TLSv1.3;</code> 禁用旧版协议，<code>ssl_ciphers</code> 使用 Mozilla 推荐的现代密码套件列表，<code>ssl_prefer_server_ciphers on;</code> 优先使用服务端配置。同时添加 HSTS 头强制 HTTPS，并设置 OCSP Stapling 加快证书状态验证。配置完成后使用 <code>nginx -t</code> 检查语法，然后重载服务。</p>
+
+            <h2>五、Apache 服务器 HTTPS 配置</h2>
+            <p>Apache 通过 <code>mod_ssl</code> 模块提供 HTTPS 支持。首先确保模块已启用（<code>a2enmod ssl</code>），然后在虚拟主机配置中监听 443 端口并设置 <code>SSLEngine on</code>，使用 <code>SSLCertificateFile</code> 和 <code>SSLCertificateKeyFile</code> 指定证书和密钥路径。如果证书链不完整，还需配置 <code>SSLCertificateChainFile</code> 或 <code>SSLCACertificateFile</code>。与 Nginx 类似，应限制协议版本为 TLS 1.2 和 1.3，配置安全的加密套件。Apache 的 <code>mod_rewrite</code> 模块可用于将 HTTP 请求重定向到 HTTPS，在站点配置中添加 RewriteEngine On 和 RewriteCond/RewriteRule 规则即可。完成配置后执行 <code>apachectl configtest</code> 验证，再重启服务生效。</p>
+
+            <h2>六、修复混合内容问题</h2>
+            <p>混合内容（Mixed Content）是指 HTTPS 页面中通过 HTTP 加载了图片、脚本、样式表或 iframe 等资源。现代浏览器会阻止这些不安全的内容，导致页面显示异常或功能失效。修复方法包括：全面检查网站源码和数据库，将所有 <code>http://</code> 链接改为 <code>https://</code> 或使用协议相对 URL（<code>//example.com</code>）。对于外部资源，确认对方支持 HTTPS，否则寻找替代方案。在迁移初期，可以暂时在页面头部添加 <code>Content-Security-Policy: upgrade-insecure-requests</code> 头，让浏览器自动将 HTTP 请求升级为 HTTPS。使用 Chrome 开发者工具的控制台可以方便地定位所有混合内容警告。</p>
+
+            <h2>七、配置 HSTS 强制 HTTPS</h2>
+            <p>HTTP 严格传输安全（HSTS）是一种安全机制，通过 <code>Strict-Transport-Security</code> 响应头告诉浏览器：在未来一段时间内，该网站只能通过 HTTPS 访问，即使点击了 HTTP 链接或遇到证书警告也不允许降级。这能有效防御 SSL 剥离攻击。配置示例为 <code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code>，其中 max-age 以秒为单位（31536000 即一年），includeSubDomains 将策略应用到所有子域名，preload 表示申请加入浏览器的内置 HSTS 预加载列表。注意：在确认 HTTPS 完全正常工作之前，不要启用 HSTS，否则如果证书配置有误，用户将无法访问你的网站。</p>
+
+            <h2>八、HTTPS 迁移的 SEO 注意事项</h2>
+            <p>搜索引擎将 HTTP 和 HTTPS 视为不同的网址，因此迁移时必须做好 SEO 过渡。首先，在 Google Search Console 和百度站长平台中添加 HTTPS 版本的网站属性。其次，设置 301 永久重定向将所有 HTTP 页面跳转到对应的 HTTPS 版本，确保权重传递。更新网站内部的绝对链接，包括导航菜单、面包屑、站点地图和 canonical 标签。向搜索引擎提交更新后的 XML 站点地图，加速重新抓取。监控索引状态，确认 HTTPS 页面逐步取代 HTTP 页面的收录。迁移后的几周内，排名和流量可能出现轻微波动，这是正常现象，通常会在一个月内恢复并趋于稳定。</p>
+
+            <h2>九、性能影响分析</h2>
+            <p>许多人担心 HTTPS 会增加服务器负载和延迟。实际上，现代硬件和 TLS 1.3 协议已经大幅降低了加密开销， handshake 过程可以控制在 1 个 RTT 内完成。HTTP/2 协议甚至要求必须使用 HTTPS，而它带来的多路复用和头部压缩能显著提升性能。证书的选择也会影响速度：ECDSA 证书比 RSA 证书更小，握手更快；启用 OCSP Stapling 可以避免客户端向 CA 查询证书状态；会话恢复机制（Session ID 和 Session Ticket）允许复用之前的握手结果。总体而言，正确配置的 HTTPS 网站在性能上不仅不会落后，反而可能因为 HTTP/2 的支持而更快。</p>
+
+            <h2>总结</h2>
+            <p>从 HTTP 迁移到 HTTPS 是每一个网站都必须完成的安全升级。整个过程涉及证书申请、服务器配置、内容修复和 SEO 调整等多个环节，但只要按步骤有序推进，就能顺利完成。建议先在测试环境演练整个流程，制定详细的迁移计划和回滚预案。迁移完成后，持续监控服务器日志、搜索排名和用户反馈，确保过渡平稳。HTTPS 不仅是对用户数据安全的承诺，也是网站专业性和可信度的基本标志。立即行动，为你的网站加上这把安全锁。</p>
+        </article>
+    </main>
+    <div id="footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script>initPage('blog');</script>
+</body>
+</html>

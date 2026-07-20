@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站安全检查清单：15 步保护你的网站 - SiteCheck</title>
+    <meta name="description" content="涵盖 HTTPS 配置、安全响应头、防火墙、SQL 注入防护、XSS 防护、CSRF 防护、文件权限、日志监控等 15 项安全检查。">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PPKQ144LSH');</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <main class="main-content" style="max-width:800px;margin:0 auto;padding:40px 20px 60px;">
+        <nav style="margin-bottom:24px;font-size:14px;color:#64748b;">
+            <a href="/" style="color:#2563eb;text-decoration:none;">首页</a> &rsaquo; 
+            <a href="/blog/index.html" style="color:#2563eb;text-decoration:none;">博客</a> &rsaquo; 
+            <span>网站安全检查清单：15 步保护你的网站</span>
+        </nav>
+        <article>
+            <h1>网站安全检查清单：15 步保护你的网站</h1>
+            <p style="color:#64748b;margin-bottom:32px;">发布于 2026 年 7 月 · 网站工具 · 约 10 分钟阅读</p>
+            
+            <p>随着网络攻击手段日益复杂，网站安全已成为每个站长不可忽视的课题。无论运行的是个人博客还是企业电商平台，一旦遭受攻击，不仅会造成数据泄露和经济损失，还会严重损害品牌信誉。本文提供一份全面的网站安全检查清单，涵盖 15 个关键步骤，帮助你系统地加固网站防御体系。</p>
+
+            <h2>一、配置 HTTPS 与 SSL 证书</h2>
+            <p>HTTPS 是网站安全的基础防线，它通过 TLS/SSL 协议加密浏览器与服务器之间的通信，防止数据在传输过程中被窃听或篡改。目前所有主流浏览器都会对未启用 HTTPS 的网站标记"不安全"警告。你可以从 Let’s Encrypt 免费申请 SSL 证书，或使用商业证书获得更高的保险额度和技术支持。配置完成后，使用 SSL Labs 的测试工具检查证书链是否完整、协议版本是否安全，确保禁用已废弃的 SSL 2.0/3.0 和 TLS 1.0/1.1。</p>
+
+            <h2>二、设置安全响应头（CSP/HSTS/X-Frame-Options）</h2>
+            <p>HTTP 安全响应头可以在浏览器层面提供额外的防护。内容安全策略（CSP）通过 <code>Content-Security-Policy</code> 头限制页面可以加载的资源来源，有效缓解 XSS 和数据注入攻击。HTTP 严格传输安全（HSTS）通过 <code>Strict-Transport-Security</code> 强制浏览器始终使用 HTTPS 访问。<code>X-Frame-Options</code> 防止网站被嵌入恶意框架进行点击劫持，<code>X-Content-Type-Options</code> 阻止浏览器 MIME 嗅探，<code>Referrer-Policy</code> 控制 Referrer 信息泄露。建议使用 Security Headers 在线工具扫描并修复缺失的头配置。</p>
+
+            <h2>三、保持软件与插件更新</h2>
+            <p>过时的软件是攻击者最常见的入侵入口。无论是内容管理系统（WordPress、Drupal）、服务器软件（Nginx、Apache、PHP）还是第三方插件和主题，都可能存在已知漏洞。建立定期更新机制，关注官方安全公告，在测试环境中验证更新兼容性后再部署到生产环境。对于不再维护的插件，应立即寻找替代方案并移除。启用自动安全更新可以在漏洞披露后的第一时间获得保护。</p>
+
+            <h2>四、使用强密码策略</h2>
+            <p>弱密码和凭证泄露是导致网站被入侵的主要原因之一。为所有管理员账户、数据库和服务器设置长度至少 12 位、包含大小写字母、数字和特殊字符的复杂密码。禁止在多个系统之间复用密码。实施登录失败锁定策略，在多次错误尝试后暂时封禁 IP 地址。考虑部署密码管理器帮助团队安全地生成和存储凭证，降低人为失误风险。</p>
+
+            <h2>五、定期备份网站数据</h2>
+            <p>即使防御措施再完善，也无法保证 100% 不被攻破。定期完整的网站备份是遭受勒索软件或数据破坏后的最后防线。备份策略应遵循 3-2-1 原则：至少保留 3 份数据副本，使用 2 种不同的存储介质，其中 1 份存放在异地。除了网站文件，数据库、配置文件和 SSL 证书都必须纳入备份范围。定期演练恢复流程，确保在紧急情况下能够快速还原业务。</p>
+
+            <h2>六、配置 Web 应用防火墙（WAF）</h2>
+            <p>Web 应用防火墙位于应用层，能够识别并拦截 SQL 注入、XSS、路径遍历、恶意爬虫等常见攻击模式。云 WAF 服务（如 Cloudflare、阿里云 WAF、AWS WAF）无需修改现有架构即可快速部署，并提供持续的规则库更新。对于有特殊合规要求的场景，可以考虑部署硬件或软件 WAF。配置时注意不要设置过于宽松的规则，以免降低防护效果，同时监控误报情况避免影响正常业务。</p>
+
+            <h2>七、防范 SQL 注入攻击</h2>
+            <p>SQL 注入通过在用户输入中嵌入恶意 SQL 语句，绕过认证或直接操纵数据库。防御的核心原则是绝不信任用户输入。对所有数据库查询使用参数化预处理语句（Prepared Statements）或存储过程，避免直接拼接 SQL 字符串。对用户输入实施严格的类型检查、长度限制和格式验证。最小化数据库账户权限，应用程序只应拥有完成必要操作的最小权限集，避免使用 root 或 sa 账户连接数据库。</p>
+
+            <h2>八、防范 XSS 跨站脚本攻击</h2>
+            <p>跨站脚本攻击（XSS）允许攻击者将恶意脚本注入网页，窃取用户会话 Cookie 或执行钓鱼操作。防御措施包括：对所有输出到页面的用户输入进行 HTML 实体编码，根据上下文选择正确的编码方式；使用现代框架（React、Vue、Angular）的自动转义机制；对富文本输入使用白名单过滤库（如 DOMPurify）清理危险标签和事件处理器；将敏感 Cookie 标记为 <code>HttpOnly</code> 和 <code>Secure</code>，防止 JavaScript 读取。结合 CSP 策略可以形成纵深防御。</p>
+
+            <h2>九、防范 CSRF 跨站请求伪造</h2>
+            <p>CSRF 攻击诱导已登录用户在不知情的情况下执行非预期的操作（如修改密码、转账）。防御方法主要有两种：一是为所有状态变更请求（POST、PUT、DELETE）添加 CSRF Token，服务端验证 Token 的有效性；二是使用 SameSite Cookie 属性，设置为 <code>Strict</code> 或 <code>Lax</code> 阻止跨站携带 Cookie。对于特别敏感的操作，还应要求用户重新输入密码或进行二次验证。</p>
+
+            <h2>十、设置正确的文件权限</h2>
+            <p>错误的文件权限可能让攻击者读取敏感配置、上传 WebShell 或修改系统文件。Web 服务器进程应以非特权用户运行，上传目录禁止执行脚本。遵循最小权限原则：配置文件设为 644（所有者可读写，其他只读），目录设为 755，可执行脚本设为 700 或 750。定期检查关键目录的权限设置，移除不必要的写权限。将配置文件（如 .env、wp-config.php）放在 Web 根目录之外，或配置服务器拒绝直接访问。</p>
+
+            <h2>十一、启用日志监控与告警</h2>
+            <p>日志是发现和追溯安全事件的关键依据。确保 Web 服务器、应用和数据库都启用了详细的访问日志和错误日志。集中收集日志到 ELK Stack、Splunk 或云日志服务，便于关联分析和长期留存。配置异常行为告警规则，如短时间内大量 404 请求可能表明扫描行为，多次登录失败可能是暴力破解尝试，异常的出站连接可能意味着后门通信。定期审计日志，关注凌晨时分的非常规访问。</p>
+
+            <h2>十二、配置 DDoS 防护</h2>
+            <p>分布式拒绝服务（DDoS）攻击通过海量流量淹没目标，使网站无法响应正常用户。基础防护包括：在服务器前部署 CDN 和负载均衡分散流量，配置连接数限制和请求速率限制（Rate Limiting），启用 SYN Cookies 防范 SYN Flood。对于大规模攻击，需要借助云服务商的 DDoS 高防 IP 或清洗中心，它们具备 T 级带宽储备和智能流量清洗能力。制定应急响应预案，确保攻击发生时能快速切换流量或启用备用基础设施。</p>
+
+            <h2>十三、启用双因素认证（2FA）</h2>
+            <p>密码一旦泄露，单因素认证体系将形同虚设。双因素认证通过"知道的东西（密码）+ 拥有的东西（手机/安全密钥）"大幅提升账户安全性。为所有管理员后台、服务器 SSH 和数据库管理界面启用 2FA，优先选择基于时间的一次性密码（TOTP）或 FIDO2 硬件安全密钥，避免使用易被拦截的短信验证码。对于团队成员，强制启用 2FA 并定期审核活跃会话。</p>
+
+            <h2>十四、定期进行漏洞扫描</h2>
+            <p>自动化漏洞扫描工具可以持续发现配置错误、过期组件和已知漏洞。使用开源工具如 Nikto、OpenVAS 或商业服务进行定期扫描，覆盖 Web 应用、服务器和网络安全。将漏洞扫描集成到 CI/CD 流水线中，在代码部署前自动检测依赖库的安全问题（如使用 Snyk、Dependabot）。对于发现的漏洞，建立分级修复机制：严重漏洞 24 小时内修复，高危漏洞 72 小时内修复。</p>
+
+            <h2>十五、进行安全审计与渗透测试</h2>
+            <p>自动化工具无法发现所有安全问题，定期的人工渗透测试和安全审计必不可少。聘请专业的安全团队模拟真实攻击者的行为，从外部网络和内部网络两个维度进行全面测试。审计范围应覆盖应用逻辑漏洞、权限绕过、业务逻辑缺陷和社工工程风险。根据审计报告制定整改计划，并在修复后进行复测验证。对于处理敏感数据或金融交易的网站，建议每年至少进行一次全面的第三方安全评估。</p>
+
+            <h2>总结</h2>
+            <p>网站安全没有银弹，而是需要多层防御和持续投入的体系工程。这份 15 步检查清单为你提供了一个系统化的加固框架。建议将各项措施落实到日常运维规范中，建立安全责任制度，定期回顾和更新安全策略。安全意识和流程与技术措施同样重要——再强大的防火墙也挡不住内部人员的不慎操作。从今天开始，逐条检查并完善你的网站安全体系，为业务的长期稳定发展奠定坚实基础。</p>
+        </article>
+    </main>
+    <div id="footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script>initPage('blog');</script>
+</body>
+</html>
