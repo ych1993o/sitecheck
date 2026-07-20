@@ -106,7 +106,25 @@ const translations = {
         ssl_expiring: '即将过期',
         ssl_valid: '有效',
         ssl_expired_days: '已过期 {days} 天',
-        ssl_days_left: '{days} 天'
+        ssl_days_left: '{days} 天',
+        about_h1: '关于我们',
+        about_subtitle: '了解 SiteCheck',
+        about_what: '什么是 SiteCheck？',
+        about_what_desc: 'SiteCheck 是一个免费的在线网站检测工具平台，致力于为网站管理员、开发者和普通用户提供便捷的网站诊断服务。我们提供 HTTP 状态检测、DNS 查询、SSL 证书检测、响应时间测试和 HTTP Headers 分析等多种工具，帮助用户快速排查和了解网站运行状况。',
+        about_tools: '我们的工具',
+        about_tool_http: 'HTTP 状态检测：快速检测网站的 HTTP 状态码，了解网站是否正常在线访问。',
+        about_tool_dns: 'DNS 查询：查询域名的 A、CNAME、MX、NS、TXT 等各种 DNS 记录。',
+        about_tool_ssl: 'SSL 证书检测：检测网站 HTTPS 证书状态，查看证书颁发机构、有效期和到期时间。',
+        about_tool_response: '响应时间检测：测量网站的加载响应时间，评估网站性能。',
+        about_tool_headers: 'HTTP Headers 检测：查看网站的 HTTP 响应头信息，检测安全头配置。',
+        about_mission: '我们的使命',
+        about_mission_desc: '我们相信，每个人都应该能够方便地检查和了解网站的运行状态。无论你是经验丰富的开发者还是刚建站的新手，SiteCheck 都能为你提供直观、准确的网站诊断结果。我们持续更新和改进工具，并撰写相关技术博客，帮助用户更好地理解网络技术知识。',
+        about_tech: '技术架构',
+        about_tech_desc: 'SiteCheck 使用 Cloudflare Pages 和 Cloudflare Workers 构建，利用全球 CDN 网络确保快速响应。所有检测请求均在服务端处理，确保用户隐私安全。',
+        about_contact: '联系方式',
+        about_contact_desc: '如果您有任何问题、建议或合作意向，请访问我们的',
+        about_contact_link: '联系方式',
+        about_contact_end: '页面。'
     },
     en: {
         nav_home: 'Home',
@@ -212,7 +230,25 @@ const translations = {
         ssl_expiring: 'Expiring Soon',
         ssl_valid: 'Valid',
         ssl_expired_days: 'Expired {days} days ago',
-        ssl_days_left: '{days} days'
+        ssl_days_left: '{days} days',
+        about_h1: 'About Us',
+        about_subtitle: 'Learn about SiteCheck',
+        about_what: 'What is SiteCheck?',
+        about_what_desc: 'SiteCheck is a free online website diagnostic tool platform, dedicated to providing convenient website diagnostic services for webmasters, developers, and ordinary users. We offer HTTP status checks, DNS lookups, SSL certificate checks, response time tests, and HTTP Headers analysis, helping users quickly troubleshoot and understand website status.',
+        about_tools: 'Our Tools',
+        about_tool_http: 'HTTP Status Check: Quickly check the HTTP status code of a website to see if it is accessible.',
+        about_tool_dns: 'DNS Lookup: Query various DNS records such as A, CNAME, MX, NS, TXT for a domain.',
+        about_tool_ssl: 'SSL Certificate Check: Check the HTTPS certificate status of a website, view the issuing authority, validity period, and expiration date.',
+        about_tool_response: 'Response Time Check: Measure the loading response time of a website to evaluate its performance.',
+        about_tool_headers: 'HTTP Headers Check: View the HTTP response header information of a website, and check the security header configuration.',
+        about_mission: 'Our Mission',
+        about_mission_desc: 'We believe that everyone should be able to easily check and understand the status of a website. Whether you are an experienced developer or a novice who just built a website, SiteCheck can provide you with intuitive and accurate diagnostic results. We continuously update and improve our tools and write related technical blogs to help users better understand network technology.',
+        about_tech: 'Technical Architecture',
+        about_tech_desc: 'SiteCheck is built with Cloudflare Pages and Cloudflare Workers, utilizing a global CDN network to ensure fast responses. All detection requests are processed on the server side to ensure user privacy.',
+        about_contact: 'Contact',
+        about_contact_desc: 'If you have any questions, suggestions, or cooperation intentions, please visit our ',
+        about_contact_link: 'Contact',
+        about_contact_end: ' page.'
     }
 };
 
