@@ -23,13 +23,13 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body><a href="https://212128.xyz/cdn-cgi/content?id=LCxFk7VrYikbE7SXg7NV4pydJuBSvPTDhfdubDqEAIg-1784515109.174627-1.2.1.1-d5SPHHRU1PKQ6ORlaCOrmnos6uNHzwfx4.JMMo7hgW8" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
     <div id="header"></div>
 
     <main class="main-content">
         <section class="hero">
-            <h1>免费在线网站检测工具</h1>
-            <p>一站式网站诊断平台，提供 HTTP 状态、DNS 解析、SSL 证书、响应时间和 HTTP Headers 检测，帮助你快速排查网站问题。</p>
+            <h1 data-i18n="hero_title">免费在线网站检测工具</h1>
+            <p data-i18n="hero_subtitle">一站式网站诊断平台，提供 HTTP 状态、DNS 解析、SSL 证书、响应时间和 HTTP Headers 检测，帮助你快速排查网站问题。</p>
         </section>
 
         <div class="tool-grid">
@@ -41,8 +41,8 @@
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                 </div>
-                <h3>HTTP 状态检测</h3>
-                <p>检测网站的 HTTP 状态码，了解网站是否正常在线访问，快速排查 404、500 等错误。</p>
+                <h3 data-i18n="tool_http">HTTP 状态检测</h3>
+                <p data-i18n="tool_http_desc">检测网站的 HTTP 状态码，了解网站是否正常在线访问，快速排查 404、500 等错误。</p>
             </a>
 
             <a href="/tools/dns-lookup.html" class="tool-card">
@@ -53,8 +53,8 @@
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                     </svg>
                 </div>
-                <h3>DNS 查询</h3>
-                <p>查询域名的 A、CNAME、MX、NS、TXT 等各种 DNS 记录，支持多类型解析查询。</p>
+                <h3 data-i18n="tool_dns">DNS 查询</h3>
+                <p data-i18n="tool_dns_desc">查询域名的 A、CNAME、MX、NS、TXT 等各种 DNS 记录，支持多类型解析查询。</p>
             </a>
 
             <a href="/tools/ssl-checker.html" class="tool-card">
@@ -63,8 +63,8 @@
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                 </div>
-                <h3>SSL 证书检测</h3>
-                <p>检测网站 HTTPS 证书状态，查看证书颁发机构、有效期和到期时间，确保网站安全。</p>
+                <h3 data-i18n="tool_ssl">SSL 证书检测</h3>
+                <p data-i18n="tool_ssl_desc">检测网站 HTTPS 证书状态，查看证书颁发机构、有效期和到期时间，确保网站安全。</p>
             </a>
 
             <a href="/tools/response-time.html" class="tool-card">
@@ -74,8 +74,8 @@
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                 </div>
-                <h3>响应时间检测</h3>
-                <p>测量网站的加载响应时间，评估网站性能，帮助你优化用户体验。</p>
+                <h3 data-i18n="tool_response">响应时间检测</h3>
+                <p data-i18n="tool_response_desc">测量网站的加载响应时间，评估网站性能，帮助你优化用户体验。</p>
             </a>
 
             <a href="/tools/http-headers.html" class="tool-card">
@@ -85,15 +85,15 @@
                         <polyline points="8 6 2 12 8 18"></polyline>
                     </svg>
                 </div>
-                <h3>HTTP Headers 检测</h3>
-                <p>查看网站的 HTTP 响应头信息，检测安全头配置（CSP、HSTS、X-Frame-Options 等）。</p>
+                <h3 data-i18n="tool_headers">HTTP Headers 检测</h3>
+                <p data-i18n="tool_headers_desc">查看网站的 HTTP 响应头信息，检测安全头配置（CSP、HSTS、X-Frame-Options 等）。</p>
             </a>
         </div>
 
         <div id="ad-slot"></div>
 
         <section style="margin-top: 60px;">
-            <h2 style="font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 24px;">最新文章</h2>
+            <h2 style="font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 24px;" data-i18n="latest_articles">最新文章</h2>
             <div class="blog-grid" id="latest-posts"></div>
         </section>
     </main>
@@ -107,20 +107,32 @@
 
         // Latest posts preview
         const latestPosts = [
-            { url: '/blog/what-is-http-status-code.html', title: 'HTTP 状态码详解：从 200 到 503 的完整指南', category: '网络基础', date: '2026-07-10', excerpt: '了解 HTTP 状态码的含义，掌握网站排查技能...' },
-            { url: '/blog/how-to-check-ssl-certificate.html', title: '如何检测网站的 SSL 证书是否有效', category: '安全', date: '2026-07-09', excerpt: 'SSL 证书是网站安全的基础，本文教你如何检测...' },
-            { url: '/blog/dns-configuration-guide.html', title: 'DNS 配置入门教程：从 A 记录到 MX 记录', category: '教程', date: '2026-07-08', excerpt: 'DNS 是互联网的电话簿，本文带你了解各种 DNS 记录...' }
+            { url: '/blog/what-is-http-status-code.html', title: 'HTTP 状态码详解：从 200 到 503 的完整指南', en_title: 'Complete Guide to HTTP Status Codes: From 200 to 503', category: '网络基础', en_category: 'Networking Basics', date: '2026-07-10', excerpt: '了解 HTTP 状态码的含义，掌握网站排查技能...', en_excerpt: 'Understand HTTP status codes and master website troubleshooting...' },
+            { url: '/blog/how-to-check-ssl-certificate.html', title: '如何检测网站的 SSL 证书是否有效', en_title: 'How to Check if Your Website\'s SSL Certificate is Valid', category: '安全', en_category: 'Security', date: '2026-07-09', excerpt: 'SSL 证书是网站安全的基础，本文教你如何检测...', en_excerpt: 'SSL certificates are the foundation of website security. Learn how to check...' },
+            { url: '/blog/dns-configuration-guide.html', title: 'DNS 配置入门教程：从 A 记录到 MX 记录', en_title: 'DNS Configuration Guide: From A Records to MX Records', category: '教程', en_category: 'Tutorial', date: '2026-07-08', excerpt: 'DNS 是互联网的电话簿，本文带你了解各种 DNS 记录...', en_excerpt: 'DNS is the Internet\'s phone book. Learn about various DNS record types...' },
+            { url_en: '/blog/website-performance-optimization.html', url_zh: '/blog/website-performance-optimization-zh.html', title: '10 种提升网站加载速度的实用方法', en_title: '10 Proven Ways to Improve Website Loading Speed in 2026', category: '性能优化', en_category: 'Performance', date: '2026-07-15', excerpt: '详细介绍网站性能优化的 10 种方法，包括图片优化、CDN、代码压缩等...', en_excerpt: '10 proven methods to optimize website performance, including image optimization, CDN, code minification...' },
+            { url_en: '/blog/website-security-checklist.html', url_zh: '/blog/website-security-checklist-zh.html', title: '网站安全检查清单：15 步保护你的网站', en_title: 'Essential Website Security Checklist: 15 Steps to Protect Your Site', category: '安全', en_category: 'Security', date: '2026-07-14', excerpt: '涵盖 HTTPS 配置、安全响应头、防火墙、SQL 注入防护等 15 项安全检查...', en_excerpt: '15 essential security checks covering HTTPS, security headers, firewall, SQL injection prevention...' },
+            { url_en: '/blog/how-to-use-cdn.html', url_zh: '/blog/how-to-use-cdn-zh.html', title: 'CDN 选择与配置完全指南', en_title: 'How to Choose and Configure a CDN: Complete Guide', category: '教程', en_category: 'Tutorial', date: '2026-07-13', excerpt: 'CDN 工作原理、主流服务商对比、DNS 配置和缓存规则设置详解...', en_excerpt: 'How CDNs work, comparison of major providers, DNS configuration and cache rules explained...' },
+            { url_en: '/blog/dns-propagation-explained.html', url_zh: '/blog/dns-propagation-explained-zh.html', title: 'DNS 传播为什么需要时间？如何加速？', en_title: 'DNS Propagation: Why It Takes Time and How to Speed It Up', category: '网络基础', en_category: 'Networking', date: '2026-07-12', excerpt: '深入理解 DNS 解析原理、TTL 作用和加速 DNS 传播的方法...', en_excerpt: 'Deep dive into DNS resolution, TTL effects, and methods to speed up DNS propagation...' },
+            { url_en: '/blog/https-migration-guide.html', url_zh: '/blog/https-migration-guide-zh.html', title: '网站从 HTTP 迁移到 HTTPS 完整指南', en_title: 'Complete Guide: Migrating Your Website from HTTP to HTTPS', category: '安全', en_category: 'Security', date: '2026-07-11', excerpt: 'SSL 证书类型对比、Let\'s Encrypt 申请、Nginx/Apache 配置和 SEO 注意事项...', en_excerpt: 'SSL certificate comparison, Let\'s Encrypt setup, Nginx/Apache config and SEO considerations...' }
         ];
-        document.getElementById('latest-posts').innerHTML = latestPosts.map(p => `
+
+        function renderLatestPosts() {
+            const isEn = currentLang === 'en';
+            document.getElementById('latest-posts').innerHTML = latestPosts.map(p => {
+                const url = isEn && p.url_en ? p.url_en : (p.url_zh || p.url);
+                return `
             <div class="blog-card">
                 <div class="blog-card-body">
-                    <div class="blog-card-category">${p.category}</div>
-                    <h3><a href="${p.url}">${p.title}</a></h3>
-                    <p>${p.excerpt}</p>
+                    <div class="blog-card-category">${isEn ? p.en_category : p.category}</div>
+                    <h3><a href="${url}">${isEn ? p.en_title : p.title}</a></h3>
+                    <p>${isEn ? p.en_excerpt : p.excerpt}</p>
                     <div class="blog-card-meta">${p.date}</div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
+        }
+        renderLatestPosts();
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1de97085bf0c76c',t:'MTc4NDUxNTEwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
