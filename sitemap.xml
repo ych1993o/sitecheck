@@ -42,7 +42,7 @@
 
     <!-- 博客索引 -->
     <url>
-        <loc>https://212128.xyz/blog/index</loc>
+        <loc>https://212128.xyz/blog/</loc>
         <lastmod>2026-07-11</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
