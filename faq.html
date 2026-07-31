@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://212128.xyz/faq">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPKQ144LSH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-PPKQ144LSH');
+    </script>
+    <title>常见问题 FAQ - SiteCheck</title>
+    <meta name="description" content="SiteCheck 常见问题解答，涵盖工具使用、HTTP 状态码、DNS 查询、SSL 证书检测、响应时间测试和 HTTP Headers 分析等常见疑问。">
+    <meta name="keywords" content="SiteCheck FAQ,常见问题,网站检测工具问答,HTTP状态码,DNS查询,SSL证书,响应时间">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1960589035364427" crossorigin="anonymous"></script>
+    <meta property="og:title" content="常见问题 FAQ - SiteCheck">
+    <meta property="og:description" content="SiteCheck 常见问题解答，涵盖工具使用、HTTP 状态码、DNS 查询、SSL 证书检测等常见疑问。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://212128.xyz/faq">
+    <meta property="og:site_name" content="SiteCheck">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="常见问题 FAQ - SiteCheck">
+    <meta name="twitter:description" content="SiteCheck 常见问题解答，涵盖工具使用与网站检测相关疑问。">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","name":"SiteCheck 常见问题","description":"SiteCheck 常见问题解答，涵盖工具使用与网站检测相关知识。","url":"https://212128.xyz/faq","publisher":{"@type":"Organization","name":"SiteCheck","url":"https://212128.xyz/"},"mainEntity":[
+    {"@type":"Question","name":"SiteCheck 的检测工具是免费的吗？","acceptedAnswer":{"@type":"Answer","text":"是的，SiteCheck 提供的所有检测工具（包括 HTTP 状态检测、DNS 查询、SSL 证书检测、响应时间测试和 HTTP Headers 分析）完全免费，无需注册账号，没有使用次数限制。我们致力于为所有用户提供便捷的网站诊断服务。"}},
+    {"@type":"Question","name":"SiteCheck 会存储我的检测数据吗？","acceptedAnswer":{"@type":"Answer","text":"不会。SiteCheck 不会长期存储您的查询记录与检测结果。当您使用检测工具时，输入的域名仅用于实时处理请求并返回结果，检测完成后相关数据即被丢弃，充分保护您的隐私。"}},
+    {"@type":"Question","name":"HTTP 状态码 200、301、404、500 分别代表什么？","acceptedAnswer":{"@type":"Answer","text":"200 OK 表示请求成功，服务器正常返回内容；301 Moved Permanently 表示永久重定向，资源已迁移到新地址；404 Not Found 表示服务器找不到请求的资源，可能是链接失效或页面已删除；500 Internal Server Error 表示服务器内部错误，通常需要查看服务端日志定位具体原因。"}},
+    {"@type":"Question","name":"DNS 查询工具支持哪些记录类型？","acceptedAnswer":{"@type":"Answer","text":"SiteCheck 的 DNS 查询工具支持 A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 共 8 种常见 DNS 记录类型。数据来源为 Google Public DNS（8.8.8.8），查询结果为实时解析数据。"}},
+    {"@type":"Question","name":"SSL 证书检测显示即将过期怎么办？","acceptedAnswer":{"@type":"Answer","text":"如果 SSL 证书剩余有效期不足 30 天，建议立即续签。使用 Let's Encrypt 的用户可通过 Certbot 配置自动续签；使用付费证书的用户请联系证书颁发机构或服务商进行续期。证书过期会导致浏览器显示安全警告，影响用户访问。"}},
+    {"@type":"Question","name":"响应时间测试结果和实际访问速度不一致？","acceptedAnswer":{"@type":"Answer","text":"SiteCheck 的响应时间测试通过 CORS 代理转发请求，因此结果会包含代理网络的额外开销，通常略高于用户直连访问的时间。测试结果更适合用于横向对比不同网站的性能差异，而非作为绝对精确的性能基准。如需精确测量，建议使用浏览器开发者工具的 Network 面板。"}},
+    {"@type":"Question","name":"HTTP Headers 分析中的安全评分是什么？","acceptedAnswer":{"@type":"Answer","text":"安全评分满分 100 分，基于 5 项关键安全响应头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy）的配置比例计算。每正确配置一项得 20 分。安全头是抵御 XSS、点击劫持等攻击的重要防线，建议达到 100 分。"}},
+    {"@type":"Question","name":"为什么 DNS 查询结果和我本地看到的不一样？","acceptedAnswer":{"@type":"Answer","text":"SiteCheck 使用 Google 公共 DNS 进行查询，而您本地的运营商 DNS 可能存在缓存或劫持，导致结果差异。DNS 修改后需要等待 TTL（生存时间）过期才能全球生效，这是正常现象。若怀疑本地被劫持，可对比多个公共 DNS 的结果确认。"}},
+    {"@type":"Question","name":"SiteCheck 支持检测哪些类型的域名？","acceptedAnswer":{"@type":"Answer","text":"支持绝大多数公共域名，包括各类顶级域名（如 .com、.net、.org、.cn、.xyz 等）和各级子域名。暂不支持内网地址（如 192.168.x.x）和本地主机名的检测。"}}
+    ]}
+    </script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="main-content" style="max-width:800px;margin:40px auto;padding:0 20px;">
+        <h1 style="font-size:28px;margin-bottom:8px;">常见问题 FAQ</h1>
+        <p style="color:var(--gray-500);margin-bottom:32px;">以下是关于 SiteCheck 工具使用与网站检测的常见问题解答</p>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">关于 SiteCheck</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">SiteCheck 的检测工具是免费的吗？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">是的，SiteCheck 提供的所有检测工具（包括 <a href="/tools/http-status.html">HTTP 状态检测</a>、<a href="/tools/dns-lookup.html">DNS 查询</a>、<a href="/tools/ssl-checker.html">SSL 证书检测</a>、<a href="/tools/response-time.html">响应时间测试</a>和 <a href="/tools/http-headers.html">HTTP Headers 分析</a>）完全免费，无需注册账号，没有使用次数限制。我们致力于为所有用户提供便捷的网站诊断服务。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">SiteCheck 会存储我的检测数据吗？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">不会。SiteCheck 不会长期存储您的查询记录与检测结果。当您使用检测工具时，输入的域名仅用于实时处理请求并返回结果，检测完成后相关数据即被丢弃，充分保护您的隐私。详情请参阅我们的<a href="/privacy-policy.html">隐私政策</a>。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">SiteCheck 支持检测哪些类型的域名？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">支持绝大多数公共域名，包括各类顶级域名（如 .com、.net、.org、.cn、.xyz 等）和各级子域名。暂不支持内网地址（如 192.168.x.x）和本地主机名的检测。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">检测请求是否经过第三方代理？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">HTTP 状态检测、响应时间测试和 HTTP Headers 分析工具通过公共 CORS 代理转发请求，DNS 查询使用 Google Public DNS，SSL 证书检测使用 crt.sh 证书透明度日志。这些第三方服务可能会影响部分检测结果的准确性，建议结合多种工具交叉验证。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">HTTP 状态检测</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">HTTP 状态码 200、301、404、500 分别代表什么？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;"><strong>200 OK</strong> 表示请求成功，服务器正常返回内容；<strong>301 Moved Permanently</strong> 表示永久重定向，资源已迁移到新地址；<strong>404 Not Found</strong> 表示服务器找不到请求的资源，可能是链接失效或页面已删除；<strong>500 Internal Server Error</strong> 表示服务器内部错误，通常需要查看服务端日志定位具体原因。更详细的状态码解释请参阅<a href="/blog/what-is-http-status-code.html">HTTP 状态码详解</a>。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">为什么显示的状态码与浏览器直接访问看到的不一致？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">本工具通过公共 CORS 代理发起请求，部分网站会针对代理 IP 或 User-Agent 返回不同响应（如地区跳转、风控拦截）。建议结合浏览器直接访问进行交叉验证。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">重定向次数显示为 0 但最终 URL 与目标不同，是出错了吗？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">受浏览器跨域限制，部分站点无法读取 Location 响应头，工具可能无法统计到跳转次数，但落地 URL 仍可能已跟随跳转，结果仅供参考。建议使用 curl -I 命令或浏览器开发者工具获取精确的重定向链。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">DNS 查询</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">DNS 查询工具支持哪些记录类型？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">SiteCheck 的 DNS 查询工具支持 A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 共 8 种常见 DNS 记录类型。数据来源为 Google Public DNS（8.8.8.8），查询结果为实时解析数据。更多记录类型的详细说明请参阅<a href="/blog/dns-records-types-explained.html">DNS 记录类型详解</a>。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">为什么 DNS 查询结果和我本地看到的不一样？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">SiteCheck 使用 Google 公共 DNS 进行查询，而您本地的运营商 DNS 可能存在缓存或劫持，导致结果差异。DNS 修改后需要等待 TTL（生存时间）过期才能全球生效，这是正常现象。若怀疑本地被劫持，可对比多个公共 DNS 的结果确认。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">查询返回 NXDOMAIN 是什么意思？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">NXDOMAIN 表示该域名不存在或该类型的记录未配置。可能原因包括：域名未注册、子域名拼写错误、该记录类型尚未配置或权威 DNS 服务器临时故障。建议核对域名拼写并换用其他记录类型再试。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">修改了 DNS 记录后多久能全球生效？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">DNS 依赖 TTL 缓存机制，修改记录后各地递归服务器会按原 TTL 缓存旧值，需等待 TTL 过期后才会全球生效。通常需要数分钟到 48 小时不等。建议在变更前先将 TTL 调小至 300 秒以内以加快生效。更多原理请参阅<a href="/blog/dns-propagation-explained.html">DNS 传播原理详解</a>。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">SSL 证书检测</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">SSL 证书检测显示即将过期怎么办？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">如果 SSL 证书剩余有效期不足 30 天，建议立即续签。使用 Let's Encrypt 的用户可通过 Certbot 配置自动续签；使用付费证书的用户请联系证书颁发机构或服务商进行续期。证书过期会导致浏览器显示安全警告，影响用户访问。详细操作请参阅<a href="/blog/ssl-certificate-expired-fix.html">SSL 证书过期解决方案</a>。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">证书明明已部署，为什么本工具查不到？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">本工具依赖证书透明度（CT）日志查询，部分内部使用的私有 CA 证书或未提交到 CT 日志的证书可能查不到。建议直接在浏览器中查看实际证书详情。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">免费证书和付费证书有什么区别？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">免费证书（如 Let's Encrypt）多为 DV（域名验证）类型，仅验证域名所有权，适合绝大多数网站；付费 OV/EV 证书包含组织身份审核，证书中包含企业信息，更适合有合规或品牌展示需求的企业。功能上两者都提供完整的 HTTPS 加密。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">响应时间测试</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">响应时间测试结果和实际访问速度不一致？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">SiteCheck 的响应时间测试通过 CORS 代理转发请求，因此结果会包含代理网络的额外开销，通常略高于用户直连访问的时间。测试结果更适合用于横向对比不同网站的性能差异，而非作为绝对精确的性能基准。如需精确测量，建议使用浏览器开发者工具的 Network 面板。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">三次测试结果差异很大怎么办？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">差异大说明服务器响应不稳定，可能存在负载波动、缓存未命中或网络抖动。建议在不同时段多次测试，关注 P95 和 P99 延迟而非仅看平均值。持续的响应时间波动通常需要排查服务器负载、数据库性能和网络链路。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">响应时间多少才算正常？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">一般来说，200ms 以内为优秀，200-500ms 为良好，500ms-1s 为一般，超过 1s 则需要优化。影响响应时间的因素包括服务器地理位置、硬件性能、数据库查询效率、CDN 配置等。更多优化方法请参阅<a href="/blog/website-performance-optimization.html">网站性能优化指南</a>。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">HTTP Headers 分析</h2>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">HTTP Headers 分析中的安全评分是什么？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">安全评分满分 100 分，基于 5 项关键安全响应头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy）的配置比例计算。每正确配置一项得 20 分。安全头是抵御 XSS、点击劫持等攻击的重要防线，建议达到 100 分。详细配置方法请参阅<a href="/blog/http-security-headers-guide.html">HTTP 安全头配置指南</a>。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">为什么有些响应头看不到？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">由于请求经过 CORS 代理转发，部分代理服务可能不会透传所有原始响应头。此外，某些响应头仅在特定条件下才会返回（如 Vary 仅在缓存协商时出现）。建议结合浏览器开发者工具综合判断。</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <h3 style="font-size:16px;margin-bottom:8px;color:var(--gray-900);">如何配置 HSTS 和 CSP？</h3>
+                <p style="color:var(--gray-700);line-height:1.8;">HSTS 推荐配置：<code>Strict-Transport-Security: max-age=31536000; includeSubDomains; preload</code>。CSP 建议采用渐进式策略：先用 <code>Content-Security-Policy-Report-Only</code> 模式收集违规报告，确认不影响功能后切换为强制模式。基础策略可设为 <code>default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'</code>。</p>
+            </div>
+        </section>
+
+        <section style="margin-bottom:32px;">
+            <h2 style="font-size:20px;margin-bottom:16px;color:var(--gray-900);">更多资源</h2>
+            <p style="color:var(--gray-700);line-height:1.8;">如果您的问题未在以上列表中找到答案，欢迎通过我们的<a href="/contact.html">联系方式</a>与我们取得联系。您也可以浏览我们的<a href="/blog/index.html">技术博客</a>，了解更多关于 HTTP、DNS、SSL、网站性能优化与安全防护的深度文章。</p>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+    <script src="/assets/js/common.js"></script>
+    <script>initPage('about');</script>
+</body>
+</html>

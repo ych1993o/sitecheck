@@ -7,6 +7,7 @@ const translations = {
         nav_tools: '检测工具',
         nav_blog: '博客',
         nav_about: '关于',
+        nav_faq: '常见问题',
         footer_desc: '免费的在线网站检测工具，提供 HTTP 状态检测、DNS 查询、SSL 证书检测、响应时间测试和 HTTP Headers 分析等功能。',
         footer_tools: '检测工具',
         footer_resources: '资源',
@@ -131,6 +132,7 @@ const translations = {
         nav_tools: 'Tools',
         nav_blog: 'Blog',
         nav_about: 'About',
+        nav_faq: 'FAQ',
         footer_desc: 'Free online website diagnostic tools, offering HTTP status check, DNS lookup, SSL certificate check, response time test, and HTTP Headers analysis.',
         footer_tools: 'Tools',
         footer_resources: 'Resources',
@@ -322,6 +324,7 @@ function renderHeader(activePage) {
                 <li><a href="/tools/http-status.html" class="${activePage === 'tools' ? 'active' : ''}" data-i18n="nav_tools">${t('nav_tools')}</a></li>
                 <li><a href="/blog/index.html" class="${activePage === 'blog' ? 'active' : ''}" data-i18n="nav_blog">${t('nav_blog')}</a></li>
                 <li><a href="/about.html" class="${activePage === 'about' ? 'active' : ''}" data-i18n="nav_about">${t('nav_about')}</a></li>
+                <li><a href="/faq.html" class="${activePage === 'faq' ? 'active' : ''}" data-i18n="nav_faq">${t('nav_faq')}</a></li>
             </ul>
             <div class="lang-switch" style="display:flex;align-items:center;gap:4px;">
                 <button class="lang-btn ${currentLang === 'zh' ? 'active' : ''}" data-lang="zh" onclick="switchLang('zh')">中文</button>
@@ -363,6 +366,7 @@ function renderFooter() {
                 <ul>
                     <li><a href="/blog/index.html" data-i18n="footer_blog">${t('footer_blog')}</a></li>
                     <li><a href="/about.html" data-i18n="footer_about_us">${t('footer_about_us')}</a></li>
+                    <li><a href="/faq.html" data-i18n="nav_faq">${t('nav_faq')}</a></li>
                     <li><a href="/contact.html" data-i18n="footer_contact">${t('footer_contact')}</a></li>
                 </ul>
             </div>
