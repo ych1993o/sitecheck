@@ -1,0 +1,39 @@
+# Cloudflare Pages _redirects file
+# Rewrite pretty URLs to .html files with 200 (no redirect)
+
+/about /about.html 200
+/contact /contact.html 200
+/privacy-policy /privacy-policy.html 200
+/terms-of-service /terms-of-service.html 200
+/404 /404.html 200
+
+/tools/http-status /tools/http-status.html 200
+/tools/dns-lookup /tools/dns-lookup.html 200
+/tools/ssl-checker /tools/ssl-checker.html 200
+/tools/response-time /tools/response-time.html 200
+/tools/http-headers /tools/http-headers.html 200
+
+/blog/ /blog/index.html 200
+/blog/what-is-http-status-code /blog/what-is-http-status-code.html 200
+/blog/how-to-check-ssl-certificate /blog/how-to-check-ssl-certificate.html 200
+/blog/dns-configuration-guide /blog/dns-configuration-guide.html 200
+/blog/website-performance-optimization /blog/website-performance-optimization.html 200
+/blog/understanding-http-headers /blog/understanding-http-headers.html 200
+/blog/how-to-troubleshoot-website-down /blog/how-to-troubleshoot-website-down.html 200
+/blog/ssl-certificate-expired-fix /blog/ssl-certificate-expired-fix.html 200
+/blog/dns-propagation-explained /blog/dns-propagation-explained.html 200
+/blog/http-vs-https-difference /blog/http-vs-https-difference.html 200
+/blog/website-monitoring-best-practices /blog/website-monitoring-best-practices.html 200
+/blog/cloudflare-vs-aws-dns /blog/cloudflare-vs-aws-dns.html 200
+/blog/free-website-monitoring-tools /blog/free-website-monitoring-tools.html 200
+/blog/http-security-headers-guide /blog/http-security-headers-guide.html 200
+/blog/dns-records-types-explained /blog/dns-records-types-explained.html 200
+/blog/website-speed-testing-guide /blog/website-speed-testing-guide.html 200
+/blog/dns-propagation-explained-zh /blog/dns-propagation-explained-zh.html 200
+/blog/how-to-use-cdn /blog/how-to-use-cdn.html 200
+/blog/how-to-use-cdn-zh /blog/how-to-use-cdn-zh.html 200
+/blog/https-migration-guide /blog/https-migration-guide.html 200
+/blog/https-migration-guide-zh /blog/https-migration-guide-zh.html 200
+/blog/website-performance-optimization-zh /blog/website-performance-optimization-zh.html 200
+/blog/website-security-checklist /blog/website-security-checklist.html 200
+/blog/website-security-checklist-zh /blog/website-security-checklist-zh.html 200
