@@ -34,6 +34,113 @@
 
             <div class="tool-description" data-i18n="tool_headers_description">HTTP 响应头是服务器在返回网页内容时发送的一系列元数据，包含了服务器类型、内容编码、缓存策略和安全配置等重要信息。常见的安全相关响应头包括：Content-Security-Policy（CSP）用于限制页面可以加载的资源来源，防止 XSS 攻击；Strict-Transport-Security（HSTS）强制浏览器使用 HTTPS 连接；X-Frame-Options 控制页面是否可以被嵌入 iframe，防止点击劫持；X-Content-Type-Options 防止浏览器进行 MIME 类型嗅探。通过本工具，你可以查看任意网站的 HTTP 响应头信息，检测安全头配置是否完善，提升网站安全等级。</div>
 
+            <div style="margin-top:36px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用方法</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:12px;">本工具通过向目标网址发起 HTTP 请求并采集全部响应头，自动检测 5 项关键安全头的配置情况并计算安全评分。操作步骤如下：</p>
+                <ol style="color:var(--gray-700);line-height:1.9;padding-left:24px;margin-bottom:16px;">
+                    <li>在输入框中填写目标网址，例如 example.com 或 https://example.com，协议头可省略。</li>
+                    <li>点击"分析"按钮，或直接按下回车键提交。</li>
+                    <li>工具会通过 CORS 代理获取目标网址的响应头信息，过程通常在数秒内完成。</li>
+                    <li>结果区首先展示 HTTP 状态码和安全评分（满分 100 分，基于 5 项安全头的配置比例）。</li>
+                    <li>安全头检测表格列出每项安全头的配置状态（已配置/未配置）和具体值。</li>
+                    <li>所有响应头表格完整展示服务器返回的全部响应头字段及其对应值。</li>
+                </ol>
+                <p style="color:var(--gray-500);font-size:13px;line-height:1.7;">提示：由于请求经过 CORS 代理，部分代理服务可能不会透传所有原始响应头。如需查看浏览器实际接收的完整响应头，建议使用浏览器开发者工具的 Network 面板。</p>
+            </div>
+
+            <div style="margin-top:8px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">关键安全响应头详解</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:16px;">以下安全头是本工具重点检测的项目，正确配置它们可以显著提升网站的防护能力。</p>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:220px;">安全头</th>
+                                    <th>作用与配置说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Strict-Transport-Security<br>(HSTS)</strong></td><td>强制浏览器在指定时间内（由 max-age 定义）始终使用 HTTPS 访问该网站，即使用户手动输入 HTTP 也会自动跳转，有效防止 SSL 剥离和中间人降级攻击。推荐配置：max-age=31536000; includeSubDomains; preload。</td></tr>
+                                <tr><td><strong>Content-Security-Policy<br>(CSP)</strong></td><td>内容安全策略，通过白名单机制限制页面可以加载的资源来源（脚本、样式、图片、字体等），是防御 XSS 攻击最有效的手段之一。推荐采用严格策略如 default-src 'self'，并逐步收紧。</td></tr>
+                                <tr><td><strong>X-Frame-Options</strong></td><td>控制页面是否允许被嵌入到 iframe、frame 或 object 标签中。设为 DENY 可完全禁止嵌入，SAMEORIGIN 仅允许同源嵌入，有效防止点击劫持攻击。现代浏览器也支持 CSP 的 frame-ancestors 指令替代此头。</td></tr>
+                                <tr><td><strong>X-Content-Type-Options</strong></td><td>设为 nosniff 时，阻止浏览器对响应内容进行 MIME 类型嗅探，强制按照 Content-Type 声明的类型解析内容，防止因类型混淆导致的安全漏洞。</td></tr>
+                                <tr><td><strong>Referrer-Policy</strong></td><td>控制 Referer 头中携带的信息量，防止敏感 URL 参数泄露给第三方。推荐配置 strict-origin-when-cross-origin，同源时发送完整 URL，跨源时仅发送来源域名。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见响应头字段说明</h2>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:200px;">响应头字段</th>
+                                    <th>含义说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Server</strong></td><td>标识服务器软件名称和版本，如 nginx/1.24.0。出于安全考虑，建议隐藏或修改此字段以减少信息泄露。</td></tr>
+                                <tr><td><strong>Date</strong></td><td>服务器生成响应的日期和时间，采用 RFC 7231 格式，用于客户端校准时钟和处理缓存。</td></tr>
+                                <tr><td><strong>Content-Type</strong></td><td>声明响应体的 MIME 类型，如 text/html; charset=UTF-8，浏览器据此决定如何渲染内容。</td></tr>
+                                <tr><td><strong>Cache-Control</strong></td><td>定义缓存策略，如 max-age=3600 表示缓存 1 小时，no-cache 表示每次需向服务器验证，no-store 表示禁止缓存。</td></tr>
+                                <tr><td><strong>ETag</strong></td><td>资源的唯一标识符（哈希值），客户端下次请求时通过 If-None-Match 携带此值，服务器未变更则返回 304 状态码，节省带宽。</td></tr>
+                                <tr><td><strong>Last-Modified</strong></td><td>资源的最后修改时间，与 If-Modified-Since 配合实现条件请求，是 HTTP 缓存验证的基础机制。</td></tr>
+                                <tr><td><strong>Set-Cookie</strong></td><td>设置 HTTP Cookie，可指定过期时间、域名、路径及安全属性（HttpOnly、Secure、SameSite）。</td></tr>
+                                <tr><td><strong>Vary</strong></td><td>告知缓存在何种请求头变化时需要使用不同缓存版本，常见值 Accept-Encoding 用于区分压缩和未压缩的响应。</td></tr>
+                                <tr><td><strong>Access-Control-Allow-Origin</strong></td><td>CORS 响应头，指定允许跨域访问的来源域名，设为 * 表示允许任意来源（生产环境应限定具体域名）。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用场景</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li><strong>安全头配置审计</strong>：检查网站是否正确配置了 HSTS、CSP、X-Frame-Options 等关键安全头，识别安全防护缺口。</li>
+                    <li><strong>缓存策略验证</strong>：查看 Cache-Control、ETag、Last-Modified 等缓存相关响应头，确认缓存策略是否符合预期。</li>
+                    <li><strong>服务器信息收集</strong>：通过 Server 响应头了解目标网站使用的服务器软件，辅助技术栈分析和兼容性评估。</li>
+                    <li><strong>CORS 配置检查</strong>：查看 Access-Control-Allow-Origin 等响应头，确认跨域配置是否正确且安全。</li>
+                    <li><strong>上线前安全验收</strong>：在网站上线前全面检查响应头配置，确保安全头已正确部署，避免遗漏关键防护。</li>
+                    <li><strong>竞品技术分析</strong>：通过响应头信息了解竞品的技术架构和安全实践，为自身优化提供参考。</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见问题 FAQ</h2>
+                <div class="result-card">
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：安全评分满分是多少？如何计算？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：满分 100 分，基于 5 项关键安全头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy）的配置比例计算。每配置一项得 20 分，全部配置则得 100 分。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：为什么有些响应头看不到？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：由于请求经过 CORS 代理转发，部分代理服务可能不会透传所有原始响应头。此外，某些响应头仅在特定条件下才会返回（如 Vary 仅在缓存协商时出现）。建议结合浏览器开发者工具综合判断。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：CSP 配置很复杂，有没有推荐策略？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：建议采用渐进式策略：先用 Content-Security-Policy-Report-Only 模式收集违规报告，确认不影响功能后切换为强制模式。基础策略可设为 default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：X-Frame-Options 和 CSP frame-ancestors 有什么区别？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：X-Frame-Options 是较早的标准，仅支持 DENY 和 SAMEORIGIN 两种策略。CSP 的 frame-ancestors 指令更灵活，支持白名单域名。现代浏览器优先使用 CSP，但建议两者同时配置以兼容旧浏览器。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：如何隐藏 Server 响应头？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;">A：不同服务器配置方式不同：Nginx 通过 server_tokens off 隐藏版本号，Apache 通过 ServerTokens Prod 限制信息量。完全移除需使用第三方模块或反向代理修改响应头。</p>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">安全头配置最佳实践</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li>配置 HSTS 并设置较长的 max-age（至少 31536000 秒即 1 年），同时启用 includeSubDomains 和 preload。</li>
+                    <li>采用 Content-Security-Policy-Report-Only 模式逐步部署 CSP，确认无功能影响后再切换为强制模式。</li>
+                    <li>同时配置 X-Frame-Options 和 CSP frame-ancestors，兼顾新旧浏览器的点击劫持防护。</li>
+                    <li>始终设置 X-Content-Type-Options: nosniff，防止 MIME 类型嗅探攻击。</li>
+                    <li>配置 Referrer-Policy: strict-origin-when-cross-origin，在功能与隐私之间取得平衡。</li>
+                    <li>使用 Permissions-Policy（原 Feature-Policy）控制浏览器 API 权限，如摄像头、麦克风、地理位置等。</li>
+                    <li>隐藏或最小化 Server 响应头信息，减少攻击者可利用的服务器指纹信息。</li>
+                    <li>定期使用本工具复查安全头配置，确保服务器升级或配置变更后防护策略仍然有效。</li>
+                </ul>
+            </div>
+
             <div class="results" id="results"></div>
         </div>
     </main>

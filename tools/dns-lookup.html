@@ -44,6 +44,91 @@
 
             <div class="tool-description" data-i18n="tool_dns_description">DNS（域名系统）是互联网的"电话簿"，负责将人类可读的域名（如 example.com）翻译为计算机可识别的 IP 地址。A 记录是最基础的 DNS 记录类型，将域名指向一个 IPv4 地址。CNAME 记录将域名指向另一个域名，常用于 CDN 和子域名管理。MX 记录指定接收该域名的邮件服务器地址。NS 记录指定域名由哪些 DNS 服务器负责解析。TXT 记录通常用于域名验证、SPF 邮件安全配置等。通过本工具，你可以快速查询任意域名的各种 DNS 记录，排查域名解析问题。</div>
 
+            <div style="margin-top:36px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用方法</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:12px;">本工具基于 Google Public DNS 实时解析域名，支持查询多种 DNS 记录类型，帮助你排查域名解析、邮件投递与证书验证等问题。操作步骤如下：</p>
+                <ol style="color:var(--gray-700);line-height:1.9;padding-left:24px;margin-bottom:16px;">
+                    <li>在左侧下拉框中选择要查询的记录类型，默认为 A 记录；如需同时了解多种记录，可分多次切换类型查询。</li>
+                    <li>在右侧输入框中填写目标域名，例如 example.com 或 www.example.com，无需带 http:// 前缀。</li>
+                    <li>点击"查询"按钮，或直接按下回车键提交。</li>
+                    <li>结果区会显示查询状态、记录名称、记录类型、TTL（生存时间）以及具体的记录数据。</li>
+                    <li>若状态显示 NXDOMAIN，表示该域名不存在或未配置；若返回 SERVFAIL，则可能是权威 DNS 服务器自身异常。</li>
+                </ol>
+                <p style="color:var(--gray-500);font-size:13px;line-height:1.7;">提示：查询结果来自 Google 公共 DNS（8.8.8.8），可能与本地运营商 DNS 缓存存在差异；如需对比本地解析，请在命令行使用 nslookup 或 dig 工具。</p>
+            </div>
+
+            <div style="margin-top:8px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见 DNS 记录类型详解</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:16px;">DNS 记录是域名解析的核心配置，不同类型的记录承担不同职责。下表列出最常用的记录类型、用途与典型应用场景，便于你在排查问题时选择正确的查询类型。</p>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:100px;">记录类型</th>
+                                    <th style="width:120px;">全称</th>
+                                    <th>用途与典型场景</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>A</strong></td><td>Address</td><td>将域名指向一个 IPv4 地址，是最基础、最常用的记录类型，用于网站服务器寻址。</td></tr>
+                                <tr><td><strong>AAAA</strong></td><td>IPv6 Address</td><td>将域名指向一个 IPv6 地址，用于支持下一代网络协议，逐步普及以应对 IPv4 地址枯竭。</td></tr>
+                                <tr><td><strong>CNAME</strong></td><td>Canonical Name</td><td>将域名别名指向另一个域名，常用于 CDN 接入、子域名统一管理与托管服务绑定。</td></tr>
+                                <tr><td><strong>MX</strong></td><td>Mail Exchange</td><td>指定接收该域名邮件的邮件服务器地址及其优先级，是邮件能否正常投递的关键配置。</td></tr>
+                                <tr><td><strong>NS</strong></td><td>Name Server</td><td>指定由哪些 DNS 服务器负责解析该域名，用于域名解析权委托与子域名委派。</td></tr>
+                                <tr><td><strong>TXT</strong></td><td>Text</td><td>存储任意文本信息，广泛用于域名所有权验证、SPF、DKIM、DMARC 等邮件安全与反垃圾配置。</td></tr>
+                                <tr><td><strong>SOA</strong></td><td>Start of Authority</td><td>记录域名的权威起点信息，包含主 DNS 服务器、管理员邮箱、序列号与各类刷新周期。</td></tr>
+                                <tr><td><strong>CAA</strong></td><td>Certification Authority Authorization</td><td>指定哪些证书颁发机构有权为该域名签发 SSL 证书，可有效降低证书被误签发的风险。</td></tr>
+                                <tr><td><strong>SRV</strong></td><td>Service</td><td>指明提供特定服务的服务器地址与端口，常见于即时通讯、SIP 电话、Active Directory 等场景。</td></tr>
+                                <tr><td><strong>PTR</strong></td><td>Pointer</td><td>反向解析记录，将 IP 地址反向映射回域名，主要用于邮件服务器身份校验与反垃圾过滤。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p style="color:var(--gray-600);line-height:1.8;margin-top:16px;">此外，DNS 查询会返回一个状态码：NOERROR 表示正常解析；NXDOMAIN 表示域名不存在或该类型记录未配置；SERVFAIL 通常意味着权威服务器返回了错误或解析链路异常；REFUSED 则表示查询被服务器策略拒绝。</p>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用场景</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li><strong>域名解析故障排查</strong>：网站打不开时，先查询 A 或 AAAA 记录，确认域名是否正确指向服务器 IP，排除解析配置错误或 DNS 缓存未刷新的问题。</li>
+                    <li><strong>CDN 与托管服务接入</strong>：配置 CNAME 接入 CDN 或对象存储后，验证别名记录是否生效，确认解析已正确指向服务商地址。</li>
+                    <li><strong>邮件投递问题诊断</strong>：邮件被拒收或进入垃圾箱时，检查 MX、SPF、DKIM、DMARC 记录是否完整且正确，保障域名邮件信誉。</li>
+                    <li><strong>SSL 证书安全加固</strong>：配置 CAA 记录限制可签发证书的 CA 机构，防止域名被未授权机构误签发证书，提升 HTTPS 安全性。</li>
+                    <li><strong>DNS 迁移与生效验证</strong>：更换 DNS 服务商或修改解析后，对比不同公共 DNS 的返回结果，判断全球解析是否已生效。</li>
+                    <li><strong>域名所有权验证</strong>：接入第三方服务（如搜索引擎站长平台、企业邮箱）时，按提示添加 TXT 记录并查询确认是否生效。</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见问题 FAQ</h2>
+                <div class="result-card">
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：为什么我修改了 DNS 记录但查询结果还是旧的？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：DNS 依赖 TTL 缓存机制，修改记录后各地递归服务器会按原 TTL 缓存旧值，需等待 TTL 过期后才会全球生效。建议在变更前先把 TTL 调小以加快生效。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：查询返回 NXDOMAIN 一定是域名不存在吗？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：不一定。除了域名确实未注册外，也可能是该记录类型未配置、子域名拼写错误，或权威服务器临时故障。建议核对域名拼写并换用其他记录类型再试。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：A 记录和 CNAME 记录可以同时配置在同一个主机名上吗？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：不可以。RFC 规定 CNAME 不能与其他记录类型共存于同一主机名，否则会导致解析异常。根域名通常只能使用 A 记录，不能使用 CNAME。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：本工具查询的结果和我本地看到的不一样怎么办？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：本工具使用 Google 公共 DNS，而本地运营商 DNS 可能存在缓存或劫持，导致结果差异。若怀疑本地被劫持，可对比多个公共 DNS 结果确认。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：TTL 设置多大比较合适？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;">A：稳定不变的记录可设较大的 TTL（如 3600 秒）以减轻 DNS 负载；需要频繁切换的记录（如故障转移、灰度）应设较小 TTL（如 60-300 秒）以便快速生效。</p>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">最佳实践</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li>在进行解析变更前，先将 TTL 调小至 300 秒以内，待全球生效后再恢复较大值，既能加快切换又可降低 DNS 查询压力。</li>
+                    <li>根域名（裸域）使用 A 记录而非 CNAME，避免与 MX、TXT 等记录冲突导致邮件与解析异常。</li>
+                    <li>为域名配置 CAA 记录，限定可信 CA 机构，从源头降低 SSL 证书被误签发的安全风险。</li>
+                    <li>完善邮件安全三件套：SPF 声明合法发件服务器、DKIM 签名验证邮件完整性、DMARC 制定失败处理策略，显著提升送达率。</li>
+                    <li>重要业务至少配置两个 NS 服务器并分散部署，避免单点故障导致整个域名无法解析。</li>
+                    <li>定期备份 DNS 解析配置，变更时做好记录与回滚预案，防止误操作引发大面积访问故障。</li>
+                    <li>对 CDN、对象存储等第三方服务使用 CNAME 接入，便于后续切换服务商而无需改动业务侧配置。</li>
+                </ul>
+            </div>
+
             <div class="results" id="results"></div>
         </div>
     </main>

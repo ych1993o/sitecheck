@@ -34,6 +34,89 @@
 
             <div class="tool-description" data-i18n="tool_ssl_description">SSL/TLS 证书是网站实现 HTTPS 加密连接的基础，它确保用户与网站之间的数据传输经过加密，防止中间人攻击和信息窃取。证书由受信任的证书颁发机构（CA）签发，包含域名信息、有效期和公钥等。常见的证书类型包括域名验证证书（DV）、组织验证证书（OV）和扩展验证证书（EV）。证书通常有效期为 90 天到 1 年，过期后需要续签。通过本工具，你可以检测任意 HTTPS 网站的 SSL 证书状态，查看证书颁发机构、有效期、到期时间和加密协议等信息，确保你的网站和访问的网站安全可靠。</div>
 
+            <div style="margin-top:36px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用方法</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:12px;">本工具通过证书透明度（CT）日志查询域名公开签发的 SSL/TLS 证书，帮助你掌握证书的颁发机构、有效期与剩余天数，避免因证书过期导致网站不可访问。操作步骤如下：</p>
+                <ol style="color:var(--gray-700);line-height:1.9;padding-left:24px;margin-bottom:16px;">
+                    <li>在输入框中填写目标域名，例如 example.com，无需带 https:// 前缀。</li>
+                    <li>点击"检测证书"按钮，或直接按下回车键提交。</li>
+                    <li>由于数据来源为 crt.sh 证书透明度日志，响应可能需要数秒，请耐心等待。</li>
+                    <li>结果区会展示最近签发的证书信息，包括颁发机构、生效时间、到期时间、剩余天数与证书状态标识。</li>
+                    <li>状态颜色含义：绿色表示有效，黄色表示即将过期或尚未生效，红色表示已过期，需立即处理。</li>
+                </ol>
+                <p style="color:var(--gray-500);font-size:13px;line-height:1.7;">提示：本工具展示的是公开 CT 日志中记录的证书，可能略晚于实际签发时间；若需查看浏览器实际建立的证书链，请结合浏览器地址栏的证书详情综合判断。</p>
+            </div>
+
+            <div style="margin-top:8px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">SSL/TLS 证书关键术语详解</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:16px;">理解下列核心术语，有助于你看懂检测结果并正确规划证书管理策略。</p>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:170px;">术语</th>
+                                    <th>含义说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>SSL / TLS</strong></td><td>用于在客户端与服务器之间建立加密连接的安全协议，SSL 已被更安全的 TLS 取代，HTTPS 即基于 TLS 实现。</td></tr>
+                                <tr><td><strong>CA（证书颁发机构）</strong></td><td>受信任的第三方机构，负责验证申请者身份并签发数字证书，浏览器与操作系统内置其根证书以建立信任。</td></tr>
+                                <tr><td><strong>DV 证书</strong></td><td>域名验证证书，仅校验域名所有权，签发速度快、成本低，适合个人站点与博客。</td></tr>
+                                <tr><td><strong>OV 证书</strong></td><td>组织验证证书，除域名外还审核企业或组织真实身份，证书中包含机构信息，适合企业官网与电商。</td></tr>
+                                <tr><td><strong>EV 证书</strong></td><td>扩展验证证书，审核最为严格，浏览器地址栏曾显示绿色企业名称，适合金融、支付等高安全场景。</td></tr>
+                                <tr><td><strong>证书链</strong></td><td>由根证书、中间证书与终端证书组成的信任链条，服务器需完整下发中间证书，否则部分客户端会报"不受信任"。</td></tr>
+                                <tr><td><strong>通配符证书</strong></td><td>可保护主域名及其所有一级子域名（如 *.example.com），便于统一管理与扩展子站点。</td></tr>
+                                <tr><td><strong>多域名证书（SAN）</strong></td><td>一张证书可绑定多个域名，适合同一主体下管理多个站点，降低证书数量与成本。</td></tr>
+                                <tr><td><strong>证书透明度（CT）</strong></td><td>公开记录所有已签发证书的日志系统，便于及时发现误签发与恶意签发，提升 CA 体系的可信度。</td></tr>
+                                <tr><td><strong>有效期</strong></td><td>证书的生效与到期时间区间。近年主流 CA 已将最长有效期缩短至 398 天，部分自动化方案采用 90 天短周期。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用场景</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li><strong>证书到期预警</strong>：定期检测自家域名证书剩余天数，在到期前 30 天内及时续签，避免因证书过期导致浏览器报错与业务中断。</li>
+                    <li><strong>HTTPS 上线验收</strong>：部署或更换证书后，确认新证书已生效且颁发机构、有效期符合预期，验证迁移是否成功。</li>
+                    <li><strong>证书签发审计</strong>：通过 CT 日志核查域名下被签发的所有证书，及时发现未经授权的异常签发或遗留的旧证书。</li>
+                    <li><strong>第三方服务安全评估</strong>：在接入支付、登录等敏感服务前，检查对方网站证书状态与颁发机构，评估其安全可信程度。</li>
+                    <li><strong>故障排查</strong>：浏览器提示"证书不受信任""证书已过期""名称不匹配"时，用本工具快速查看证书详情定位原因。</li>
+                    <li><strong>多域名统一管理</strong>：对持有多个域名的运维人员，集中检测各站点证书有效期，建立续签日历避免遗漏。</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见问题 FAQ</h2>
+                <div class="result-card">
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：证书明明已部署，为什么本工具查不到？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：本工具依赖证书透明度日志，部分内部使用的私有 CA 证书或未提交到 CT 日志的证书可能查不到。建议直接在浏览器中查看实际证书详情。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：剩余天数显示为负数是什么意思？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：表示证书已过期。此时浏览器会向用户显示安全警告并阻止访问，应立即续签并部署新证书，恢复 HTTPS 正常服务。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：为什么会有多条证书记录？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：每次续签或更换 CA 都会在 CT 日志中留下记录，因此同一域名常存在多条历史证书。工具默认展示最近签发的一条，并额外列出最近 5 条供参考。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：免费证书和付费证书有什么区别？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：免费证书（如 Let's Encrypt）多为 DV 类型，仅验证域名，适合绝大多数网站；付费 OV/EV 证书包含组织身份审核，更适合有合规或品牌展示需求的企业。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：证书查询很慢甚至超时怎么办？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;">A：crt.sh 服务在高峰期响应较慢，单次查询最长等待 30 秒。如遇超时可稍后重试，或先用其他工具确认域名是否启用了 HTTPS。</p>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">最佳实践</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li>使用 ACME 协议（如 Let's Encrypt + Certbot）实现证书自动签发与自动续签，从根本上杜绝过期风险。</li>
+                    <li>将证书续签阈值设为到期前 30 天告警、7 天紧急告警，预留充足时间处理异常。</li>
+                    <li>部署时务必完整下发中间证书，构建完整证书链，避免部分客户端提示不受信任。</li>
+                    <li>停用已废弃的 TLS 1.0 与 TLS 1.1，仅启用 TLS 1.2 及以上版本，并优先使用前向保密的加密套件。</li>
+                    <li>同时为域名配置 HSTS 响应头，强制浏览器长期使用 HTTPS 连接，防范降级与中间人攻击。</li>
+                    <li>对持有多个域名的企业，采用通配符或 SAN 多域名证书集中管理，降低运维复杂度与证书成本。</li>
+                    <li>定期通过 CT 日志审计域名下的所有证书，及时吊销并清理不再使用的旧证书，缩小攻击面。</li>
+                </ul>
+            </div>
+
             <div class="results" id="results"></div>
         </div>
     </main>

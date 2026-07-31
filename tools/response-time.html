@@ -34,6 +34,114 @@
 
             <div class="tool-description" data-i18n="tool_response_description">网站响应时间是指从用户发起请求到收到服务器第一个字节响应所经历的时间，通常称为 TTFB（Time to First Byte）。响应时间是衡量网站性能的核心指标之一。一般来说，200ms 以内为优秀，200-500ms 为良好，500ms-1s 为一般，超过 1s 则需要优化。影响响应时间的因素包括服务器地理位置、服务器性能、网络带宽、数据库查询效率、CDN 配置等。通过本工具，你可以测量任意网站的响应时间，评估网站性能，帮助定位加载缓慢的原因。</div>
 
+            <div style="margin-top:36px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用方法</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:12px;">本工具通过向目标网址发起真实 HTTP 请求并计时，连续测试 3 次后计算平均值、最小值和最大值，帮助你全面评估网站的响应性能。操作步骤如下：</p>
+                <ol style="color:var(--gray-700);line-height:1.9;padding-left:24px;margin-bottom:16px;">
+                    <li>在输入框中填写目标网址，例如 example.com 或 https://example.com，协议头可省略，工具会自动补全。</li>
+                    <li>点击"开始测试"按钮，或直接按下回车键提交。</li>
+                    <li>工具会连续发起 3 次请求，每次测试期间会显示当前进度，请耐心等待。</li>
+                    <li>测试完成后，结果区会展示平均响应时间、最快响应时间、最慢响应时间以及柱状图对比。</li>
+                    <li>柱状图颜色含义：绿色表示快速（500ms 以内），黄色表示一般（500-1500ms），红色表示缓慢（超过 1500ms）。</li>
+                    <li>如需对比不同时段的性能表现，可在不同时间点多次测试，观察响应时间波动情况。</li>
+                </ol>
+                <p style="color:var(--gray-500);font-size:13px;line-height:1.7;">提示：由于测试请求经过 CORS 代理转发，实际响应时间可能略高于用户直连访问的时间。本工具结果更适合用于横向对比不同网站的性能差异，而非作为绝对精确的性能基准。</p>
+            </div>
+
+            <div style="margin-top:8px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">响应时间关键指标详解</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:16px;">理解以下核心指标与术语，有助于你准确解读测试结果并制定优化策略。</p>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:170px;">术语</th>
+                                    <th>含义说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>TTFB</strong></td><td>Time to First Byte，从发起请求到收到服务器返回第一个字节的时间，是衡量服务器响应速度的核心指标，包含 DNS 解析、TCP 连接、TLS 握手和服务器处理时间。</td></tr>
+                                <tr><td><strong>DNS 解析时间</strong></td><td>将域名转换为 IP 地址所需的时间。使用快速 DNS 服务（如 1.1.1.1 或 8.8.8.8）并启用 DNS 缓存可缩短此环节。</td></tr>
+                                <tr><td><strong>TCP 连接时间</strong></td><td>与服务器建立 TCP 三次握手所需的时间，受客户端与服务器之间物理距离和网络路由影响。</td></tr>
+                                <tr><td><strong>TLS 握手时间</strong></td><td>HTTPS 连接中完成 TLS 加密协商的时间。启用 TLS 1.3 和会话恢复（Session Resumption）可显著减少握手轮次。</td></tr>
+                                <tr><td><strong>服务器处理时间</strong></td><td>服务器接收请求后执行后端逻辑（数据库查询、页面渲染等）并开始返回响应的时间，是优化后端性能的关键。</td></tr>
+                                <tr><td><strong>内容下载时间</strong></td><td>从收到第一个字节到完整接收响应体的时间，取决于响应体大小和网络带宽。</td></tr>
+                                <tr><td><strong>CDN 边缘节点</strong></td><td>内容分发网络的缓存节点，将静态资源缓存在离用户更近的位置，减少回源请求，显著降低 TTFB。</td></tr>
+                                <tr><td><strong>缓存命中率</strong></td><td>CDN 或反向代理直接从缓存返回响应的比例，命中率越高，平均响应时间越低。</td></tr>
+                                <tr><td><strong>P95 / P99 延迟</strong></td><td>95% 或 99% 的请求响应时间低于该值，是评估长尾延迟和用户体验下限的重要指标。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">响应时间等级参考</h2>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:140px;">响应时间范围</th>
+                                    <th style="width:100px;">等级</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>0 - 200ms</strong></td><td><span style="color:var(--success);font-weight:600;">优秀</span></td><td>用户体验极佳，页面几乎无感知延迟，适合高频交互场景和 API 接口。</td></tr>
+                                <tr><td><strong>200 - 500ms</strong></td><td><span style="color:var(--success);font-weight:600;">良好</span></td><td>用户体验良好，多数用户不会感知明显延迟，是大多数网站的目标范围。</td></tr>
+                                <tr><td><strong>500ms - 1s</strong></td><td><span style="color:var(--warning);font-weight:600;">一般</span></td><td>用户可感知轻微延迟，移动端体验可能受影响，建议进行基础优化。</td></tr>
+                                <tr><td><strong>1s - 3s</strong></td><td><span style="color:var(--danger);font-weight:600;">较慢</span></td><td>用户明显感知等待，跳出率显著上升，需优先排查服务器性能与网络链路。</td></tr>
+                                <tr><td><strong>> 3s</strong></td><td><span style="color:var(--danger);font-weight:600;">很差</span></td><td>严重影响用户体验，搜索引擎可能降低排名，需立即进行全面性能优化。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用场景</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li><strong>网站上线前性能验收</strong>：在网站正式上线前，测试关键页面的响应时间，确保达到性能基线要求，避免上线后影响用户体验。</li>
+                    <li><strong>CDN 效果评估</strong>：在启用 CDN 前后分别测试响应时间，量化 CDN 对 TTFB 的改善效果，验证投入产出比。</li>
+                    <li><strong>服务器迁移对比</strong>：在更换服务器或云服务商前后进行对比测试，评估迁移对性能的影响，辅助决策。</li>
+                    <li><strong>竞品性能分析</strong>：对比自身网站与竞品的响应时间，了解性能差距，制定有针对性的优化计划。</li>
+                    <li><strong>故障排查与监控</strong>：当用户反馈网站变慢时，快速测试响应时间，判断是服务器端问题还是客户端网络问题。</li>
+                    <li><strong>API 性能评估</strong>：测试后端 API 接口的响应时间，评估是否满足 SLA 要求，为容量规划提供数据支撑。</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见问题 FAQ</h2>
+                <div class="result-card">
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：为什么测试结果比浏览器实际访问慢？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：本工具的请求经过 CORS 代理转发，增加了额外的网络跳转开销。建议将测试结果用于横向对比，而非作为绝对性能基准。如需精确测量，可使用浏览器开发者工具的 Network 面板。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：三次测试结果差异很大怎么办？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：差异大说明服务器响应不稳定，可能存在负载波动、缓存未命中或网络抖动。建议在不同时段多次测试，关注 P95 和 P99 延迟而非仅看平均值。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：响应时间主要受哪些因素影响？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：主要包括 DNS 解析速度、服务器与用户之间的物理距离、服务器硬件性能、后端代码执行效率、数据库查询速度、CDN 缓存命中率以及网络带宽等。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：如何降低 TTFB？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：可从以下几个方面入手：使用 CDN 缓存静态内容、优化数据库查询与索引、启用服务器端页面缓存、使用 HTTP/2 或 HTTP/3 减少连接开销、将服务器部署在离用户更近的区域、升级服务器配置等。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：测试显示超时或失败是什么原因？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;">A：可能原因包括目标网站无法访问、CORS 代理服务暂时不可用、目标服务器防火墙拦截了请求、或网络连接超时。建议确认网址可正常访问后重试。</p>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">性能优化最佳实践</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li>部署 CDN 将静态资源缓存至全球边缘节点，缩短用户到服务器的物理距离，显著降低 TTFB。</li>
+                    <li>启用 HTTP/2 或 HTTP/3 协议，利用多路复用和 0-RTT 等特性减少连接建立开销。</li>
+                    <li>对动态页面实施服务器端缓存（如 Redis、Varnish），避免每次请求都执行完整后端逻辑。</li>
+                    <li>优化数据库查询，添加合适索引，避免 N+1 查询，对慢查询进行专项分析和重构。</li>
+                    <li>使用 gzip 或 Brotli 压缩响应体，减少传输数据量，缩短内容下载时间。</li>
+                    <li>将图片转为 WebP 或 AVIF 格式，并使用懒加载延迟加载非首屏图片。</li>
+                    <li>配置浏览器缓存策略（Cache-Control、ETag），让回访用户直接从本地缓存加载资源。</li>
+                    <li>定期使用本工具或专业监控服务（如 Pingdom、UptimeRobot）持续跟踪响应时间变化趋势。</li>
+                </ul>
+            </div>
+
             <div class="results" id="results"></div>
         </div>
     </main>

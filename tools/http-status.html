@@ -34,6 +34,98 @@
 
             <div class="tool-description" data-i18n="tool_http_description">HTTP 状态码是 Web 服务器在响应客户端请求时返回的三位数字代码，用于表示请求的处理结果。200 系列状态码表示请求成功，如 200 OK 表示正常返回内容，204 No Content 表示成功但无内容返回。300 系列表示重定向，如 301 表示永久跳转，302 表示临时跳转。400 系列表示客户端错误，最常见的 404 Not Found 表示请求的资源不存在，403 Forbidden 表示服务器拒绝访问。500 系列表示服务器内部错误，如 502 Bad Gateway 表示网关错误，503 Service Unavailable 表示服务暂时不可用。通过本工具，你可以快速检测任意网址的 HTTP 状态码，判断网站是否正常运行，排查访问故障。</div>
 
+            <div style="margin-top:36px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用方法</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:12px;">本工具用于快速检测任意网址返回的 HTTP 状态码，帮助你判断网站是否可正常访问、是否存在重定向或服务器异常。完整操作步骤如下：</p>
+                <ol style="color:var(--gray-700);line-height:1.9;padding-left:24px;margin-bottom:16px;">
+                    <li>在输入框中填写目标网址，可只输入域名（如 example.com），也可输入完整地址（如 https://example.com/path）。若未带协议，工具会自动补全为 https。</li>
+                    <li>点击"开始检测"按钮，或直接按下回车键提交请求。</li>
+                    <li>稍候片刻，结果区会依次显示状态码、对应状态文本、响应时间、最终落地 URL 以及重定向次数。</li>
+                    <li>根据状态码的颜色标识判断结果：绿色代表请求成功，黄色代表重定向或需要关注，红色代表客户端或服务器存在错误。</li>
+                </ol>
+                <p style="color:var(--gray-500);font-size:13px;line-height:1.7;">提示：检测请求会经由公共 CORS 代理转发，因此响应时间会包含代理网络的额外开销，仅适合用于对比相对快慢，并不等同于用户真实访问延迟。</p>
+            </div>
+
+            <div style="margin-top:8px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见 HTTP 状态码详解</h2>
+                <p style="color:var(--gray-700);line-height:1.8;margin-bottom:16px;">HTTP 状态码由三位数字组成，首位数字表示响应类别：1xx 为信息提示，2xx 为成功，3xx 为重定向，4xx 为客户端错误，5xx 为服务器错误。下表列出运维与故障排查中最常遇到的状态码、名称及其典型成因。</p>
+                <div class="result-card" style="padding:0;overflow:hidden;">
+                    <div style="overflow-x:auto;">
+                        <table class="result-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:90px;">状态码</th>
+                                    <th style="width:160px;">名称</th>
+                                    <th>含义与典型成因</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>200</strong></td><td>OK</td><td>请求成功，服务器正常返回所请求的资源内容，是最理想的状态。</td></tr>
+                                <tr><td><strong>201</strong></td><td>Created</td><td>请求成功并创建了新资源，常见于 POST 提交表单或上传后写入数据的接口。</td></tr>
+                                <tr><td><strong>204</strong></td><td>No Content</td><td>请求成功但响应体为空，多见于 DELETE、PUT 等操作后无需返回内容的情况。</td></tr>
+                                <tr><td><strong>301</strong></td><td>Moved Permanently</td><td>资源已永久迁移到新地址，搜索引擎与浏览器会缓存跳转，常用于域名更换或 HTTP 升级 HTTPS。</td></tr>
+                                <tr><td><strong>302</strong></td><td>Found</td><td>资源临时跳转到新地址，缓存策略与 301 不同，适合短期活动页或临时维护跳转。</td></tr>
+                                <tr><td><strong>304</strong></td><td>Not Modified</td><td>客户端缓存仍然有效，服务器告知无需重新下载，可显著节省带宽并加快二次访问。</td></tr>
+                                <tr><td><strong>307</strong></td><td>Temporary Redirect</td><td>临时重定向，与 302 类似，但严格保持原请求方法不变，不会把 POST 转为 GET。</td></tr>
+                                <tr><td><strong>308</strong></td><td>Permanent Redirect</td><td>永久重定向，与 301 类似，同样保持原请求方法不变，适合需要保留 POST 的永久迁移。</td></tr>
+                                <tr><td><strong>400</strong></td><td>Bad Request</td><td>请求语法或参数错误，服务器无法理解，多见于接口传参缺失、格式不正确或 JSON 格式异常。</td></tr>
+                                <tr><td><strong>401</strong></td><td>Unauthorized</td><td>未通过身份验证，需要先登录或携带有效凭证（如 Token、Cookie）后再次发起请求。</td></tr>
+                                <tr><td><strong>403</strong></td><td>Forbidden</td><td>服务器理解请求但拒绝执行，常见于权限不足、目录禁止列出或访问 IP 被封禁。</td></tr>
+                                <tr><td><strong>404</strong></td><td>Not Found</td><td>服务器找不到对应资源，可能是链接失效、路径拼写错误或页面已被删除下线。</td></tr>
+                                <tr><td><strong>405</strong></td><td>Method Not Allowed</td><td>请求方法不被允许，例如对只支持 GET 的接口发起了 POST 请求。</td></tr>
+                                <tr><td><strong>408</strong></td><td>Request Timeout</td><td>客户端在服务器等待时限内未完成请求发送，通常由网络不稳定或客户端异常引起。</td></tr>
+                                <tr><td><strong>429</strong></td><td>Too Many Requests</td><td>请求频率超过限流阈值，触发了速率限制，需要降低频率或等待冷却后再试。</td></tr>
+                                <tr><td><strong>500</strong></td><td>Internal Server Error</td><td>服务器内部发生异常，多为代码报错、数据库连接失败或配置错误，需查看服务端日志定位。</td></tr>
+                                <tr><td><strong>502</strong></td><td>Bad Gateway</td><td>作为网关或代理的服务器从上游收到无效响应，常见于后端服务未启动或已崩溃。</td></tr>
+                                <tr><td><strong>503</strong></td><td>Service Unavailable</td><td>服务暂时不可用，多因服务器过载或正在维护，通常会附带 Retry-After 提示重试时间。</td></tr>
+                                <tr><td><strong>504</strong></td><td>Gateway Timeout</td><td>网关在等待上游响应时超时，表明后端处理过慢或网络中断，需要排查上游服务性能。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">使用场景</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li><strong>网站上线与迁移验收</strong>：域名更换、HTTP 切换 HTTPS 后，检测旧地址是否正确 301 跳转到新地址，避免流量损失与 SEO 权重流失。</li>
+                    <li><strong>故障快速排查</strong>：用户反馈页面打不开时，第一时间用状态码判断是 404 失效链接、403 权限问题还是 500/502 服务端故障，快速锁定排查方向。</li>
+                    <li><strong>死链清理与 SEO 优化</strong>：批量检测站内链接状态，找出返回 404 或 5xx 的失效页面并修复，有助于提升搜索引擎收录与用户体验。</li>
+                    <li><strong>CDN 与缓存验证</strong>：配合 304 状态码确认静态资源缓存是否生效，判断 CDN 回源策略与浏览器缓存配置是否合理。</li>
+                    <li><strong>接口与重定向链路检查</strong>：分析最终落地 URL 与重定向次数，发现多余的跳转环节，缩短请求链路以提升页面加载速度。</li>
+                    <li><strong>限流与风控自测</strong>：压测自家接口时观察是否在预期阈值返回 429，验证限流策略与降级方案是否生效。</li>
+                </ul>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">常见问题 FAQ</h2>
+                <div class="result-card">
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：为什么显示的状态码与我直接访问看到的不一致？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：本工具通过公共 CORS 代理发起请求，部分网站会针对代理 IP 或 User-Agent 返回不同响应（如地区跳转、风控拦截）。建议结合浏览器直接访问进行交叉验证。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：检测时一直提示失败怎么办？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：请先确认网址拼写无误且服务确实在线；若目标站点禁止跨域或代理被限流，也可能导致请求失败，可稍后重试或换用其他工具辅助确认。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：返回 200 但页面内容异常，能说明网站正常吗？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：不能。状态码只反映传输层面的成功，内容是否正确需进一步查看响应体。某些自定义错误页本身也会返回 200，需结合页面内容综合判断。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：重定向次数显示为 0 但最终 URL 与目标不同，是出错了吗？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;margin-bottom:16px;">A：受浏览器跨域限制，部分站点无法读取 Location 响应头，工具可能无法统计到跳转次数，但落地 URL 仍可能已跟随跳转，结果仅供参考。</p>
+                    <p style="color:var(--gray-700);line-height:1.8;margin-bottom:8px;"><strong>Q：301 和 302 在 SEO 上有什么区别？</strong></p>
+                    <p style="color:var(--gray-600);line-height:1.8;">A：301 是永久重定向，搜索引擎会把原页面的权重转移到新地址；302 是临时重定向，权重通常仍保留在原地址。长期迁移应优先使用 301。</p>
+                </div>
+            </div>
+
+            <div style="margin-top:32px;">
+                <h2 style="font-size:20px;font-weight:600;color:var(--gray-900);margin:0 0 16px;">最佳实践</h2>
+                <ul style="color:var(--gray-700);line-height:1.9;padding-left:24px;">
+                    <li>域名迁移或全站 HTTPS 化时，统一使用 301 永久重定向，并保留旧链接至少半年，确保搜索引擎完成权重转移。</li>
+                    <li>避免重定向链过长，理想情况下不超过 1 次跳转；链路过长会拖慢首屏加载并影响搜索排名。</li>
+                    <li>对已删除或改版的内容，及时配置自定义 404 页面，引导用户回到首页或相关内容，降低跳出率。</li>
+                    <li>服务器侧建立监控告警，当 5xx 错误率或响应时间异常上升时第一时间通知运维，缩短故障恢复时间。</li>
+                    <li>对高频接口合理设置速率限制并返回 429，同时附带 Retry-After 头，在保护后端的同时给客户端明确的重试预期。</li>
+                    <li>定期巡检站内链接，清理失效页面，保持 2xx 占比与 304 缓存命中率处于健康水平。</li>
+                    <li>对需要保留 POST 方法的跳转，使用 307 或 308 而非 302 或 301，避免请求方法被意外改写导致数据丢失。</li>
+                </ul>
+            </div>
+
             <div class="results" id="results"></div>
         </div>
     </main>
